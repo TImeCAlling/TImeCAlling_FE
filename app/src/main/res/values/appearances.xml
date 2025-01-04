@@ -20,6 +20,13 @@
         <item name="fontFamily">@font/pretendard_semibold</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.Head4">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
+
     <style name="TextAppearance.TimeCAlling.Body1">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/gray_900</item>
@@ -67,6 +74,24 @@
     <style name="TextAppearance.TimeCAlling.Warning">
         <item name="textFillColor">@color/warning</item>
         <item name="android:textSize">12sp</item>
+    </style>
+    
+    <style name="TextAppearance.TimeCAlling.Time">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@color/gray_900</item>
+        <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
+    <style name="TextAppearance.TimeCAlling.Calender">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="TextAppearance.TimeCAlling.Calender.0Day">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/gray_400</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
     </style>
 
     <style name="TextAppearance.TimeCAlling.Bnv">
