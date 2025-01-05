@@ -6,10 +6,15 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapData
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapTapi
@@ -24,6 +29,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.umc.timeCAlling.R.layout.fragment_location_search) {
 
+    private val viewModel: AddScheduleViewModel by activityViewModels() // ViewModel 초기화
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var tMapView: TMapView
     private lateinit var tmapTapi: TMapTapi
     private lateinit var tmapData: TMapData
@@ -40,6 +47,8 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         bottomNavigationRemove()
         initTMapView() // TMapView 초기화
         initTMapTapi()
+        initPostListRVA()
+        initBottomSheet()
         tmapData = TMapData()
 
         // initView()에서 현재 위치 로그에 출력
@@ -69,6 +78,8 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
 
         binding.ivLocationSearch.setOnClickListener {
             searchLocation()
+            val keyword = binding.etLocationSearchLocation.text.toString()
+            viewModel.addRecentSearch(keyword) // 검색어 추가
         }
     }
 
@@ -139,6 +150,21 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         tMapView.setSKTMapApiKey(getString(R.string.tmap_app_key)) // T map API 키로 변경
         binding.tmapView.addView(tMapView)
     }
+
+    private fun initPostListRVA() {
+        val recentSearchRVA = RecentSearchRVA(viewModel, viewLifecycleOwner)
+        binding.rvRecentSearch.adapter = recentSearchRVA
+        binding.rvRecentSearch.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    private fun initBottomSheet() {
+        val bottomSheet = binding.bottomSheetRecentSearch // BottomSheet 레이아웃 ID
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
+        bottomSheetBehavior.peekHeight = 200
+        bottomSheetBehavior.isHideable = false // 드래그하여 숨기기 설정
+        bottomSheetBehavior.skipCollapsed = true // 숨김 상태로 바로 전환
+        }
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000

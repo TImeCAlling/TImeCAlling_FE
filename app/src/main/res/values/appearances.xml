@@ -26,6 +26,12 @@
         <item name="fontFamily">@font/pretendard_semibold</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.Head3">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/gray_900</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Head4">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/gray_800</item>
