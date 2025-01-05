@@ -128,7 +128,7 @@
 
                     <EditText
                         android:id="@+id/et_add_schedule_name"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="일정 이름을 입력해주세요"
                         style="@style/TextAppearance.TimeCAlling.Body1"
@@ -160,7 +160,7 @@
                         android:layout_weight="1"/>
 
                     <TextView
-                        android:id="@+id/tv_add_schedule_memo_title_count"
+                        android:id="@+id/tv_add_schedule_memo_count"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="0"
@@ -186,8 +186,8 @@
                     android:paddingVertical="15dp">
 
                     <EditText
-                        id="@+id/et_add_schedule_memo"
-                        android:layout_width="match_parent"
+                        android:id="@+id/et_add_schedule_memo"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="메모를 입력해주세요"
                         style="@style/TextAppearance.TimeCAlling.Body1"
