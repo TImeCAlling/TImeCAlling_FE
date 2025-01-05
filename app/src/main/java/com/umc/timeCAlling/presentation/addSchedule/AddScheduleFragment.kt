@@ -119,6 +119,9 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
         binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
+        val amPmValues = arrayOf("오전", "오후")
+        numberPickerAmPm.displayedValues = amPmValues
+
         timeBottomSheetBehavior.peekHeight = 0
         timeBottomSheetBehavior.isHideable = true // 드래그하여 숨기기 설정
         timeBottomSheetBehavior.skipCollapsed = true // 숨김 상태로 바로 전환
@@ -126,19 +129,16 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         binding.tvAddScheduleTimeSave.setOnClickListener { // 저장하기 버튼 클릭 리스너
             val selectedHour = numberPickerHour.value // 선택한 시간
             val selectedMinute = numberPickerMinute.value // 선택한 분
+            val selectedAmPm = amPmValues[numberPickerAmPm.value] // 오전/오후 문자열 가져오기
 
-            val selectedTime = String.format("%02d:%02d", selectedHour, selectedMinute) // 시간 형식 지정
+            val selectedTime = String.format("%s %02d:%02d", selectedAmPm, selectedHour, selectedMinute) // 시간 형식 지정
             timeTextView.text = selectedTime // TextView에 시간 설정
             binding.layoutAddScheduleTime.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_mint_line_2) // 배경 변경
             binding.tvAddScheduleTime.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900)) // 글자 색깔 변경
-            binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_calender_check)) // 아이콘 변경
+            binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_alarm_check)) // 아이콘 변경
 
             timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
         }
-
-        val amPmValues = arrayOf("오전", "오후")
-        numberPickerAmPm.displayedValues = amPmValues
-
 
         // 이미지 클릭 리스너
         binding.layoutAddScheduleTime.setOnClickListener {
