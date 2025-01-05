@@ -419,7 +419,7 @@
                 android:layout_height="wrap_content"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/shape_rect_30_white_fill">
+                android:background="@drawable/shape_bottom_sheet">
 
                 <com.google.android.material.bottomsheet.BottomSheetDragHandleView
                     android:id="@+id/drag_handle_date"
@@ -485,10 +485,10 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bottom_sheet_time"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="700dp"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/shape_rect_30_white_fill">
+                android:background="@drawable/shape_bottom_sheet">
 
                 <com.google.android.material.bottomsheet.BottomSheetDragHandleView
                     android:id="@+id/drag_handle_time"
@@ -512,11 +512,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/tv_title_time"
+                    android:layout_marginTop="15dp"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:layout_marginTop="-30dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:id="@+id/number_picker_am_pm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:np_dividerThickness="0dp"
+                        app:np_max="1"
+                        app:np_min="0"
+                        app:np_wrapSelectorWheel="true"
+                        app:np_itemSpacing="-15dp" />
 
                     <com.shawnlin.numberpicker.NumberPicker
                         android:id="@+id/number_picker_hour"
@@ -525,12 +537,12 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:np_dividerThickness="0dp"
-                        app:np_hideWheelUntilFocused="true"
-                        app:np_itemSpacing="1dp"
-                        app:np_max="23"
+                        app:np_max="12"
                         app:np_min="0"
-                        app:np_selectedTextSize="48dp"
-                        app:np_wrapSelectorWheel="true" />
+                        app:np_selectedTextSize="24dp"
+                        app:np_textSize="16dp"
+                        app:np_wrapSelectorWheel="true"
+                        app:np_itemSpacing="-20dp"/>
 
                     <TextView
                         android:id="@+id/tv_divider"
@@ -555,10 +567,9 @@
                         app:np_wrapSelectorWheel="true"
                         app:np_min="0"
                         app:np_max="59"
-                        app:np_hideWheelUntilFocused="true"
-                        app:np_selectedTextSize="48dp"
-                        app:np_itemSpacing="1dp"
-                        />
+                        app:np_selectedTextSize="24dp"
+                        app:np_textSize="16dp"
+                        app:np_itemSpacing="-20dp" />
                 </LinearLayout>
 
                 <TextView
@@ -567,8 +578,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_rect_999_mint_fill"
                     android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginTop="-30dp"
                     android:text="저장하기"
                     android:paddingVertical="20dp"
                     style="@style/TextAppearance.TimeCAlling.Button"

@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -108,6 +109,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     private fun initTimeBottomSheet() {
 
+        val numberPickerAmPm = binding.numberPickerAmPm // 오전/오후 NumberPicker
         val numberPickerHour = binding.numberPickerHour // 시간 NumberPicker
         val numberPickerMinute = binding.numberPickerMinute // 분 NumberPicker
         val timeTextView = binding.tvAddScheduleTime // 시간을 표시할 TextView
@@ -133,6 +135,10 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
             timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
         }
+
+        val amPmValues = arrayOf("오전", "오후")
+        numberPickerAmPm.displayedValues = amPmValues
+
 
         // 이미지 클릭 리스너
         binding.layoutAddScheduleTime.setOnClickListener {
