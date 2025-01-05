@@ -99,7 +99,7 @@ dependencies {
     //indicator : https://github.com/tommybuonomo/dotsindicator?utm_source=android-arsenal.com&utm_medium=referral&utm_campaign=7127
     implementation(libs.dotsindicator)
 
-    implementation(libs.material.calendarview){exclude(group = "com.android.support")}
+    implementation(libs.material.calendarview) {exclude(group = "com.android.support")}
     implementation (libs.number.picker)
 }
 configurations.all {
