@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.alpha
 import androidx.navigation.fragment.dialog
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
@@ -33,6 +34,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         initTimeBottomSheet()
         initScheduleName()
         initScheduleMemo()
+        moveToLocationSearch()
 
     }
 
@@ -216,6 +218,13 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 // 텍스트 변경 후
             }
         })
+
+    }
+
+    private fun moveToLocationSearch() {
+        binding.layoutAddScheduleLocation.setOnClickListener {
+            findNavController().navigate(R.id.action_addScheduleFragment_to_locationSearchFragment)
+        }
 
     }
 }

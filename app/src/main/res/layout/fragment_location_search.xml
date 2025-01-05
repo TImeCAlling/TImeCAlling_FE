@@ -53,7 +53,7 @@
             android:layout_marginTop="14dp"/>
 
         <LinearLayout
-            android:id="@+id/layout_add_schedule_location"
+            android:id="@+id/layout_location_search_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rect_10_gray250_fill"
@@ -65,7 +65,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/tv_add_schedule_location"
+                android:id="@+id/tv_location_search_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="장소를 입력해주세요"
@@ -75,12 +75,22 @@
                 android:layout_weight="1"/>
 
             <ImageView
+                android:id="@+id/iv_location_search"
                 android:layout_width="23dp"
                 android:layout_height="23dp"
                 android:src="@drawable/ic_search"
                 android:layout_gravity="center"/>
 
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/tmap_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_location_search_location"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp">
+        </FrameLayout>
 
 
 
