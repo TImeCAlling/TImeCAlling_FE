@@ -8,6 +8,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_add_schedule"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -81,7 +82,7 @@
             android:layout_marginHorizontal="20dp">
 
             <LinearLayout
-                android:id="@+id/layout_add_schedule"
+                android:id="@+id/layout_add_schedule_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -100,7 +101,7 @@
                         android:layout_weight="1"/>
 
                     <TextView
-                        android:id="@+id/tv_add_schedule_name_title_count"
+                        android:id="@+id/tv_add_schedule_title_count"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="0"
@@ -398,6 +399,14 @@
             android:paddingVertical="20dp"
             style="@style/TextAppearance.TimeCAlling.Button"
             android:gravity="center"/>
+
+        <View
+            android:id="@+id/view_bottom_sheet_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bottomsheet_background"
+            android:visibility="invisible"/>
+
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"

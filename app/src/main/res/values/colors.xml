@@ -21,6 +21,7 @@
     <color name="mint_400">#ADE6D1</color>
     <color name="mint_600">#009278</color>
     <color name="transparency">#00ff0000</color>
+    <color name="bottomsheet_background">#80000000</color>
     <color name="line">#2B000000</color>
     <color name="track">#EFF5F5</color>
 </resources>

@@ -1,8 +1,13 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.alpha
 import androidx.navigation.fragment.dialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -20,9 +25,12 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     override fun initView() {
 
+        binding.viewBottomSheetBackground.isClickable = false
+
         bottomNavigationRemove()
         initDateBottomSheet()
         initTimeBottomSheet()
+        initScheduleName()
 
     }
 
@@ -36,7 +44,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     }
 
     private fun initDateBottomSheet() {
-
         val calendarView = binding.calendarView // MaterialCalendarView
         val dateTextView = binding.tvAddScheduleDate // 날짜를 표시할 TextView
         var selectedDate: String? = null // 선택된 날짜를 저장할 변수
@@ -44,6 +51,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         val bottomSheet = binding.bottomSheetDate // BottomSheet 레이아웃 ID
         dateBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
+        binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
         dateBottomSheetBehavior.peekHeight = 0
         dateBottomSheetBehavior.isHideable = true // 드래그하여 숨기기 설정
@@ -68,10 +76,26 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             if (dateBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 시간 BottomSheet 숨기기
+                binding.viewBottomSheetBackground.visibility = View.VISIBLE
             } else {
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                binding.viewBottomSheetBackground.visibility = View.INVISIBLE
             }
         }
+
+        dateBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (slideOffset <= 0) {
+                    binding.viewBottomSheetBackground.visibility = View.INVISIBLE
+                } else if (slideOffset > 0) {
+                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                // onStateChanged()에서는 visibility를 변경하지 않음
+            }
+        })
     }
 
     private fun initTimeBottomSheet() {
@@ -83,6 +107,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         val bottomSheet = binding.bottomSheetTime // BottomSheet 레이아웃 ID
         timeBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
+        binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
         timeBottomSheetBehavior.peekHeight = 0
         timeBottomSheetBehavior.isHideable = true // 드래그하여 숨기기 설정
@@ -102,11 +127,54 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         binding.layoutAddScheduleTime.setOnClickListener {
             if (timeBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 날짜 BottomSheet 숨기기
+                dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                binding.viewBottomSheetBackground.visibility = View.VISIBLE
             } else {
                 timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                binding.viewBottomSheetBackground.visibility = View.INVISIBLE
             }
         }
+
+        timeBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (slideOffset <= 0) {
+                    binding.viewBottomSheetBackground.visibility = View.INVISIBLE
+                } else if (slideOffset > 0) {
+                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                // onStateChanged()에서는 visibility를 변경하지 않음
+            }
+        })
+    }
+
+    private fun initScheduleName(){
+        binding.etAddScheduleName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 텍스트 변경 전
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val textLength = s?.length ?: 0 // 입력된 글자 수
+                binding.tvAddScheduleTitleCount.text = textLength.toString() // 글자 수 표시
+
+                if (textLength > 0) { // 글자가 입력된 경우
+                    binding.layoutAddScheduleName.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_mint_line_2) // 배경 변경
+                    binding.etAddScheduleName.setTextColor(ContextCompat.getColor(requireContext(), R.color.black)) // 글자 색깔 변경
+                    binding.ivAddScheduleNameCheck.visibility = View.VISIBLE // 체크 표시 보이기
+                } else { // 글자가 없는 경우
+                    binding.layoutAddScheduleName.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_gray250_fill) // 배경 변경
+                    binding.etAddScheduleName.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_600)) // 글자 색깔 변경
+                    binding.ivAddScheduleNameCheck.visibility = View.INVISIBLE // 체크 표시 숨기기
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // 텍스트 변경 후
+            }
+        })
+
     }
 }
-
