@@ -64,11 +64,11 @@
             android:paddingVertical="15dp"
             android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tv_location_search_location"
+            <EditText
+                android:id="@+id/et_location_search_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="장소를 입력해주세요"
+                android:hint="장소를 입력해주세요"
                 style="@style/TextAppearance.TimeCAlling.Body1.Hint"
                 android:background="@color/transparency"
                 android:layout_marginStart="8dp"
