@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="black_700">#616161</color>
     <color name="white">#FFFFFFFF</color>
     <color name="warning">#F26E6E</color>
     <color name="gray">#767373</color>
     <color name="gray_200">#F5F5F5</color>
     <color name="gray_250">#F0F0F0</color>
     <color name="gray_300">#E0E0E0</color>
+    <color name="gray_400">#BDBDBD</color>
     <color name="gray_500">#9E9E9E</color>
     <color name="gray_600">#757575</color>
     <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
     <color name="gray_900">#222222</color>
     <color name="mint_main">#0CC3A5</color>
     <color name="mint_100">#F1F5F4</color>
@@ -18,4 +21,7 @@
     <color name="mint_400">#ADE6D1</color>
     <color name="mint_600">#009278</color>
     <color name="transparency">#00ff0000</color>
+    <color name="bottomsheet_background">#80000000</color>
+    <color name="line">#2B000000</color>
+    <color name="track">#EFF5F5</color>
 </resources>

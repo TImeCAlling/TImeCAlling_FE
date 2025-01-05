@@ -7,4 +7,16 @@
     </style>
 
     <style name="Theme.TimeCAlling" parent="Base.Theme.TimeCAlling" />
+
+    <!-- 캘린더의 날짜(Day)의 스타일 설정 -->
+    <style name="CalenderViewCustom" parent="Theme.AppCompat">
+        <item name="android:textColor">@drawable/sel_calender_textcolor</item>
+        <item name="android:textAppearance">@style/TextAppearance.TimeCAlling.Calender</item>
+    </style>
+
+    <!-- 캘린더의 날짜(Day)의 스타일 설정 -->
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@drawable/sel_calender_textcolor</item>
+        <item name="android:textAppearance">@style/TextAppearance.TimeCAlling.Calender</item>
+    </style>
 </resources>
