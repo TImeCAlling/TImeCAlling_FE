@@ -9,7 +9,11 @@
         android:id="@+id/homeFragment"
         android:name="com.umc.timeCAlling.presentation.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_addScheduleTab"
+            app:destination="@id/addScheduleTab"/>
+    </fragment>
 
     <fragment
         android:id="@+id/calendarFragment"
@@ -22,5 +26,14 @@
         android:name="com.umc.timeCAlling.presentation.mypage.MypageFragment"
         android:label="MypageFragment"
         tools:layout="@layout/fragment_mypage"/>
+
+    <navigation android:id="@+id/addScheduleTab"
+        app:startDestination="@id/addScheduleFragment">
+        <fragment
+            android:id="@+id/addScheduleFragment"
+            android:name="com.umc.timeCAlling.presentation.addSchedule.AddScheduleFragment"
+            android:label="AddScheduleFragment"
+            tools:layout="@layout/fragment_add_schedule"/>
+    </navigation>
 
 </navigation>

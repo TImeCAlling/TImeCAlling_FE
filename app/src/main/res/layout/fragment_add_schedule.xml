@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_add_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="23dp">
+
+            <ImageView
+                android:id="@+id/iv_add_schedule_back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_add_schedule_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="일정추가"
+                style="@style/TextAppearance.TimeCAlling.Head2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        
+        <View
+            android:id="@+id/view_add_schedule_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            app:layout_constraintTop_toBottomOf="@id/topbar"
+            android:layout_marginTop="14dp"/>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressindicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/view_add_schedule_line"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"
+            android:layout_marginHorizontal="20dp"
+            app:indicatorColor="@color/mint_main"
+            app:trackColor="@color/track"
+            app:trackStopIndicatorSize="0dp"/>
+
+        <TextView
+            android:id="@+id/tv_add_schedule_title_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일정을 추가해주세요"
+            style="@style/TextAppearance.TimeCAlling.Head1"
+            app:layout_constraintTop_toBottomOf="@id/progressindicator"
+            app:layout_constraintStart_toStartOf="@id/progressindicator"
+            android:layout_marginTop="36dp"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_add_schedule_title_2"
+            android:layout_marginTop="39dp"
+            android:layout_marginHorizontal="20dp">
+
+            <LinearLayout
+                android:id="@+id/layout_add_schedule_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="일정 이름"
+                        style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/tv_add_schedule_title_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="0"
+                        android:textColor="@color/mint_main"
+                        android:gravity="center"
+                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="/10"
+                        android:gravity="center"
+                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_add_schedule_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rect_10_gray250_fill"
+                    android:layout_marginTop="12dp"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp">
+
+                    <EditText
+                        android:id="@+id/et_add_schedule_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="일정 이름을 입력해주세요"
+                        style="@style/TextAppearance.TimeCAlling.Body1"
+                        android:background="@color/transparency"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:id="@+id/iv_add_schedule_name_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_check"
+                        android:layout_gravity="center"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="24dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="메모"
+                        style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/tv_add_schedule_memo_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="0"
+                        android:textColor="@color/mint_main"
+                        android:gravity="center"
+                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="/20"
+                        android:gravity="center"
+                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_add_schedule_memo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rect_10_gray250_fill"
+                    android:layout_marginTop="12dp"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp">
+
+                    <EditText
+                        android:id="@+id/et_add_schedule_memo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="메모를 입력해주세요"
+                        style="@style/TextAppearance.TimeCAlling.Body1"
+                        android:background="@color/transparency"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:id="@+id/iv_add_schedule_memo_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_check"
+                        android:layout_gravity="center"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="24dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="약속 시간"
+                        style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/layout_add_schedule_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rect_10_gray250_fill"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="15dp">
+
+                        <ImageView
+                            android:id="@+id/iv_add_schedule_date"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_calender" />
+
+                        <TextView
+                            android:id="@+id/tv_add_schedule_date"
+                            style="@style/TextAppearance.TimeCAlling.Body2.Hint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="날짜를 입력하세요"
+                            android:layout_gravity="center_vertical"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="16dp"
+                        android:layout_height="0dp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_add_schedule_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_rect_10_gray250_fill"
+                        android:layout_marginTop="12dp"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="15dp"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_add_schedule_time"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:src="@drawable/ic_alarm"
+                            android:layout_gravity="center"/>
+
+                        <TextView
+                            android:id="@+id/tv_add_schedule_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="시간을 입력하세요"
+                            style="@style/TextAppearance.TimeCAlling.Body2.Hint"
+                            android:layout_marginStart="6dp"
+                            android:layout_gravity="center_vertical"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="24dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="장소"
+                        style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_add_schedule_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rect_10_gray250_fill"
+                    android:layout_marginTop="12dp"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_add_schedule_location"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:src="@drawable/ic_map"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/tv_add_schedule_location"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="장소를 입력해주세요"
+                        style="@style/TextAppearance.TimeCAlling.Body1.Hint"
+                        android:background="@color/transparency"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:src="@drawable/ic_search"
+                        android:layout_gravity="center"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_add_schedule_time_taken"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rect_10_gray250_fill"
+                    android:layout_marginTop="12dp"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="22dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="소요시간"
+                        style="@style/TextAppearance.TimeCAlling.Body1.Hint"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/tv_add_schedule_hour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        style="@style/TextAppearance.TimeCAlling.Time"
+                        android:visibility="invisible"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="시간"
+                        style="@style/TextAppearance.TimeCAlling.Body1"/>
+
+                    <TextView
+                        android:id="@+id/tv_add_schedule_minute"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20"
+                        style="@style/TextAppearance.TimeCAlling.Time"
+                        android:layout_marginStart="8dp"
+                        android:visibility="invisible"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="분"
+                        style="@style/TextAppearance.TimeCAlling.Body1"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/tv_add_schedule_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/shape_rect_999_mint_fill"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="다음"
+            android:paddingVertical="20dp"
+            style="@style/TextAppearance.TimeCAlling.Button"
+            android:gravity="center"/>
+
+        <View
+            android:id="@+id/view_bottom_sheet_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bottomsheet_background"
+            android:visibility="invisible"/>
+
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bottom_sheet_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/shape_rect_30_white_fill">
+
+                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                    android:id="@+id/drag_handle_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_title_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="약속 날짜"
+                    style="@style/TextAppearance.TimeCAlling.Head2"
+                    android:textColor="@color/gray_600"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drag_handle_date"/>
+
+                <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                    android:id="@+id/calendar_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_marginTop="12dp"
+                    android:theme="@style/CalenderViewCustom"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_date"
+                    android:layout_marginHorizontal="20dp"
+                    app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+                    app:mcv_firstDayOfWeek="sunday"
+                    app:mcv_headerTextAppearance="@style/TextAppearance.TimeCAlling.Head4"
+                    app:mcv_leftArrow="@drawable/ic_arrow_left_calender"
+                    app:mcv_rightArrow="@drawable/ic_arrow_right_calender"
+                    app:mcv_selectionMode="single"
+                    app:mcv_weekDayTextAppearance="@style/TextAppearance.TimeCAlling.Calender.0Day"/>
+
+                <TextView
+                    android:id="@+id/tv_add_schedule_date_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rect_999_mint_fill"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="저장하기"
+                    android:paddingVertical="20dp"
+                    style="@style/TextAppearance.TimeCAlling.Button"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@id/calendar_view"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bottom_sheet_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/shape_rect_30_white_fill">
+
+                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                    android:id="@+id/drag_handle_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_title_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="약속 시간"
+                    style="@style/TextAppearance.TimeCAlling.Head2"
+                    android:textColor="@color/gray_600"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drag_handle_time"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_time_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_time"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="-30dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:id="@+id/number_picker_hour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:np_dividerThickness="0dp"
+                        app:np_hideWheelUntilFocused="true"
+                        app:np_itemSpacing="1dp"
+                        app:np_max="23"
+                        app:np_min="0"
+                        app:np_selectedTextSize="48dp"
+                        app:np_wrapSelectorWheel="true" />
+
+                    <TextView
+                        android:id="@+id/tv_divider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textAppearance="@style/TextAppearance.TimeCAlling.Head1"
+                        app:layout_constraintTop_toTopOf="@id/number_picker_hour"
+                        app:layout_constraintBottom_toBottomOf="@id/number_picker_hour"
+                        app:layout_constraintEnd_toStartOf="@id/number_picker_minute"
+                        app:layout_constraintStart_toEndOf="@id/number_picker_hour"
+                        android:layout_gravity="center"/>
+
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:id="@+id/number_picker_minute"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:np_dividerThickness="0dp"
+                        app:np_fadingEdgeStrength="1"
+                        app:np_wrapSelectorWheel="true"
+                        app:np_min="0"
+                        app:np_max="59"
+                        app:np_hideWheelUntilFocused="true"
+                        app:np_selectedTextSize="48dp"
+                        app:np_itemSpacing="1dp"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_add_schedule_time_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rect_999_mint_fill"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="-30dp"
+                    android:text="저장하기"
+                    android:paddingVertical="20dp"
+                    style="@style/TextAppearance.TimeCAlling.Button"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@id/layout_time_picker"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
