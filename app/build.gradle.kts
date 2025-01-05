@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.dotsindicator)
 
     implementation(libs.material.calendarview){exclude(group = "com.android.support")}
+    implementation (libs.number.picker)
 }
 configurations.all {
     exclude(group = "com.android.support")

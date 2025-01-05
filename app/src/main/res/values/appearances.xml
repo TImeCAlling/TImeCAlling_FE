@@ -90,7 +90,7 @@
 
     <style name="TextAppearance.TimeCAlling.Calender.0Day">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/gray_400</item>
+        <item name="android:textColor">@color/gray_600</item>
         <item name="fontFamily">@font/pretendard_regular</item>
     </style>
 

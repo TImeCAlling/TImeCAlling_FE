@@ -246,7 +246,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="날짜를 입력하세요" />
+                            android:text="날짜를 입력하세요"
+                            android:layout_gravity="center_vertical"/>
 
                     </LinearLayout>
 
@@ -255,7 +256,7 @@
                         android:layout_height="0dp" />
 
                     <LinearLayout
-                        id="@+id/layout_add_schedule_time"
+                        android:id="@+id/layout_add_schedule_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_rect_10_gray250_fill"
@@ -277,7 +278,8 @@
                             android:layout_height="wrap_content"
                             android:text="시간을 입력하세요"
                             style="@style/TextAppearance.TimeCAlling.Body2.Hint"
-                            android:layout_marginStart="6dp" />
+                            android:layout_marginStart="6dp"
+                            android:layout_gravity="center_vertical"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -403,7 +405,7 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/bottom_sheet"
+                android:id="@+id/bottom_sheet_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
@@ -411,13 +413,13 @@
                 android:background="@drawable/shape_rect_30_white_fill">
 
                 <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-                    android:id="@+id/drag_handle"
+                    android:id="@+id/drag_handle_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/tv_title_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="약속 날짜"
@@ -425,7 +427,7 @@
                     android:textColor="@color/gray_600"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/drag_handle"/>
+                    app:layout_constraintTop_toBottomOf="@id/drag_handle_date"/>
 
                 <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                     android:id="@+id/calendar_view"
@@ -436,7 +438,7 @@
                     android:theme="@style/CalenderViewCustom"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_date"
                     android:layout_marginHorizontal="20dp"
                     app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
                     app:mcv_firstDayOfWeek="sunday"
@@ -453,12 +455,116 @@
                     android:background="@drawable/shape_rect_999_mint_fill"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginTop="43dp"
                     android:text="저장하기"
                     android:paddingVertical="20dp"
                     style="@style/TextAppearance.TimeCAlling.Button"
                     android:gravity="center"
                     app:layout_constraintTop_toBottomOf="@id/calendar_view"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bottom_sheet_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/shape_rect_30_white_fill">
+
+                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                    android:id="@+id/drag_handle_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_title_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="약속 시간"
+                    style="@style/TextAppearance.TimeCAlling.Head2"
+                    android:textColor="@color/gray_600"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drag_handle_time"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_time_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_time"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="-30dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:id="@+id/number_picker_hour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:np_dividerThickness="0dp"
+                        app:np_hideWheelUntilFocused="true"
+                        app:np_itemSpacing="1dp"
+                        app:np_max="23"
+                        app:np_min="0"
+                        app:np_selectedTextSize="48dp"
+                        app:np_wrapSelectorWheel="true" />
+
+                    <TextView
+                        android:id="@+id/tv_divider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textAppearance="@style/TextAppearance.TimeCAlling.Head1"
+                        app:layout_constraintTop_toTopOf="@id/number_picker_hour"
+                        app:layout_constraintBottom_toBottomOf="@id/number_picker_hour"
+                        app:layout_constraintEnd_toStartOf="@id/number_picker_minute"
+                        app:layout_constraintStart_toEndOf="@id/number_picker_hour"
+                        android:layout_gravity="center"/>
+
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:id="@+id/number_picker_minute"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:np_dividerThickness="0dp"
+                        app:np_fadingEdgeStrength="1"
+                        app:np_wrapSelectorWheel="true"
+                        app:np_min="0"
+                        app:np_max="59"
+                        app:np_hideWheelUntilFocused="true"
+                        app:np_selectedTextSize="48dp"
+                        app:np_itemSpacing="1dp"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_add_schedule_time_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rect_999_mint_fill"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="-30dp"
+                    android:text="저장하기"
+                    android:paddingVertical="20dp"
+                    style="@style/TextAppearance.TimeCAlling.Button"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@id/layout_time_picker"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
