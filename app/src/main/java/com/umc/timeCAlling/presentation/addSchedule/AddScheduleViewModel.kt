@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.bumptech.glide.Glide.init
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.umc.timeCAlling.data.SearchResult
@@ -26,6 +27,12 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     private val _searchResults = MutableLiveData<List<SearchResult>>()
     val searchResults: LiveData<List<SearchResult>> = _searchResults
+
+    private val _startPoint = MutableLiveData<String>()
+    val startPoint: LiveData<String> = _startPoint
+
+    private val _endPoint = MutableLiveData<String>()
+    val endPoint: LiveData<String> = _endPoint
 
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
