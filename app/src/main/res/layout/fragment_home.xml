@@ -142,8 +142,6 @@
                     android:layout_marginTop="6dp"/>
                 <!-- 지난 일정이 있을 때 -->
                 <androidx.recyclerview.widget.RecyclerView
-                    tools:listitem="@layout/item_last_schedule"
-                    tools:orientation="horizontal"
                     android:id="@+id/rv_home_last_schedule"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -217,10 +215,10 @@
 
                 </LinearLayout>
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_home_no_today_schedule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp">
-
                     <View
                         android:layout_width="2dp"
                         android:layout_height="200dp"
@@ -239,7 +237,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent">
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -264,6 +261,12 @@
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_home_today_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="20dp"/>
 
             </LinearLayout>
 
