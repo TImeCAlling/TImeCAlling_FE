@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_search_result_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="장소"
+        style="@style/TextAppearance.TimeCAlling.Head2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <LinearLayout
+        android:id="@+id/layout_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_search_result_name"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_search_result_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="도로명"
+            style="@style/TextAppearance.TimeCAlling.Detail.Bold"
+            android:background="@drawable/shape_rect_999_gray200_fill"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"/>
+
+        <TextView
+            android:id="@+id/tv_search_result_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="장소"
+            style="@style/TextAppearance.TimeCAlling.Body2"
+            android:textColor="@color/black_700"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_300"
+        app:layout_constraintTop_toBottomOf="@id/layout_search_result"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginVertical="14dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

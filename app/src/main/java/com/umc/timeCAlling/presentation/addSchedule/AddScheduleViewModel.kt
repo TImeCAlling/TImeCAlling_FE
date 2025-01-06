@@ -2,11 +2,13 @@ package com.umc.timeCAlling.presentation.addSchedule
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.umc.timeCAlling.data.SearchResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.collections.remove
@@ -18,8 +20,12 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     ) : ViewModel() {
 
     private val maxRecentSearches = 10 // 최대 검색어 개수
+
     private val _recentSearches = MutableLiveData<List<String>>(emptyList())
     val recentSearches: LiveData<List<String>> = _recentSearches
+
+    private val _searchResults = MutableLiveData<List<SearchResult>>()
+    val searchResults: LiveData<List<SearchResult>> = _searchResults
 
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
@@ -41,6 +47,14 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         val updatedSearches = _recentSearches.value?.toMutableList()?.also { it.remove(search) }
         _recentSearches.value = updatedSearches ?: emptyList()
         saveRecentSearches(_recentSearches.value!!) // 저장
+    }
+
+    fun updateSearchResults(results: List<SearchResult>) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            _searchResults.value = results // UI 스레드에서 호출되는 경우
+        } else {
+            _searchResults.postValue(results) // 다른 스레드에서 호출되는 경우
+        }
     }
 
     private fun loadRecentSearches(): List<String> {
