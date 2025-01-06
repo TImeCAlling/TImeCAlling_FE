@@ -114,6 +114,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/layout_home_last_schedule"
                 android:layout_width="match_parent"
@@ -139,8 +140,18 @@
                     android:textSize="14sp"
                     android:textColor="@color/gray_600"
                     android:layout_marginTop="6dp"/>
-
+                <!-- 지난 일정이 있을 때 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    tools:listitem="@layout/item_last_schedule"
+                    tools:orientation="horizontal"
+                    android:id="@+id/rv_home_last_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="16dp"/>
+                <!-- 지난 일정이 없을 때 -->
                 <LinearLayout
+                    android:id="@+id/tv_home_no_last_schedule"
                     android:layout_width="match_parent"
                     android:layout_height="108dp"
                     android:gravity="center"
@@ -156,6 +167,7 @@
                         android:textAlignment="center"/>
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/layout_home_today_schedule"
                 android:layout_width="match_parent"
