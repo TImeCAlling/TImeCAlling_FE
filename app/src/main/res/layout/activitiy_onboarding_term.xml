@@ -435,31 +435,17 @@
 
         <!-- btn -->
         <TextView
-            android:id="@+id/tv_onboarding_term_next_default"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/shape_rect_999_gray200_fill"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="24dp"
-            android:text="다음"
-            android:paddingVertical="20dp"
-            style="@style/TextAppearance.TimeCAlling.Button.Default"
-            android:gravity="center"/>
-
-        <TextView
             android:id="@+id/tv_onboarding_term_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/shape_rect_999_mint_fill"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="20dp"
             android:text="다음"
             android:paddingVertical="20dp"
             style="@style/TextAppearance.TimeCAlling.Button"
-            android:gravity="center"
-            android:visibility="invisible"/>
+            android:gravity="center"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
