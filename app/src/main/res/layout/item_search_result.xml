@@ -22,16 +22,11 @@
         app:layout_constraintTop_toBottomOf="@id/tv_search_result_name"
         android:layout_marginTop="8dp"
         android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/tv_search_result_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="도로명"
-            style="@style/TextAppearance.TimeCAlling.Detail.Bold"
-            android:background="@drawable/shape_rect_999_gray200_fill"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"/>
+        
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_map"/>
 
         <TextView
             android:id="@+id/tv_search_result_address"
@@ -44,6 +39,15 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/iv_search_result_next"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:src="@drawable/ic_location_next"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="2dp"/>
+
     <View
         android:id="@+id/view_search_result_divider"
         android:layout_width="match_parent"
@@ -51,37 +55,5 @@
         android:background="@color/gray_300"
         app:layout_constraintTop_toBottomOf="@id/layout_search_result"
         android:layout_marginVertical="14dp"/>
-
-    <TextView
-        android:id="@+id/tv_search_result_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="도착"
-        android:background="@drawable/shape_rect_999_mint_fill"
-        style="@style/TextAppearance.TimeCAlling.Detail"
-        android:textColor="@color/white"
-        android:paddingVertical="5dp"
-        android:paddingHorizontal="15dp"
-        app:layout_constraintTop_toBottomOf="@id/view_search_result_divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="14dp"
-        android:layout_marginTop="5dp"/>
-
-    <TextView
-        android:id="@+id/tv_search_result_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="출발"
-        android:background="@drawable/shape_rect_999_white_fill_mint_line_2"
-        style="@style/TextAppearance.TimeCAlling.Detail"
-        android:textColor="@color/mint_main"
-        android:paddingVertical="5dp"
-        android:paddingHorizontal="15dp"
-        app:layout_constraintTop_toBottomOf="@id/view_search_result_divider"
-        app:layout_constraintEnd_toStartOf="@id/tv_search_result_end"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="5dp"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

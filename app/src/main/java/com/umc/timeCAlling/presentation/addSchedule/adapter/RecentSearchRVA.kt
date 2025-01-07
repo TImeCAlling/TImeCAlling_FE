@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.addSchedule
+package com.umc.timeCAlling.presentation.addSchedule.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide.init
 import com.umc.timeCAlling.R
+import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 
 class RecentSearchRVA(
     private val viewModel: AddScheduleViewModel,

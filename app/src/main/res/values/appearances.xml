@@ -32,15 +32,23 @@
         <item name="fontFamily">@font/pretendard_regular</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.Location_20sp">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/gray_500</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Head4">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/gray_800</item>
         <item name="fontFamily">@font/pretendard_semibold</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.Head4.Regular">
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Head4.Bold">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/gray_800</item>
         <item name="fontFamily">@font/pretendard_bold</item>
     </style>
 

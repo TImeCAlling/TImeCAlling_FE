@@ -42,7 +42,16 @@
             android:id="@+id/locationSearchFragment"
             android:name="com.umc.timeCAlling.presentation.addSchedule.LocationSearchFragment"
             android:label="LocationSearchFragment"
-            tools:layout="@layout/fragment_location_search"/>
+            tools:layout="@layout/fragment_location_search">
+            <action
+                android:id="@+id/action_locationSearchFragment_to_locationResultFragment"
+                app:destination="@id/locationResultFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/locationResultFragment"
+            android:name="com.umc.timeCAlling.presentation.addSchedule.LocationResultFragment"
+            android:label="LocationResultFragment"
+            tools:layout="@layout/fragment_location_result"/>
     </navigation>
 
 </navigation>

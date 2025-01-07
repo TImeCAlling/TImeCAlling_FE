@@ -10,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,6 +22,8 @@ import com.skt.tmap.overlay.TMapMarkerItem
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.data.SearchResult
 import com.umc.timeCAlling.databinding.FragmentLocationSearchBinding
+import com.umc.timeCAlling.presentation.addSchedule.adapter.RecentSearchRVA
+import com.umc.timeCAlling.presentation.addSchedule.adapter.SearchResultRVA
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,7 +61,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 if (location != null) {
                     Log.d("LocationSearchFragment", "Current Location in initView(): ${location.latitude}, ${location.longitude}")
-
+                    viewModel.updateCurrentLocation(location)
                     tMapView.setOnMapReadyListener {
                         tMapView.setLocationPoint(location.latitude, location.longitude)
                         tMapView.setCenterPoint(location.latitude, location.longitude)

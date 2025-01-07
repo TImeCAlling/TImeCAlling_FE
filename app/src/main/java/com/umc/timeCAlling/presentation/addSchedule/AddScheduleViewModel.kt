@@ -2,15 +2,19 @@ package com.umc.timeCAlling.presentation.addSchedule
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.location.Location
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide.init
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.umc.timeCAlling.data.SearchResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import kotlin.collections.remove
 import kotlin.collections.toMutableList
@@ -19,6 +23,9 @@ import kotlin.collections.toMutableList
 class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을 받겠다.
     private val spf: SharedPreferences
     ) : ViewModel() {
+
+    private val _categoryNeedsRefresh = MutableStateFlow<String>("대중교통")
+    val categoryNeedsRefresh: StateFlow<String> get() = _categoryNeedsRefresh
 
     private val maxRecentSearches = 10 // 최대 검색어 개수
 
@@ -30,6 +37,10 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     private val _startPoint = MutableLiveData<String>()
     val startPoint: LiveData<String> = _startPoint
+
+    private val _currentLocation = MutableLiveData<Location>()
+    val currentLocation: LiveData<Location> = _currentLocation
+
 
     private val _endPoint = MutableLiveData<String>()
     val endPoint: LiveData<String> = _endPoint
@@ -77,4 +88,14 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         val searchesJson = Gson().toJson(searches)
         spf.edit().putString("searches", searchesJson).apply()
     }
+
+    fun updateCurrentLocation(location: Location) {
+        _currentLocation.value = location
+    }
+
+    fun refreshCategoryPage(category: String){
+        _categoryNeedsRefresh.value = ""
+        _categoryNeedsRefresh.value = category
+    }
+
 }
