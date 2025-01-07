@@ -71,6 +71,12 @@
         <item name="fontFamily">@font/pretendard_bold</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.Button.Default">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/gray_500</item>
+        <item name="fontFamily">@font/pretendard_bold</item>
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Warning">
         <item name="textFillColor">@color/warning</item>
         <item name="android:textSize">12sp</item>
