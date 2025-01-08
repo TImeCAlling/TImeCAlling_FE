@@ -1,16 +1,11 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
-import android.graphics.Typeface
-import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
-import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.alpha
-import androidx.navigation.fragment.dialog
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -44,8 +39,19 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     }
 
     private fun bottomNavigationRemove() {
+        // BottomNavigationView 숨기기
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
         bottomNavigationView?.visibility = View.GONE
+
+        // + 버튼 숨기기
+        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
+        addScheduleButton?.visibility = View.GONE
+
+        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
+        shadowImageView?.visibility = View.GONE
+
+        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
+        ovalImageView?.visibility = View.GONE
     }
 
     private fun initDateBottomSheet() {
