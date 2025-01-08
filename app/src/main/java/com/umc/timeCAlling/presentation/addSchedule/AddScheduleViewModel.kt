@@ -99,7 +99,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     fun getRoute(startX: Double, startY: Double, endX: Double, endY: Double) {
         viewModelScope.launch {
-            repository.getRoute(startX, startY, endX, endY).onSuccess { response ->
+            repository.getCarTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _routeResult.value = response // LiveData에 API 응답 저장
                 Log.d("TmapRoute", "Distance: ${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
             }.onFailure { error ->

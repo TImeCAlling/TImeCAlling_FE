@@ -11,7 +11,4 @@ interface TmapService {
     suspend fun getCarTransportation(
         @Body request: TmapRouteRequestDto
     ): TmapRouteResponseDto
-
-    @POST("https://apis.openapi.sk.com/tmap/routes/pedestrian")
-    suspend fun
 }
