@@ -41,13 +41,4 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:src="@drawable/ic_arrow_right"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/layout_location_result_detail"
-        android:layout_marginVertical="5dp"
-        android:layout_marginStart="2dp"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

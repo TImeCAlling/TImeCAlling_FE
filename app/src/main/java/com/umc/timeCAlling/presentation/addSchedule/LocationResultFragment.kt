@@ -39,10 +39,6 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
     private var _transportationListVPA: LocationResultTransportationListVPA? = null
     private val transportationListVPA get() = _transportationListVPA
 
-    private lateinit var tMapView: TMapView
-    private lateinit var tmapTapi: TMapTapi
-    private lateinit var tmapData: TMapData
-
     override fun initObserver() {
 
     }
@@ -50,27 +46,12 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
     override fun initView() {
         bottomNavigationRemove()
         initLocationResultTransportationListVPAdapter()
-        initTMapView()
+        initSearchText()
     }
 
     private fun bottomNavigationRemove() {
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
         bottomNavigationView?.visibility = View.GONE
-    }
-
-    private fun initCarTime() {
-        viewModel.currentLocation.observe(viewLifecycleOwner) {location ->
-            if(location != null) {
-                tmapData.findAroundNamePOI(TMapPoint(location.latitude, location.longitude), "내 위치",1000, 10){poiItems ->
-
-                }
-            }
-        }
-    }
-
-    private fun initTMapView() {
-        tMapView = TMapView(requireContext())
-        tMapView.setSKTMapApiKey(getString(R.string.tmap_app_key)) // T map API 키로 변경
     }
 
     private fun initLocationResultTransportationListVPAdapter(){
@@ -97,6 +78,10 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
 
             })
         }
+    }
+
+    private fun initSearchText(){
+        binding.tvLocationSearchEnd.text = viewModel.selectedLocationName.value
     }
 
     companion object {

@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -177,9 +178,8 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         val searchResultRVA = SearchResultRVA(
             viewModel,
             viewLifecycleOwner,
-            ::moveToSearchResult, // Assuming this function handles the click
-            tMapView,
-            tmapData
+            ::moveToSearchResult, // Assuming this function handles the click,
+            findNavController()
         )
         binding.rvSearchResult.adapter = searchResultRVA
         binding.rvSearchResult.layoutManager = LinearLayoutManager(requireContext())

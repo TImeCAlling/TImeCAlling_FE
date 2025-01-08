@@ -36,8 +36,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _recentSearches = MutableLiveData<List<String>>(emptyList())
     val recentSearches: LiveData<List<String>> = _recentSearches
 
-    private val _searchResults = MutableLiveData<List<SearchResult>>()
-    val searchResults: LiveData<List<SearchResult>> = _searchResults
+    private val _searchLocation = MutableLiveData<List<SearchResult>>()
+    val searchLocation: LiveData<List<SearchResult>> = _searchLocation
 
     private val _currentLocation = MutableLiveData<Location>()
     val currentLocation: LiveData<Location> = _currentLocation
@@ -53,6 +53,13 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
+    }
+
+    private val _selectedLocationName = MutableLiveData<String>()
+    val selectedLocationName: LiveData<String> = _selectedLocationName
+
+    fun setSelectedLocationName(name: String) {
+        _selectedLocationName.value = name
     }
 
     fun addRecentSearch(search: String) {
@@ -75,9 +82,9 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     fun updateSearchResults(results: List<SearchResult>) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            _searchResults.value = results // UI 스레드에서 호출되는 경우
+            _searchLocation.value = results // UI 스레드에서 호출되는 경우
         } else {
-            _searchResults.postValue(results) // 다른 스레드에서 호출되는 경우
+            _searchLocation.postValue(results) // 다른 스레드에서 호출되는 경우
         }
     }
 
@@ -108,8 +115,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         viewModelScope.launch {
             repository.getCarTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _carResult.value = response // LiveData에 API 응답 저장
-                Log.d("자동차 거리", "${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
-                Log.d("자동차 시간", "${response.features?.get(0)?.properties?.totalTime}") // 로그에 거리 출력
+                Log.d("transportation 자동차 거리", "${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
+                Log.d("transportation 자동차 시간", "${response.features?.get(0)?.properties?.totalTime}") // 로그에 거리 출력
             }.onFailure { error ->
                 Log.e("자동차 오류", "API 호출 실패: $error")
             }
@@ -120,8 +127,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         viewModelScope.launch {
             repository.getWalkTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _walkResult.value = response // LiveData에 API 응답 저장
-                Log.d("걷기 거리", "${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
-                Log.d("걷기 시간", "${response.features?.get(0)?.properties?.totalTime}") // 로그에 거리 출력
+                Log.d("transportation 걷기 거리", "${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
+                Log.d("transportation 걷기 시간", "${response.features?.get(0)?.properties?.totalTime}") // 로그에 거리 출력
             }.onFailure { error ->
                 Log.e("걷기 오류", "API 호출 실패: $error")
 
@@ -133,7 +140,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         viewModelScope.launch {
             repository.getPublicTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _publicResult.value = response // LiveData에 API 응답 저장
-                Log.d("대중교통 시간", "${response.metaData?.plan?.itineraries?.get(0)?.totalTime}")
+                Log.d("transportation 대중교통 시간", "${response.metaData?.plan?.itineraries?.get(0)?.totalTime}")
             }.onFailure { error->
                 Log.e("대중교통 오류", "API 호출 실패: $error")
             }

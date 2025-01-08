@@ -221,6 +221,5 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         binding.layoutAddScheduleLocation.setOnClickListener {
             findNavController().navigate(R.id.action_addScheduleFragment_to_locationSearchFragment)
         }
-
     }
 }
