@@ -40,7 +40,25 @@
             android:id="@+id/addScheduleFragment"
             android:name="com.umc.timeCAlling.presentation.addSchedule.AddScheduleFragment"
             android:label="AddScheduleFragment"
-            tools:layout="@layout/fragment_add_schedule"/>
+            tools:layout="@layout/fragment_add_schedule">
+            <action
+                android:id="@+id/action_addScheduleFragment_to_locationSearchFragment"
+                app:destination="@id/locationSearchFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/locationSearchFragment"
+            android:name="com.umc.timeCAlling.presentation.addSchedule.LocationSearchFragment"
+            android:label="LocationSearchFragment"
+            tools:layout="@layout/fragment_location_search">
+            <action
+                android:id="@+id/action_locationSearchFragment_to_locationResultFragment"
+                app:destination="@id/locationResultFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/locationResultFragment"
+            android:name="com.umc.timeCAlling.presentation.addSchedule.LocationResultFragment"
+            android:label="LocationResultFragment"
+            tools:layout="@layout/fragment_location_result"/>
     </navigation>
 
     <!-- 홈프래그먼트로 전환 -->

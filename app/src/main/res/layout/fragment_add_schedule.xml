@@ -43,41 +43,22 @@
                 android:gravity="center"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        
-        <View
-            android:id="@+id/view_add_schedule_line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            app:layout_constraintTop_toBottomOf="@id/topbar"
-            android:layout_marginTop="14dp"/>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progressindicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/view_add_schedule_line"
+            app:layout_constraintTop_toBottomOf="@id/topbar"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="32dp"
-            android:layout_marginHorizontal="20dp"
             app:indicatorColor="@color/mint_main"
             app:trackColor="@color/track"
             app:trackStopIndicatorSize="0dp"/>
 
-        <TextView
-            android:id="@+id/tv_add_schedule_title_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="일정을 추가해주세요"
-            style="@style/TextAppearance.TimeCAlling.Head1"
-            app:layout_constraintTop_toBottomOf="@id/progressindicator"
-            app:layout_constraintStart_toStartOf="@id/progressindicator"
-            android:layout_marginTop="36dp"/>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_add_schedule_title_2"
+            app:layout_constraintTop_toBottomOf="@id/progressindicator"
             android:layout_marginTop="39dp"
             android:layout_marginHorizontal="20dp">
 
@@ -93,11 +74,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
+                    <EditText
+                        android:id="@+id/et_add_schedule_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="일정 이름"
-                        style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                        android:hint="일정 제목"
+                        style="@style/TextAppearance.TimeCAlling.Head1"
+                        android:background="@color/transparency"
+                        android:layout_marginTop="12dp"
                         android:layout_weight="1"/>
 
                     <TextView
@@ -106,44 +90,23 @@
                         android:layout_height="match_parent"
                         android:text="0"
                         android:textColor="@color/mint_main"
-                        android:gravity="center"
-                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"/>
+                        style="@style/TextAppearance.TimeCAlling.Detail.SemiBold"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="/10"
-                        android:gravity="center"
-                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"/>
+                        style="@style/TextAppearance.TimeCAlling.Detail.SemiBold"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/layout_add_schedule_name"
+                <View
+                    android:id="@+id/view_add_schedule_name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_rect_10_gray250_fill"
+                    android:layout_height="3dp"
+                    android:background="@color/mint_main"
                     android:layout_marginTop="12dp"
                     android:paddingHorizontal="20dp"
-                    android:paddingVertical="15dp">
-
-                    <EditText
-                        android:id="@+id/et_add_schedule_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="일정 이름을 입력해주세요"
-                        style="@style/TextAppearance.TimeCAlling.Body1"
-                        android:background="@color/transparency"
-                        android:layout_weight="1"/>
-
-                    <ImageView
-                        android:id="@+id/iv_add_schedule_name_check"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_check"
-                        android:layout_gravity="center"
-                        android:visibility="invisible"/>
-
-                </LinearLayout>
+                    android:paddingVertical="15dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -166,14 +129,14 @@
                         android:text="0"
                         android:textColor="@color/mint_main"
                         android:gravity="center"
-                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"/>
+                        style="@style/TextAppearance.TimeCAlling.Detail.SemiBold"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="/20"
                         android:gravity="center"
-                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"/>
+                        style="@style/TextAppearance.TimeCAlling.Detail.SemiBold"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -419,7 +382,7 @@
                 android:layout_height="wrap_content"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/shape_rect_30_white_fill">
+                android:background="@drawable/shape_bottom_sheet">
 
                 <com.google.android.material.bottomsheet.BottomSheetDragHandleView
                     android:id="@+id/drag_handle_date"
@@ -488,7 +451,7 @@
                 android:layout_height="wrap_content"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/shape_rect_30_white_fill">
+                android:background="@drawable/shape_bottom_sheet">
 
                 <com.google.android.material.bottomsheet.BottomSheetDragHandleView
                     android:id="@+id/drag_handle_time"
@@ -512,11 +475,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/tv_title_time"
+                    android:layout_marginTop="15dp"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:layout_marginTop="-30dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:id="@+id/number_picker_am_pm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:np_dividerThickness="0dp"
+                        app:np_max="1"
+                        app:np_min="0"
+                        app:np_wrapSelectorWheel="true"
+                        app:np_itemSpacing="-15dp" />
 
                     <com.shawnlin.numberpicker.NumberPicker
                         android:id="@+id/number_picker_hour"
@@ -525,12 +500,12 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:np_dividerThickness="0dp"
-                        app:np_hideWheelUntilFocused="true"
-                        app:np_itemSpacing="1dp"
-                        app:np_max="23"
+                        app:np_max="12"
                         app:np_min="0"
-                        app:np_selectedTextSize="48dp"
-                        app:np_wrapSelectorWheel="true" />
+                        app:np_selectedTextSize="24dp"
+                        app:np_textSize="16dp"
+                        app:np_wrapSelectorWheel="true"
+                        app:np_itemSpacing="-20dp"/>
 
                     <TextView
                         android:id="@+id/tv_divider"
@@ -555,10 +530,9 @@
                         app:np_wrapSelectorWheel="true"
                         app:np_min="0"
                         app:np_max="59"
-                        app:np_hideWheelUntilFocused="true"
-                        app:np_selectedTextSize="48dp"
-                        app:np_itemSpacing="1dp"
-                        />
+                        app:np_selectedTextSize="24dp"
+                        app:np_textSize="16dp"
+                        app:np_itemSpacing="-20dp" />
                 </LinearLayout>
 
                 <TextView
@@ -567,8 +541,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_rect_999_mint_fill"
                     android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginTop="-30dp"
                     android:text="저장하기"
                     android:paddingVertical="20dp"
                     style="@style/TextAppearance.TimeCAlling.Button"

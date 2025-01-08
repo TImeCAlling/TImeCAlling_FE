@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_location_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="23dp">
+
+            <ImageView
+                android:id="@+id/iv_location_result_back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_location_result_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="장소찾기"
+                style="@style/TextAppearance.TimeCAlling.Head2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        
+        <View
+            android:id="@+id/view_location_result_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            app:layout_constraintTop_toBottomOf="@id/topbar"
+            android:layout_marginTop="14dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout_location_result_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rect_999_gray200_fill"
+            app:layout_constraintTop_toBottomOf="@id/view_location_result_line"
+            android:layout_marginTop="12dp"
+            android:layout_marginHorizontal="20dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="11dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/ic_my_location"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/et_location_search_start"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="내 위치"
+                style="@style/TextAppearance.TimeCAlling.Head4.Regular"
+                android:background="@color/transparency"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/iv_location_result_start_delete"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/ic_delete_black"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_location_result_end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rect_999_gray200_fill"
+            app:layout_constraintTop_toBottomOf="@id/layout_location_result_start"
+            android:layout_marginTop="6dp"
+            android:layout_marginHorizontal="20dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="11dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/ic_map_black"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/et_location_search_end"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="도착지"
+                style="@style/TextAppearance.TimeCAlling.Head4.Regular"
+                android:background="@color/transparency"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/iv_location_result_end_delete"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/ic_delete_black"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_location_result_transportation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="22dp"
+            android:background="@color/transparency"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/layout_location_result_end"
+            app:tabIndicator="@null"
+            app:tabRippleColor="@null"
+            app:tabMode="fixed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tabSelectedTextAppearance="@style/TextAppearance.TimeCAlling.Head4.Bold"
+            app:tabTextAppearance="@style/TextAppearance.TimeCAlling.Head4"
+            app:tabTextColor="@color/white">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_car"
+                android:text="자동차" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_public_transportation"
+                android:text="대중교통" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_walk"
+                android:text="걷기" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_location_result_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tab_location_result_transportation"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="8dp"
+            android:background="@drawable/shape_rect_gray200_fill_gray300_line">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="약속 시간"
+                style="@style/TextAppearance.TimeCAlling.Body1.Bold"/>
+
+            <TextView
+                android:id="@+id/tv_location_result_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:layout_marginStart="8dp"
+                style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                android:textColor="@color/gray_900"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="빠른 시간순"
+                android:layout_marginStart="8dp"
+                style="@style/TextAppearance.TimeCAlling.Body1"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/gray_600"/>
+
+        </LinearLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_location_result_transportation_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_location_result_time" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

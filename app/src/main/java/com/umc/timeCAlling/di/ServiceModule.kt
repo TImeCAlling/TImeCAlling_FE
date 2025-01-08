@@ -1,11 +1,13 @@
 package com.umc.timeCAlling.di
 
 import com.umc.timeCAlling.data.service.TestService
+import com.umc.timeCAlling.data.service.TmapService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -17,7 +19,14 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideTestService(retrofit: Retrofit): TestService {
+    fun provideTestService(@Named("default") retrofit: Retrofit): TestService {
         return retrofit.buildService()
+    }
+
+    @Provides
+    @Singleton
+    @Named("tmap")
+    fun provideTmapRouteService(@Named("tmap") retrofit: Retrofit): TmapService {
+        return retrofit.create(TmapService::class.java)
     }
 }
