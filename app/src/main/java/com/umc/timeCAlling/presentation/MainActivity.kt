@@ -26,8 +26,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun initNavigator() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        //binding.mainBnv.setupWithNavController(navController)
-        binding.mainBnv.setOnItemSelectedListener { menuItem ->
+        binding.mainBnv.setupWithNavController(navController)
+        /*binding.mainBnv.setOnItemSelectedListener { menuItem ->
             return@setOnItemSelectedListener when (menuItem.itemId) {
                 R.id.homeFragment -> {
                     // 홈 탭 홈화면으로 돌리기
@@ -42,6 +42,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     NavigationUI.onNavDestinationSelected(menuItem, navController)
                 }
             }
-        }
+        }*/
     }
 }

@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleBinding
 
-class TodayScheduleAdapter(
+class TodayScheduleRVA(
     private val items: List<TodaySchedule>
-) : RecyclerView.Adapter<TodayScheduleAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<TodayScheduleRVA.ViewHolder>() {
 
     interface DeleteClick {
         fun onClick(view: View, position: Int)

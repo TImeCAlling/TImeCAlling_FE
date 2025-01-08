@@ -18,7 +18,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
         }
         binding.layoutHomeTodayScheduleDetail.setOnClickListener{
-            findNavController().navigate(R.id.action_homeFragment_to_scheduleListFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_calendarFragment)
         }
 
         initLastScheduleRV()
@@ -39,7 +39,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     )
 
     private fun initLastScheduleRV() {
-        val adapter = LastScheduleAdapter(list,
+        val adapter = LastScheduleRVA(list,
             onClickDeleteItem = {deleteTask(it)})
         binding.rvHomeLastSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -72,7 +72,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
             TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
         )
-        val adapter = TodayScheduleAdapter(list2)
+        val adapter = TodayScheduleRVA(list2)
         binding.rvHomeTodaySchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = adapter
@@ -85,7 +85,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             binding.rvHomeTodaySchedule.visibility = View.VISIBLE
             binding.layoutHomeNoTodaySchedule.visibility = View.GONE
         }
-        adapter.deleteClick = object : TodayScheduleAdapter.DeleteClick {
+        adapter.deleteClick = object : TodayScheduleRVA.DeleteClick {
             override fun onClick(view: View, position: Int) {
                 list2.removeAt(position)
                 adapter.notifyDataSetChanged()

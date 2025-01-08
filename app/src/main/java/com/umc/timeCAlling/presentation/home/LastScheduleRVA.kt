@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.databinding.ItemLastScheduleBinding
 
-class LastScheduleAdapter(
+class LastScheduleRVA(
     private val lastSchedules: List<LastSchedule>,
     val onClickDeleteItem: (lastSchedule: LastSchedule) -> Unit
-) : RecyclerView.Adapter<LastScheduleAdapter.LastScheduleViewHolder>() {
+) : RecyclerView.Adapter<LastScheduleRVA.LastScheduleViewHolder>() {
     inner class LastScheduleViewHolder(private val binding: ItemLastScheduleBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(lastSchedule: LastSchedule) {
+        fun bind( lastSchedule: LastSchedule) {
             binding.tvLastScheduleTitle.text = lastSchedule.title
             binding.tvLastScheduleDescription.text = lastSchedule.description
             binding.tvLastScheduleTimeType.text = if (lastSchedule.isMorning) "오전" else "오후"
