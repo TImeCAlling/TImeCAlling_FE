@@ -17,14 +17,29 @@
         android:theme="@style/Theme.TimeCAlling"
         android:usesCleartextTraffic="true"
         tools:targetApi="35">
+
+
+        <activity
+            android:name=".presentation.onboarding.OnboardingActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".presentation.onboarding.OnboardingTermActivity" />
+        <activity android:name=".presentation.onboarding.OnboardingPhotoActivity" />
+        <activity android:name=".presentation.onboarding.OnboardingNameActivity" />
+        <activity android:name=".presentation.onboarding.OnboardingTimeActivity" />
+        <activity android:name=".presentation.onboarding.OnboardingSpareActivity" />
+
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:screenOrientation="fullSensor">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <!-- Trigger Google Play services to install the backported photo picker module. -->
