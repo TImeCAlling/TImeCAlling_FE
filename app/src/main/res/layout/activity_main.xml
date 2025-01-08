@@ -24,16 +24,17 @@
             />
 
         <ImageView
+            android:id="@+id/iv_main_bnv_shadow"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/bottom_nav_shadow"
             android:alpha="0.6"
             app:layout_constraintDimensionRatio="1.05:1.2"
             app:layout_constraintWidth_percent="0.176"
-            app:layout_constraintStart_toStartOf="@id/main_add_schedule_btn"
-            app:layout_constraintEnd_toEndOf="@id/main_add_schedule_btn"
-            app:layout_constraintTop_toTopOf="@id/main_add_schedule_btn"
-            app:layout_constraintBottom_toBottomOf="@id/main_add_schedule_btn"/>
+            app:layout_constraintStart_toStartOf="@id/iv_main_add_schedule_btn"
+            app:layout_constraintEnd_toEndOf="@id/iv_main_add_schedule_btn"
+            app:layout_constraintTop_toTopOf="@id/iv_main_add_schedule_btn"
+            app:layout_constraintBottom_toBottomOf="@id/iv_main_add_schedule_btn"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/main_bnv"
@@ -57,19 +58,20 @@
             app:menu="@menu/main_menu" />
 
         <ImageView
+            android:id="@+id/iv_main_bnv_white_oval"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/shape_rect_999_white_fill"
             android:elevation="20dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_percent="0.164"
-            app:layout_constraintStart_toStartOf="@id/main_add_schedule_btn"
-            app:layout_constraintEnd_toEndOf="@id/main_add_schedule_btn"
-            app:layout_constraintTop_toTopOf="@id/main_add_schedule_btn"
-            app:layout_constraintBottom_toBottomOf="@id/main_add_schedule_btn"/>
+            app:layout_constraintStart_toStartOf="@id/iv_main_add_schedule_btn"
+            app:layout_constraintEnd_toEndOf="@id/iv_main_add_schedule_btn"
+            app:layout_constraintTop_toTopOf="@id/iv_main_add_schedule_btn"
+            app:layout_constraintBottom_toBottomOf="@id/iv_main_add_schedule_btn"/>
 
         <ImageView
-            android:id="@+id/main_add_schedule_btn"
+            android:id="@+id/iv_main_add_schedule_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_plus"
