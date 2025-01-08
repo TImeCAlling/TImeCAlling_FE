@@ -3,7 +3,7 @@ package com.umc.timeCAlling.data.dto.request.tmap
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TimeCAllingApplication.Companion.getString
 
-data class TmapRouteRequestDto(
+data class CarTransportationRequestDto(
     val startX: Double,
     val startY: Double,
     val endX: Double,

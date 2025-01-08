@@ -1,9 +1,9 @@
 package  com.umc.timeCAlling.data.dto.response.tmap
 
 
-import com.umc.timeCAlling.domain.model.response.TmapRouteModel
+import com.umc.timeCAlling.domain.model.response.CarTransportationModel
 
-data class TmapRouteResponseDto(
+data class CarTransportationResponseDto(
     val type: String,
     val features: List<FeatureResponseDto?>?
 ) {
@@ -18,7 +18,7 @@ data class TmapRouteResponseDto(
             val traffic: Any?
         ){
             fun toGeometryModel()=
-                TmapRouteModel.FeatureModel.GeometryModel(type,coordinates,traffic)
+                CarTransportationModel.FeatureModel.GeometryModel(type,coordinates,traffic)
         }
         data class PropertiesResponseDto(
             val totalDistance: Int?,
@@ -42,14 +42,14 @@ data class TmapRouteResponseDto(
             val destIdx: Int? // rs6 타입의 Feature에만 존재하는 속성
         ) {
             fun toPropertiesModel()=
-                TmapRouteModel.FeatureModel.PropertiesModel(totalDistance, totalTime, totalFare, taxiFare, index, pointIndex, name, description, nextRoadName, turnType, pointType, lineIndex, distance, time, fare, roadType, facilityType, departIdx, destIdx)
+                CarTransportationModel.FeatureModel.PropertiesModel(totalDistance, totalTime, totalFare, taxiFare, index, pointIndex, name, description, nextRoadName, turnType, pointType, lineIndex, distance, time, fare, roadType, facilityType, departIdx, destIdx)
         }fun toFeatureModel() =
-            TmapRouteModel.FeatureModel(
+            CarTransportationModel.FeatureModel(
                 type,
                 geometry?.toGeometryModel(),
                 properties?.toPropertiesModel()
             )
     }
     fun toTmapRouteModel() =
-        TmapRouteModel(type,features?.map {  it?.toFeatureModel() } ?: emptyList())
+        CarTransportationModel(type,features?.map {  it?.toFeatureModel() } ?: emptyList())
 }

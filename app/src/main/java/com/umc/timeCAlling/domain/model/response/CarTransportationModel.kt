@@ -1,6 +1,6 @@
 package com.umc.timeCAlling.domain.model.response
 
-data class TmapRouteModel(
+data class CarTransportationModel(
     val type: String, // Add type property
     val features: List<FeatureModel?>?
 ) {

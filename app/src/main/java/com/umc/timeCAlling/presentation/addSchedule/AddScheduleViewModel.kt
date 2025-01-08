@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.umc.timeCAlling.data.SearchResult
-import com.umc.timeCAlling.domain.model.response.TmapRouteModel
+import com.umc.timeCAlling.domain.model.response.CarTransportationModel
 import com.umc.timeCAlling.domain.repository.TmapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,8 +40,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _currentLocation = MutableLiveData<Location>()
     val currentLocation: LiveData<Location> = _currentLocation
 
-    private val _routeResult = MutableLiveData<TmapRouteModel>()
-    val routeResult: LiveData<TmapRouteModel> = _routeResult
+    private val _routeResult = MutableLiveData<CarTransportationModel>()
+    val routeResult: LiveData<CarTransportationModel> = _routeResult
 
 
     init {
