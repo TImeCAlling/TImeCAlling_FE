@@ -10,5 +10,5 @@ class TmapRepositoryImpl @Inject constructor(
 ) : TmapRepository {
 
     override suspend fun getRoute(startX: Double, startY: Double, endX: Double, endY: Double): Result<TmapRouteModel> =
-        runCatching {tmapDataSource.getRoute(startX,startY,endX,endY).toTmapRouteResponseModel()}
+        runCatching {tmapDataSource.getRoute(startX,startY,endX,endY).toTmapRouteModel()}
     }
