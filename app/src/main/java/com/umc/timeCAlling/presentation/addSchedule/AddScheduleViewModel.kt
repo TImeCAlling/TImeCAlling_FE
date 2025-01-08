@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.umc.timeCAlling.data.SearchResult
 import com.umc.timeCAlling.domain.model.response.CarTransportationModel
+import com.umc.timeCAlling.domain.model.response.WalkTransportationModel
 import com.umc.timeCAlling.domain.repository.TmapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,9 +41,11 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _currentLocation = MutableLiveData<Location>()
     val currentLocation: LiveData<Location> = _currentLocation
 
-    private val _routeResult = MutableLiveData<CarTransportationModel>()
-    val routeResult: LiveData<CarTransportationModel> = _routeResult
+    private val _carResult = MutableLiveData<CarTransportationModel>()
+    val carResult: LiveData<CarTransportationModel> = _carResult
 
+    private val _walkResult = MutableLiveData<WalkTransportationModel>()
+    val walkResult: LiveData<WalkTransportationModel> = _walkResult
 
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
@@ -97,14 +100,25 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         _categoryNeedsRefresh.value = category
     }
 
-    fun getRoute(startX: Double, startY: Double, endX: Double, endY: Double) {
+    fun getCarTransportation(startX: Double, startY: Double, endX: Double, endY: Double) {
         viewModelScope.launch {
             repository.getCarTransportation(startX, startY, endX, endY).onSuccess { response ->
-                _routeResult.value = response // LiveData에 API 응답 저장
+                _carResult.value = response // LiveData에 API 응답 저장
                 Log.d("TmapRoute", "Distance: ${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
             }.onFailure { error ->
                 Log.d("ㄹㅇ", "??:${error.message}")
                 // 오류 처리 로직 추가 (예: 오류 메시지 표시)
+            }
+        }
+    }
+
+    fun getWalkTransportation(startX: Double, startY: Double, endX: Double, endY: Double) {
+        viewModelScope.launch {
+            repository.getWalkTransportation(startX, startY, endX, endY).onSuccess { response ->
+                _walkResult.value = response // LiveData에 API 응답 저장
+                Log.d("TmapRoute", "Distance: ${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
+            }.onFailure { error ->
+                Log.d("지랄 ㄴ", "??:${error.message}")
             }
         }
     }

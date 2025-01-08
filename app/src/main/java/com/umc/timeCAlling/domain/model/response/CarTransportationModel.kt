@@ -2,19 +2,19 @@ package com.umc.timeCAlling.domain.model.response
 
 data class CarTransportationModel(
     val type: String, // Add type property
-    val features: List<FeatureModel?>?
+    val features: List<CarFeatureModel?>?
 ) {
-    data class FeatureModel(
+    data class CarFeatureModel(
         val type: String?, // Add type property
-        val geometry: GeometryModel?,
-        val properties: PropertiesModel?
+        val geometry: CarGeometryModel?,
+        val properties: CarPropertiesModel?
     ) {
-        data class GeometryModel(
+        data class CarGeometryModel(
             val type: String?,
             val coordinates: Any?,
             val traffic: Any?
         )
-        data class PropertiesModel(
+        data class CarPropertiesModel(
             val totalDistance: Int?,
             val totalTime: Int?,
             val totalFare: Int?,

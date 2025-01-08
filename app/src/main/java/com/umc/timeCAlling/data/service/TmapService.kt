@@ -2,7 +2,9 @@ package com.umc.timeCAlling.data.service
 
 
 import com.umc.timeCAlling.data.dto.request.tmap.CarTransportationRequestDto
+import com.umc.timeCAlling.data.dto.request.tmap.WalkTransportationRequestDto
 import com.umc.timeCAlling.data.dto.response.tmap.CarTransportationResponseDto
+import com.umc.timeCAlling.data.dto.response.tmap.WalkTransportationResponseDto
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -14,6 +16,6 @@ interface TmapService {
 
     @POST("https://apis.openapi.sk.com/tmap/routes/pedestrian")
     suspend fun getWalkTransportation(
-        @Body request: CarTransportationRequestDto
-    )
+        @Body request: WalkTransportationRequestDto
+    ):WalkTransportationResponseDto
 }

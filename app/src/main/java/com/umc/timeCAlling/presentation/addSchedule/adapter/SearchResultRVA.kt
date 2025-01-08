@@ -57,7 +57,17 @@ class SearchResultRVA(
             // next 버튼 클릭 시 경로 계산 로직 실행
             viewModel.currentLocation.observe(lifecycleOwner) { currentLocation ->
                 lifecycleOwner.lifecycleScope.launch {
-                    val result = viewModel.getRoute(
+                    val result = viewModel.getCarTransportation(
+                        currentLocation.longitude,
+                        currentLocation.latitude,
+                        searchResult.longitude,
+                        searchResult.latitude
+                    )
+                }
+            }
+            viewModel.currentLocation.observe(lifecycleOwner) { currentLocation ->
+                lifecycleOwner.lifecycleScope.launch {
+                    val result = viewModel.getWalkTransportation(
                         currentLocation.longitude,
                         currentLocation.latitude,
                         searchResult.longitude,
