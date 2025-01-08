@@ -9,6 +9,6 @@ class TmapRepositoryImpl @Inject constructor(
     private val tmapDataSource: TmapDataSource
 ) : TmapRepository {
 
-    override suspend fun getRoute(startX: Double, startY: Double, endX: Double, endY: Double): Result<TmapRouteModel> =
-        runCatching {tmapDataSource.getRoute(startX,startY,endX,endY).toTmapRouteModel()}
+    override suspend fun getCarTransportation(startX: Double, startY: Double, endX: Double, endY: Double): Result<TmapRouteModel> =
+        runCatching {tmapDataSource.getCarTransportation(startX,startY,endX,endY).toTmapRouteModel()}
     }

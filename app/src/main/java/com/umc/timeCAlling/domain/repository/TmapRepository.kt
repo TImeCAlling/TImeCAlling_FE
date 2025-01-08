@@ -4,5 +4,5 @@ import com.umc.timeCAlling.domain.model.response.TmapRouteModel
 
 
 interface TmapRepository {
-    suspend fun getRoute(startX: Double, startY: Double, endX: Double, endY: Double): Result<TmapRouteModel>
+    suspend fun getCarTransportation(startX: Double, startY: Double, endX: Double, endY: Double): Result<TmapRouteModel>
 }

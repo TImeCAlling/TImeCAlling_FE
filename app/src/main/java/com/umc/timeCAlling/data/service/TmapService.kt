@@ -8,7 +8,10 @@ import retrofit2.http.POST
 
 interface TmapService {
     @POST("https://apis.openapi.sk.com/tmap/routes\n")
-    suspend fun getRoute(
+    suspend fun getCarTransportation(
         @Body request: TmapRouteRequestDto
     ): TmapRouteResponseDto
+
+    @POST("https://apis.openapi.sk.com/tmap/routes/pedestrian")
+    suspend fun
 }
