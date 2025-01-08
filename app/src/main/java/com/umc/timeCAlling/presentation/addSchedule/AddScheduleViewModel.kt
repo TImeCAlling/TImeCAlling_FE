@@ -1,27 +1,29 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.location.Location
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.umc.timeCAlling.data.SearchResult
+import com.umc.timeCAlling.domain.model.response.TmapRouteModel
+import com.umc.timeCAlling.domain.repository.TmapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.collections.remove
 import kotlin.collections.toMutableList
 
 @HiltViewModel
 class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을 받겠다.
-    private val spf: SharedPreferences
+    private val spf: SharedPreferences,
+    private val repository: TmapRepository
     ) : ViewModel() {
 
     private val _categoryNeedsRefresh = MutableStateFlow<String>("대중교통")
@@ -35,15 +37,12 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _searchResults = MutableLiveData<List<SearchResult>>()
     val searchResults: LiveData<List<SearchResult>> = _searchResults
 
-    private val _startPoint = MutableLiveData<String>()
-    val startPoint: LiveData<String> = _startPoint
-
     private val _currentLocation = MutableLiveData<Location>()
     val currentLocation: LiveData<Location> = _currentLocation
 
+    private val _routeResult = MutableLiveData<TmapRouteModel>()
+    val routeResult: LiveData<TmapRouteModel> = _routeResult
 
-    private val _endPoint = MutableLiveData<String>()
-    val endPoint: LiveData<String> = _endPoint
 
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
@@ -98,4 +97,15 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         _categoryNeedsRefresh.value = category
     }
 
+    fun getRoute(startX: Double, startY: Double, endX: Double, endY: Double) {
+        viewModelScope.launch {
+            repository.getRoute(startX, startY, endX, endY).onSuccess { response ->
+                _routeResult.value = response // LiveData에 API 응답 저장
+                Log.d("TmapRoute", "Distance: ${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
+            }.onFailure { error ->
+                Log.d("ㄹㅇ", "??:${error.message}")
+                // 오류 처리 로직 추가 (예: 오류 메시지 표시)
+            }
+        }
+    }
 }

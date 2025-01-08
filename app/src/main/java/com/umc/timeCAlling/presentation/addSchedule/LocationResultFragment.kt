@@ -35,43 +35,22 @@ import dagger.hilt.android.AndroidEntryPoint
 class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.layout.fragment_location_result) {
 
     private val viewModel: AddScheduleViewModel by activityViewModels() // ViewModel 초기화
-    private lateinit var tMapView: TMapView
-    private lateinit var tmapTapi: TMapTapi
-    private lateinit var tmapData: TMapData
 
     private var _transportationListVPA: LocationResultTransportationListVPA? = null
     private val transportationListVPA get() = _transportationListVPA
 
+    private lateinit var tMapView: TMapView
+    private lateinit var tmapTapi: TMapTapi
+    private lateinit var tmapData: TMapData
+
     override fun initObserver() {
-        // 위치 권한 요청
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-        } else {
-        }
+
     }
 
     override fun initView() {
         bottomNavigationRemove()
-        initTMapView() // TMapView 초기화
-        initTMapTapi()
-        tmapData = TMapData()
         initLocationResultTransportationListVPAdapter()
-
-        // initView()에서 현재 위치 로그에 출력
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    Log.d("LocationSearchFragment", "Current Location in initView(): ${location.latitude}, ${location.longitude}")
-
-                    tMapView.setOnMapReadyListener {
-                        tMapView.setLocationPoint(location.latitude, location.longitude)
-                        tMapView.setCenterPoint(location.latitude, location.longitude)
-                        tMapView.setZoomLevel(15)
-                    }
-                }
-            }
-        }
+        initTMapView()
     }
 
     private fun bottomNavigationRemove() {
@@ -79,8 +58,19 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
         bottomNavigationView?.visibility = View.GONE
     }
 
-    private fun initTMapTapi() {
-        tmapTapi = TMapTapi(requireContext())
+    private fun initCarTime() {
+        viewModel.currentLocation.observe(viewLifecycleOwner) {location ->
+            if(location != null) {
+                tmapData.findAroundNamePOI(TMapPoint(location.latitude, location.longitude), "내 위치",1000, 10){poiItems ->
+
+                }
+            }
+        }
+    }
+
+    private fun initTMapView() {
+        tMapView = TMapView(requireContext())
+        tMapView.setSKTMapApiKey(getString(R.string.tmap_app_key)) // T map API 키로 변경
     }
 
     private fun initLocationResultTransportationListVPAdapter(){
@@ -94,7 +84,7 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
 
             tabLocationResultTransportation.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewModel.refreshCategoryPage(tab?.text?.toString() ?: "잡담")
+                    viewModel.refreshCategoryPage(tab?.text?.toString() ?: "자동차")
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -109,14 +99,7 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
         }
     }
 
-    private fun initTMapView() {
-        tMapView = TMapView(requireContext())
-        tMapView.setSKTMapApiKey(getString(R.string.tmap_app_key)) // T map API 키로 변경
-        binding.tmapView.addView(tMapView)
-    }
-
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-        private val tabTitles = listOf("대중교통", "걷기", "자동차")
+        private val tabTitles = listOf("자동차", "대중교통", "걷기")
     }
 }

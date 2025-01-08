@@ -178,16 +178,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val textLength = s?.length ?: 0 // 입력된 글자 수
                 binding.tvAddScheduleTitleCount.text = textLength.toString() // 글자 수 표시
-
-                if (textLength > 0) { // 글자가 입력된 경우
-                    binding.layoutAddScheduleName.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_mint_line_2) // 배경 변경
-                    binding.etAddScheduleName.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900)) // 글자 색깔 변경
-                    binding.ivAddScheduleNameCheck.visibility = View.VISIBLE // 체크 표시 보이기
-                } else { // 글자가 없는 경우
-                    binding.layoutAddScheduleName.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_gray250_fill) // 배경 변경
-                    binding.etAddScheduleName.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_600)) // 글자 색깔 변경
-                    binding.ivAddScheduleNameCheck.visibility = View.INVISIBLE // 체크 표시 숨기기
-                }
             }
 
             override fun afterTextChanged(s: Editable?) {

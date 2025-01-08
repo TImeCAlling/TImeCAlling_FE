@@ -36,7 +36,6 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
     private lateinit var recentBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var resultBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var tMapView: TMapView
-    private lateinit var tmapTapi: TMapTapi
     private lateinit var tmapData: TMapData
 
     override fun initObserver() {
@@ -50,7 +49,6 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
     override fun initView() {
         bottomNavigationRemove()
         initTMapView() // TMapView 초기화
-        initTMapTapi()
         initRecentSearchRVA()
         initRecentBottomSheet()
         tmapData = TMapData()
@@ -84,17 +82,12 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
             searchLocation()
             val keyword = binding.etLocationSearchLocation.text.toString()
             viewModel.addRecentSearch(keyword) // 검색어 추가
-            Log.d("LocationSearchFragment", "눌렀잖아!!")
         }
     }
 
     private fun bottomNavigationRemove() {
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
         bottomNavigationView?.visibility = View.GONE
-    }
-
-    private fun initTMapTapi() {
-        tmapTapi = TMapTapi(requireContext())
     }
 
     private fun searchLocation() {
@@ -180,17 +173,17 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         initResultBottomSheet()
         binding.bottomSheetSearchResult.visibility = View.VISIBLE
         binding.bottomSheetRecentSearch.visibility = View.GONE
-        val searchResultRVA = SearchResultRVA(viewModel, viewLifecycleOwner) { searchResult ->
-            val poiPoint = TMapPoint(searchResult.latitude, searchResult.longitude)
-            val topMargin = 400 * resources.displayMetrics.density
-            tMapView.setCenterPoint(poiPoint.latitude, poiPoint.longitude, true) // animate 매개변수 추가
-            tMapView.setPadding(0, 0, 0, topMargin.toInt())
-            tMapView.setZoomLevel(15)
-        }
+
+        val searchResultRVA = SearchResultRVA(
+            viewModel,
+            viewLifecycleOwner,
+            ::moveToSearchResult, // Assuming this function handles the click
+            tMapView,
+            tmapData
+        )
         binding.rvSearchResult.adapter = searchResultRVA
         binding.rvSearchResult.layoutManager = LinearLayoutManager(requireContext())
         Log.d("LocationSearchFragment", "결과")
-
     }
 
     private fun initRecentBottomSheet() {
@@ -210,6 +203,14 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         resultBottomSheetBehavior.isHideable = false // 드래그하여 숨기기 설정
         resultBottomSheetBehavior.skipCollapsed = true // 숨김 상태로 바로 전환
         Log.d("LocationSearchFragment", "결과 바텀")
+    }
+
+    private fun moveToSearchResult(searchResult: SearchResult) {
+        val poiPoint = TMapPoint(searchResult.latitude, searchResult.longitude)
+        val topMargin = 400 * resources.displayMetrics.density
+        tMapView.setCenterPoint(poiPoint.latitude, poiPoint.longitude, true)
+        tMapView.setPadding(0, 0, 0, topMargin.toInt())
+        tMapView.setZoomLevel(15)
     }
 
     companion object {

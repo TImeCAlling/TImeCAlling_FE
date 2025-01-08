@@ -14,9 +14,9 @@ class LocationResultTransportationListVPA(fragment: Fragment): FragmentStateAdap
     // API 연결하면서 내부 Fragment 바꿀 예정
     override fun createFragment(position: Int): Fragment {
         return when(position){
-            0 -> PublicTransportationListFragment()
-            1 -> WalkTransportationListFragment()
-            2 -> CarTransportationListFragment()
+            0 -> CarTransportationListFragment()
+            1 -> PublicTransportationListFragment()
+            2 -> WalkTransportationListFragment()
             else -> throw IllegalStateException("Invalid position")
         }
     }

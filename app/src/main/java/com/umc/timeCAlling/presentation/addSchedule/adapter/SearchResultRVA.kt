@@ -3,17 +3,25 @@ package com.umc.timeCAlling.presentation.addSchedule.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.skt.tmap.TMapData
+import com.skt.tmap.TMapTapi
+import com.skt.tmap.TMapView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.data.SearchResult
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
+import kotlinx.coroutines.launch
 
 class SearchResultRVA(
     private val viewModel: AddScheduleViewModel,
     private val lifecycleOwner: LifecycleOwner,
-    private val onSearchResultClickListener: (SearchResult) -> Unit // 클릭 리스너 추가
+    private val onSearchResultClickListener: (SearchResult) -> Unit,
+    private val tMapView: TMapView,
+    private val tmapData: TMapData
 ) : RecyclerView.Adapter<SearchResultRVA.SearchResultViewHolder>() {
 
     private var searchResults: List<SearchResult> = emptyList()
@@ -41,9 +49,23 @@ class SearchResultRVA(
         holder.name.text = searchResult.name
         holder.address.text = searchResult.address
 
-        // 아이템 클릭 리스너 설정
         holder.itemView.setOnClickListener {
             onSearchResultClickListener(searchResult)
+        }
+        val nextButton = holder.itemView.findViewById<ImageView>(R.id.iv_search_result_next)
+        nextButton.setOnClickListener {
+            // next 버튼 클릭 시 경로 계산 로직 실행
+            viewModel.currentLocation.observe(lifecycleOwner) { currentLocation ->
+                lifecycleOwner.lifecycleScope.launch {
+                    val result = viewModel.getRoute(
+                        currentLocation.longitude,
+                        currentLocation.latitude,
+                        searchResult.longitude,
+                        searchResult.latitude
+                    )
+                }
+            }
+
         }
     }
 
