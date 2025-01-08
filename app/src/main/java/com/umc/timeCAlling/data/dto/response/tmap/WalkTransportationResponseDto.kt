@@ -45,12 +45,8 @@ data class WalkTransportationResponseDto(
             fun toWalkPropertiesModel()=
                 WalkTransportationModel.WalkFeatureModel.WalkPropertiesModel(totalDistance, totalTime, index, pointIndex, name, description, direction, nearPoiName, nearPoiX, nearPoiY, intersectionName, facilityType, facilityName, turnType, pointType, lineIndex, distance, time, roadType, categoryRoadType)
         }fun toWalkFeatureModel() =
-            WalkTransportationModel.WalkFeatureModel(
-                type,
-                geometry?.toWalkGeometryModel(),
-                properties?.toWalkPropertiesModel()
-            )
+            WalkTransportationModel.WalkFeatureModel(type, geometry?.toWalkGeometryModel(), properties?.toWalkPropertiesModel())
     }
-    fun toWalkTmapRouteModel() =
+    fun toWalkTransportationModel() =
         WalkTransportationModel(type,features?.map {  it?.toWalkFeatureModel() } ?: emptyList())
 }

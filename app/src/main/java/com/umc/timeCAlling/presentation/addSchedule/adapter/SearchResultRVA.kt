@@ -75,6 +75,16 @@ class SearchResultRVA(
                     )
                 }
             }
+            viewModel.currentLocation.observe(lifecycleOwner) { currentLocation ->
+                lifecycleOwner.lifecycleScope.launch {
+                    val result = viewModel.getPublicTransportation(
+                        currentLocation.longitude,
+                        currentLocation.latitude,
+                        searchResult.longitude,
+                        searchResult.latitude
+                    )
+                }
+            }
 
         }
     }

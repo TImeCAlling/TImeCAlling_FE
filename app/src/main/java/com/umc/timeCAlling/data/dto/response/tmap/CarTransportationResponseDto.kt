@@ -50,6 +50,6 @@ data class CarTransportationResponseDto(
                 properties?.toCarPropertiesModel()
             )
     }
-    fun toCarTmapRouteModel() =
+    fun toCarTransportationModel() =
         CarTransportationModel(type,features?.map {  it?.toCarFeatureModel() } ?: emptyList())
 }

@@ -77,7 +77,7 @@ object NetworkModule {
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://apis.openapi.sk.com/tmap/") // Tmap API 기본 URL
+            .baseUrl("https://apis.openapi.sk.com/") // Tmap API 기본 URL
             .addConverterFactory(gsonConverterFactory)
             .client(client)
             .build()

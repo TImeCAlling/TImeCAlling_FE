@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.umc.timeCAlling.data.SearchResult
 import com.umc.timeCAlling.domain.model.response.CarTransportationModel
+import com.umc.timeCAlling.domain.model.response.PublicTransportationModel
 import com.umc.timeCAlling.domain.model.response.WalkTransportationModel
 import com.umc.timeCAlling.domain.repository.TmapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,6 +47,9 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     private val _walkResult = MutableLiveData<WalkTransportationModel>()
     val walkResult: LiveData<WalkTransportationModel> = _walkResult
+
+    private val _publicResult = MutableLiveData<PublicTransportationModel>()
+    val publicResult: LiveData<PublicTransportationModel> = _publicResult
 
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
@@ -104,10 +108,10 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         viewModelScope.launch {
             repository.getCarTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _carResult.value = response // LiveData에 API 응답 저장
-                Log.d("TmapRoute", "Distance: ${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
+                Log.d("자동차 거리", "${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
+                Log.d("자동차 시간", "${response.features?.get(0)?.properties?.totalTime}") // 로그에 거리 출력
             }.onFailure { error ->
-                Log.d("ㄹㅇ", "??:${error.message}")
-                // 오류 처리 로직 추가 (예: 오류 메시지 표시)
+                Log.e("자동차 오류", "API 호출 실패: $error")
             }
         }
     }
@@ -116,9 +120,22 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         viewModelScope.launch {
             repository.getWalkTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _walkResult.value = response // LiveData에 API 응답 저장
-                Log.d("TmapRoute", "Distance: ${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
+                Log.d("걷기 거리", "${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
+                Log.d("걷기 시간", "${response.features?.get(0)?.properties?.totalTime}") // 로그에 거리 출력
             }.onFailure { error ->
-                Log.d("지랄 ㄴ", "??:${error.message}")
+                Log.e("걷기 오류", "API 호출 실패: $error")
+
+            }
+        }
+    }
+
+    fun getPublicTransportation(startX: Double, startY: Double, endX: Double, endY: Double) {
+        viewModelScope.launch {
+            repository.getPublicTransportation(startX, startY, endX, endY).onSuccess { response ->
+                _publicResult.value = response // LiveData에 API 응답 저장
+                Log.d("대중교통 시간", "${response.metaData?.plan?.itineraries?.get(0)?.totalTime}")
+            }.onFailure { error->
+                Log.e("대중교통 오류", "API 호출 실패: $error")
             }
         }
     }
