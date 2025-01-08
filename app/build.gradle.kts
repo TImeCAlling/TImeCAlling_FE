@@ -98,4 +98,16 @@ dependencies {
 
     //indicator : https://github.com/tommybuonomo/dotsindicator?utm_source=android-arsenal.com&utm_medium=referral&utm_campaign=7127
     implementation(libs.dotsindicator)
+
+    implementation(libs.material.calendarview){exclude(group = "com.android.support")}
+    implementation (libs.number.picker)
+
+    //Tmap
+    implementation(files("libs/tmap-sdk-1.8.aar"))
+    implementation(files("libs/vsm-tmap-sdk-v2-android-1.7.23.aar"))
+
+    implementation(libs.play.services.location)
+}
+configurations.all {
+    exclude(group = "com.android.support")
 }
