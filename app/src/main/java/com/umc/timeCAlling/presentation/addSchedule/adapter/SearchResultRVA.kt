@@ -57,6 +57,7 @@ class SearchResultRVA(
         }
         val nextButton = holder.itemView.findViewById<ImageView>(R.id.iv_search_result_next)
         nextButton.setOnClickListener {
+            viewModel.setSelectedLocationName(searchResult.name) // ViewModel 함수 호출
             navController.navigate(R.id.action_locationSearchFragment_to_locationResultFragment)
         }
     }

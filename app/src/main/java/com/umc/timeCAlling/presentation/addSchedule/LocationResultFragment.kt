@@ -1,32 +1,16 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
+import android.graphics.PorterDuff
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.skt.tmap.TMapData
-import com.skt.tmap.TMapPoint
-import com.skt.tmap.TMapTapi
-import com.skt.tmap.TMapView
-import com.skt.tmap.overlay.TMapMarkerItem
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.data.SearchResult
 import com.umc.timeCAlling.databinding.FragmentLocationResultBinding
-import com.umc.timeCAlling.databinding.FragmentLocationSearchBinding
 import com.umc.timeCAlling.presentation.addSchedule.adapter.LocationResultTransportationListVPA
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
@@ -49,6 +33,7 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
         bottomNavigationRemove()
         initLocationResultTransportationListVPAdapter()
         initSearchText()
+        moveToLocationSearch()
 
         binding.ivLocationResultBack.setOnSingleClickListener {
             findNavController().popBackStack()
@@ -70,24 +55,31 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
             }.attach()
 
             tabLocationResultTransportation.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewModel.refreshCategoryPage(tab?.text?.toString() ?: "자동차")
+                override fun onTabSelected(tab: TabLayout.Tab) {
+                    viewModel.refreshCategoryPage(tab.text?.toString() ?: "자동차")
                 }
 
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                override fun onTabUnselected(tab: TabLayout.Tab) {
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab) {
 
                 }
 
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-
-                }
 
             })
         }
     }
 
     private fun initSearchText(){
+        Log.d("selectedLocationName", "selectedLocationName: ${viewModel.selectedLocationName.value}")
         binding.tvLocationSearchEnd.text = viewModel.selectedLocationName.value
+    }
+
+    private fun moveToLocationSearch() {
+        binding.tvLocationResultLocationSave.setOnClickListener {
+            findNavController().navigate(R.id.action_locationResultFragment_to_addScheduleFragment)
+        }
     }
 
     companion object {

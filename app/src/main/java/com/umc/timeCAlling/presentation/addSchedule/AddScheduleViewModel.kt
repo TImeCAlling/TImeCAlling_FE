@@ -58,7 +58,15 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _selectedLocationName = MutableLiveData<String>()
     val selectedLocationName: LiveData<String> = _selectedLocationName
 
+    private val _timeTaken = MutableLiveData<Int>()
+    val timeTaken: LiveData<Int> = _timeTaken
+
+    fun setTimeTaken(time: Int) {
+        _timeTaken.value = time
+    }
+
     fun setSelectedLocationName(name: String) {
+        Log.d("dddd","_selectedLocationName: $name")
         _selectedLocationName.value = name
     }
 

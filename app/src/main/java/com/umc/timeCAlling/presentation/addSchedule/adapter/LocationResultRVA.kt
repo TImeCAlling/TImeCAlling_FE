@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +40,7 @@ class LocationResultRVA(
         val symbol = itemView.findViewById<ImageView>(R.id.iv_item_location_result_symbol)
         val recyclerView = itemView.findViewById<RecyclerView>(R.id.rv_location_result_details)
         val linearLayout = itemView.findViewById<ViewGroup>(R.id.layout_item_location_result_distance)
+        var isSelected = false
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationResultViewHolder {
@@ -115,6 +117,31 @@ class LocationResultRVA(
                 }
             }
         }
+
+        holder.itemView.setOnClickListener {
+            holder.isSelected = !holder.isSelected
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1)
+
+            // 선택된 아이템의 시간 가져오기
+            val selectedTime = when (type) {
+                LocationResultType.Public -> {
+                    viewModel.publicResult.value?.metaData?.plan?.itineraries?.get(position)?.totalTime?.div(60)
+                }
+                LocationResultType.Car -> {
+                    viewModel.carResult.value?.features?.get(0)?.properties?.totalTime?.div(60)
+                }
+                LocationResultType.Walk -> {
+                    viewModel.walkResult.value?.features?.get(0)?.properties?.totalTime?.div(60)
+                }
+            }
+
+            // ViewModel에 선택된 시간 저장
+            selectedTime?.let { viewModel.setTimeTaken(it) }
+
+            // 배경색 업데이트
+            notifyItemChanged(position)
+        }
+
     }
 
     override fun getItemCount(): Int {

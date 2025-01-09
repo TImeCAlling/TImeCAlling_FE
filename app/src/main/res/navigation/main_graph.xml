@@ -51,7 +51,11 @@
             android:id="@+id/locationResultFragment"
             android:name="com.umc.timeCAlling.presentation.addSchedule.LocationResultFragment"
             android:label="LocationResultFragment"
-            tools:layout="@layout/fragment_location_result"/>
+            tools:layout="@layout/fragment_location_result">
+            <action
+                android:id="@+id/action_locationResultFragment_to_addScheduleFragment"
+                app:destination="@id/addScheduleFragment"/>
+        </fragment>
     </navigation>
 
 </navigation>
