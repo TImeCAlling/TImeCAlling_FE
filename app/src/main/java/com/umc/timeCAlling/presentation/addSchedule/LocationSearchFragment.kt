@@ -1,11 +1,13 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -26,6 +28,7 @@ import com.umc.timeCAlling.databinding.FragmentLocationSearchBinding
 import com.umc.timeCAlling.presentation.addSchedule.adapter.RecentSearchRVA
 import com.umc.timeCAlling.presentation.addSchedule.adapter.SearchResultRVA
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -84,6 +87,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
             val keyword = binding.etLocationSearchLocation.text.toString()
             viewModel.addRecentSearch(keyword) // 검색어 추가
         }
+
         binding.tvRecentSearchDelete.setOnClickListener {
             viewModel.clearRecentSearches()
         }
@@ -92,6 +96,9 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
             binding.etLocationSearchLocation.text.clear()
             binding.bottomSheetSearchResult.visibility = View.GONE
             binding.bottomSheetRecentSearch.visibility = View.VISIBLE
+        }
+        binding.ivLocationSearchBack.setOnSingleClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -113,9 +120,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
                         var i = 0
                         val latitude = poiItem.poiPoint.latitude
                         val longitude = poiItem.poiPoint.longitude
-
                         val roadNameAddress = poiItem.getPOIAddress()
-                        Log.d("LocationSearchFragment", "장소명: ${poiItem.name}, 도로명 주소: $roadNameAddress")
                         val searchResult = SearchResult(poiItem.name, roadNameAddress, latitude, longitude)
                         searchResults.add(searchResult)
 
@@ -124,34 +129,24 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
                         val markerItem = TMapMarkerItem()
                         val point = TMapPoint(latitude, longitude)
 
-                        // 마커 아이콘
-                        try {
-                            val bitmap = BitmapFactory.decodeResource(resources, R.drawable.img_marker_test)
-                            markerItem.icon = bitmap // 마커 아이콘 지정
-                        } catch (e: Exception) {
-                            Log.e("LocationSearchFragment", "마커 아이콘 로드 실패", e)
-                            // 기본 마커 아이콘 사용 또는 오류 메시지 표시
-                        }
+                        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.img_marker_test)
+                        markerItem.icon = bitmap
+
                         markerItem.setPosition(0.5f, 1.0f)
                         markerItem.tMapPoint = point
-                        markerItem.name = poiItem.name // poiItem.name을 마커 이름으로 설정
+                        markerItem.name = poiItem.name
 
                         markerItem.id = "markerItem${index}" // index 사용
 
                         tMapView.addTMapMarkerItem(markerItem)
 
 
-                        if (filteredPoiItems.isNotEmpty()) {
-                            val firstPoiItem = filteredPoiItems[0] // 첫 번째 POIItem 가져오기
-                            val firstPoiPoint = firstPoiItem.poiPoint
-
-                            // 첫 번째 검색 결과의 위도와 경도를 사용하여 지도 중심점 설정
-                            tMapView.setCenterPoint(firstPoiPoint.latitude, firstPoiPoint.longitude, true)
-                            tMapView.setZoomLevel(15)
-                        }
+                        val firstPoiItem = filteredPoiItems[0] // 첫 번째 POIItem 가져오기
+                        val firstPoiPoint = firstPoiItem.poiPoint
+                        tMapView.setCenterPoint(firstPoiPoint.latitude-0.004, firstPoiPoint.longitude, true)
+                        tMapView.setZoomLevel(15)
 
                         i++
-                        Log.d("LocationSearchFragment", "마커 추가중~~")
                     }
                     viewModel.updateSearchResults(searchResults)
                     requireActivity().runOnUiThread {
@@ -201,7 +196,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         val bottomSheet = binding.bottomSheetRecentSearch // BottomSheet 레이아웃 ID
         recentBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         recentBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
-        recentBottomSheetBehavior.peekHeight = 200
+        recentBottomSheetBehavior.peekHeight = 400
         recentBottomSheetBehavior.isHideable = false // 드래그하여 숨기기 설정
         recentBottomSheetBehavior.skipCollapsed = true // 숨김 상태로 바로 전환
     }
@@ -210,7 +205,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         val bottomSheet = binding.bottomSheetSearchResult// BottomSheet 레이아웃 ID
         resultBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         resultBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        resultBottomSheetBehavior.peekHeight = 200
+        resultBottomSheetBehavior.peekHeight = 400
         resultBottomSheetBehavior.isHideable = false // 드래그하여 숨기기 설정
         resultBottomSheetBehavior.skipCollapsed = true // 숨김 상태로 바로 전환
         Log.d("LocationSearchFragment", "결과 바텀")
@@ -218,9 +213,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
 
     private fun moveToSearchResult(searchResult: SearchResult) {
         val poiPoint = TMapPoint(searchResult.latitude, searchResult.longitude)
-        val topMargin = 400 * resources.displayMetrics.density
-        tMapView.setCenterPoint(poiPoint.latitude, poiPoint.longitude, true)
-        tMapView.setPadding(0, 0, 0, topMargin.toInt())
+        tMapView.setCenterPoint(poiPoint.latitude-0.004, poiPoint.longitude, true)
         tMapView.setZoomLevel(15)
     }
 

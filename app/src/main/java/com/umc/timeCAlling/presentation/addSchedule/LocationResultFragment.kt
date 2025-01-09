@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -28,6 +29,7 @@ import com.umc.timeCAlling.databinding.FragmentLocationResultBinding
 import com.umc.timeCAlling.databinding.FragmentLocationSearchBinding
 import com.umc.timeCAlling.presentation.addSchedule.adapter.LocationResultTransportationListVPA
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -47,6 +49,10 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
         bottomNavigationRemove()
         initLocationResultTransportationListVPAdapter()
         initSearchText()
+
+        binding.ivLocationResultBack.setOnSingleClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun bottomNavigationRemove() {

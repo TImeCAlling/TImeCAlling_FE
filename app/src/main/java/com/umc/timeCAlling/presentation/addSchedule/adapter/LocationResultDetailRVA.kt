@@ -45,8 +45,9 @@ class LocationResultDetailRVA(
                         holder.transport.text = "도보"
                     }
                     "BUS" -> {
-                        holder.symbol.setImageResource(R.drawable.ic_public_transportation) // 버스 아이콘 설정
-                        holder.transport.text = "${leg?.route}"
+                        holder.symbol.setImageResource(R.drawable.ic_public_transportation) // 지하철 아이콘 설
+                        val route = leg?.route?.replace(": ", "") // "일반: " 제거
+                        holder.transport.text = "${route}번"
                     }
                     "SUBWAY" -> {
                         holder.symbol.setImageResource(R.drawable.ic_train) // 지하철 아이콘 설정
@@ -55,8 +56,8 @@ class LocationResultDetailRVA(
                     else -> {
                     }
                 }
-
-                holder.time.text = "${leg?.sectionTime}분" // time 설정
+                val totalMinute= leg?.sectionTime?.div(60)
+                holder.time.text = "${totalMinute}분" // time 설정
             }
         }
         Log.d("로그", "로그심기ㅎㅎ")
