@@ -94,7 +94,7 @@
             android:background="@drawable/shape_rect_10_gray200_fill"
             app:layout_constraintTop_toBottomOf="@id/tv_onboarding_name_subtitle"
             android:layout_marginHorizontal="20dp"
-            android:hint="일정 이름을 입력해주세요"
+            android:hint="EX) 김지각"
             android:text=""
             android:paddingVertical="20dp"
             style="@style/TextAppearance.TimeCAlling.Body1.Hint"
@@ -163,6 +163,44 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- error 표시 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_onboarding_name_error"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_percent="0.048"
+            app:layout_constraintTop_toTopOf="@id/et_onboarding_name_input"
+            app:layout_constraintBottom_toBottomOf="@id/et_onboarding_name_input"
+            app:layout_constraintEnd_toEndOf="@id/et_onboarding_name_input"
+            android:layout_marginEnd="20dp"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/iv_onboarding_term_error_oval"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/shape_rect_999_error_fill"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_percent="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iv_onboarding_term_error"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_percent="0.6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <!-- 글자 수 -->
         <TextView
