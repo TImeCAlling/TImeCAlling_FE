@@ -34,6 +34,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         initScheduleName()
         initScheduleMemo()
         moveToLocationSearch()
+        moveToAddScheduleSecond()
 
         binding.ivAddScheduleBack.setOnSingleClickListener {
             findNavController().popBackStack()
@@ -235,6 +236,12 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private fun moveToLocationSearch() {
         binding.layoutAddScheduleLocation.setOnClickListener {
             findNavController().navigate(R.id.action_addScheduleFragment_to_locationSearchFragment)
+        }
+    }
+
+    private fun moveToAddScheduleSecond() {
+        binding.tvAddScheduleNext.setOnClickListener {
+            findNavController().navigate(R.id.action_addScheduleFragment_to_addScheduleSecondFragment)
         }
     }
 }

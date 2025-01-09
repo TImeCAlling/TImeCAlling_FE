@@ -37,6 +37,9 @@
             <action
                 android:id="@+id/action_addScheduleFragment_to_locationSearchFragment"
                 app:destination="@id/locationSearchFragment"/>
+            <action
+                android:id="@+id/action_addScheduleFragment_to_addScheduleSecondFragment"
+                app:destination="@id/addScheduleSecondFragment"/>
         </fragment>
         <fragment
             android:id="@+id/locationSearchFragment"
@@ -56,6 +59,11 @@
                 android:id="@+id/action_locationResultFragment_to_addScheduleFragment"
                 app:destination="@id/addScheduleFragment"/>
         </fragment>
+        <fragment
+            android:id="@+id/addScheduleSecondFragment"
+            android:name="com.umc.timeCAlling.presentation.addSchedule.AddScheduleSecondFragment"
+            android:label="AddScheduleSecondFragment"
+            tools:layout="@layout/fragment_add_schedule_second"/>
     </navigation>
 
 </navigation>
