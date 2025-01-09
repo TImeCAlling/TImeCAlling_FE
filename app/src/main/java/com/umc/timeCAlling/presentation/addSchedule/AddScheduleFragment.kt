@@ -1,15 +1,12 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
-import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
-import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.alpha
-import androidx.navigation.fragment.dialog
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
@@ -33,6 +30,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         initTimeBottomSheet()
         initScheduleName()
         initScheduleMemo()
+        moveToLocationSearch()
 
     }
 
@@ -41,8 +39,19 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     }
 
     private fun bottomNavigationRemove() {
+        // BottomNavigationView 숨기기
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
         bottomNavigationView?.visibility = View.GONE
+
+        // + 버튼 숨기기
+        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
+        addScheduleButton?.visibility = View.GONE
+
+        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
+        shadowImageView?.visibility = View.GONE
+
+        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
+        ovalImageView?.visibility = View.GONE
     }
 
     private fun initDateBottomSheet() {
@@ -106,6 +115,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     private fun initTimeBottomSheet() {
 
+        val numberPickerAmPm = binding.numberPickerAmPm // 오전/오후 NumberPicker
         val numberPickerHour = binding.numberPickerHour // 시간 NumberPicker
         val numberPickerMinute = binding.numberPickerMinute // 분 NumberPicker
         val timeTextView = binding.tvAddScheduleTime // 시간을 표시할 TextView
@@ -115,6 +125,9 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
         binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
+        val amPmValues = arrayOf("오전", "오후")
+        numberPickerAmPm.displayedValues = amPmValues
+
         timeBottomSheetBehavior.peekHeight = 0
         timeBottomSheetBehavior.isHideable = true // 드래그하여 숨기기 설정
         timeBottomSheetBehavior.skipCollapsed = true // 숨김 상태로 바로 전환
@@ -122,12 +135,13 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         binding.tvAddScheduleTimeSave.setOnClickListener { // 저장하기 버튼 클릭 리스너
             val selectedHour = numberPickerHour.value // 선택한 시간
             val selectedMinute = numberPickerMinute.value // 선택한 분
+            val selectedAmPm = amPmValues[numberPickerAmPm.value] // 오전/오후 문자열 가져오기
 
-            val selectedTime = String.format("%02d:%02d", selectedHour, selectedMinute) // 시간 형식 지정
+            val selectedTime = String.format("%s %02d:%02d", selectedAmPm, selectedHour, selectedMinute) // 시간 형식 지정
             timeTextView.text = selectedTime // TextView에 시간 설정
             binding.layoutAddScheduleTime.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_mint_line_2) // 배경 변경
             binding.tvAddScheduleTime.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900)) // 글자 색깔 변경
-            binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_calender_check)) // 아이콘 변경
+            binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_alarm_check)) // 아이콘 변경
 
             timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
         }
@@ -170,16 +184,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val textLength = s?.length ?: 0 // 입력된 글자 수
                 binding.tvAddScheduleTitleCount.text = textLength.toString() // 글자 수 표시
-
-                if (textLength > 0) { // 글자가 입력된 경우
-                    binding.layoutAddScheduleName.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_mint_line_2) // 배경 변경
-                    binding.etAddScheduleName.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900)) // 글자 색깔 변경
-                    binding.ivAddScheduleNameCheck.visibility = View.VISIBLE // 체크 표시 보이기
-                } else { // 글자가 없는 경우
-                    binding.layoutAddScheduleName.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_gray250_fill) // 배경 변경
-                    binding.etAddScheduleName.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_600)) // 글자 색깔 변경
-                    binding.ivAddScheduleNameCheck.visibility = View.INVISIBLE // 체크 표시 숨기기
-                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -216,6 +220,13 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 // 텍스트 변경 후
             }
         })
+
+    }
+
+    private fun moveToLocationSearch() {
+        binding.layoutAddScheduleLocation.setOnClickListener {
+            findNavController().navigate(R.id.action_addScheduleFragment_to_locationSearchFragment)
+        }
 
     }
 }

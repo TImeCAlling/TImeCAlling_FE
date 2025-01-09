@@ -3,6 +3,10 @@ package com.umc.timeCAlling.di
 import com.google.gson.GsonBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TimeCAllingApplication
+import com.umc.timeCAlling.data.datasource.TmapDataSource
+import com.umc.timeCAlling.data.datasourceImpl.TmapDataSourceImpl
+import com.umc.timeCAlling.data.service.TmapService
+import com.umc.timeCAlling.util.TmapInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 // @Module: 모듈은 Hilt에게 특정 객체를 만드는 방법을 알려주는 클래스이다.
@@ -42,8 +47,8 @@ object NetworkModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder().apply {
-
             addInterceptor(interceptor)
+            addInterceptor(TmapInterceptor())
             connectTimeout(5, TimeUnit.SECONDS)
             readTimeout(5, TimeUnit.SECONDS)
             writeTimeout(5, TimeUnit.SECONDS)
@@ -52,6 +57,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @Named("default")
     fun providesRetrofit(
         client: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory
@@ -61,5 +67,25 @@ object NetworkModule {
             .addConverterFactory(gsonConverterFactory)
             .client(client)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("tmap")
+    fun providesTmapRetrofit(
+        client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://apis.openapi.sk.com/") // Tmap API 기본 URL
+            .addConverterFactory(gsonConverterFactory)
+            .client(client)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providesTmapRouteDataSource(@Named("tmap") tmapService: TmapService): TmapDataSource {
+        return TmapDataSourceImpl(tmapService)
     }
 }

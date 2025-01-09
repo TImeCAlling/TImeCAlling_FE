@@ -14,16 +14,42 @@
         <item name="fontFamily">@font/pretendard_semibold</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.Head1.Bold">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/gray_900</item>
+        <item name="fontFamily">@font/pretendard_bold</item>
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Head2">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/gray_900</item>
         <item name="fontFamily">@font/pretendard_semibold</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.Head3">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/gray_900</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="TextAppearance.TimeCAlling.Location_20sp">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/gray_500</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Head4">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/gray_800</item>
         <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
+    <style name="TextAppearance.TimeCAlling.Head4.Regular">
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="TextAppearance.TimeCAlling.Head4.Bold">
+        <item name="fontFamily">@font/pretendard_bold</item>
     </style>
 
 
@@ -61,10 +87,16 @@
         <item name="fontFamily">@font/pretendard_regular</item>
     </style>
 
-    <style name="TextAppearance.TimeCAlling.Detail.Bold">
+    <style name="TextAppearance.TimeCAlling.Detail.SemiBold">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/black_700</item>
         <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
+    <style name="TextAppearance.TimeCAlling.Detail.Bold">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black_700</item>
+        <item name="fontFamily">@font/pretendard_bold</item>
     </style>
 
     <style name="TextAppearance.TimeCAlling.Button">
