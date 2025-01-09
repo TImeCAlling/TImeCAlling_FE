@@ -12,9 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var navController: NavController
     override fun initView() {
-        binding.ivGoToAddSchedule.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
-        }
+
     }
 
     override fun initObserver() {

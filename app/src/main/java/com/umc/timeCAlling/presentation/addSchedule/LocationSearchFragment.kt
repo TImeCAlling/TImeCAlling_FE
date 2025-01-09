@@ -84,6 +84,15 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
             val keyword = binding.etLocationSearchLocation.text.toString()
             viewModel.addRecentSearch(keyword) // 검색어 추가
         }
+        binding.tvRecentSearchDelete.setOnClickListener {
+            viewModel.clearRecentSearches()
+        }
+
+        binding.ivLocationSearchDelete.setOnClickListener {
+            binding.etLocationSearchLocation.text.clear()
+            binding.bottomSheetSearchResult.visibility = View.GONE
+            binding.bottomSheetRecentSearch.visibility = View.VISIBLE
+        }
     }
 
     private fun bottomNavigationRemove() {
@@ -98,10 +107,8 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         if (keyword.isNotBlank()) {
             tmapData.findAllPOI(keyword) { poiItems ->
                 if (poiItems != null && poiItems.isNotEmpty()) {
-                    // 도로명 주소가 있는 POI만 필터링하고 최대 5개로 제한
                     val filteredPoiItems = poiItems.filter { it.newAddressList.isNotEmpty()}.take(5)
 
-                    // 필터링된 검색 결과 출력
                     for ((index,poiItem) in filteredPoiItems.withIndex()) {
                         var i = 0
                         val latitude = poiItem.poiPoint.latitude
@@ -110,7 +117,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
                         val roadNameAddress = poiItem.getPOIAddress()
                         Log.d("LocationSearchFragment", "장소명: ${poiItem.name}, 도로명 주소: $roadNameAddress")
                         val searchResult = SearchResult(poiItem.name, roadNameAddress, latitude, longitude)
-                        searchResults.add(searchResult) // searchResults 리스트에 직접
+                        searchResults.add(searchResult)
 
                         val poiItem = filteredPoiItems[i]
 
@@ -165,7 +172,11 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
 
     private fun initRecentSearchRVA() {
         binding.bottomSheetRecentSearch.visibility = View.VISIBLE
-        val recentSearchRVA = RecentSearchRVA(viewModel, viewLifecycleOwner)
+        val recentSearchRVA = RecentSearchRVA(viewModel, viewLifecycleOwner){
+            recentSearch ->
+            binding.etLocationSearchLocation.setText(recentSearch)
+            searchLocation()
+        }
         binding.rvRecentSearch.adapter = recentSearchRVA
         binding.rvRecentSearch.layoutManager = LinearLayoutManager(requireContext())
     }

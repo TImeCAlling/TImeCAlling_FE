@@ -80,6 +80,11 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         saveRecentSearches(_recentSearches.value!!) // 저장
     }
 
+    fun clearRecentSearches() {
+        _recentSearches.value = emptyList()
+        saveRecentSearches(emptyList())
+    }
+
     fun updateSearchResults(results: List<SearchResult>) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             _searchLocation.value = results // UI 스레드에서 호출되는 경우
