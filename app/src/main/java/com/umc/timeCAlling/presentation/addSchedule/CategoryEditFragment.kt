@@ -1,11 +1,13 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
 import com.umc.timeCAlling.databinding.FragmentCategoryEditBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -14,6 +16,10 @@ class CategoryEditFragment: BaseFragment<FragmentCategoryEditBinding>(R.layout.f
     override fun initView() {
 
         bottomNavigationRemove()
+
+        binding.ivCalendarEditBack.setOnSingleClickListener {
+            findNavController().popBackStack()
+        }
 
     }
 

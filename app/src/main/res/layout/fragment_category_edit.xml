@@ -24,7 +24,7 @@
             android:layout_marginTop="23dp">
 
             <ImageView
-                android:id="@+id/iv_add_schedule_second_back"
+                android:id="@+id/iv_calendar_edit_back"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_arrow_left"

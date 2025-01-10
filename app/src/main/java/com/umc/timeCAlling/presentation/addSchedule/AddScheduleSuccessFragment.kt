@@ -1,12 +1,14 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentAddScheduleSuccessBinding
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
 import com.umc.timeCAlling.databinding.FragmentCategoryEditBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,6 +17,11 @@ class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding
     override fun initView() {
 
         bottomNavigationRemove()
+        moveToHomeFragment()
+
+        binding.ivAddScheduleSuccessBack.setOnSingleClickListener {
+            findNavController().popBackStack()
+        }
 
     }
 
@@ -36,5 +43,11 @@ class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding
 
         val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
         ovalImageView?.visibility = View.GONE
+    }
+
+    private fun moveToHomeFragment() {
+        binding.tvAddScheduleSuccessNext.setOnClickListener {
+            findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment)
+        }
     }
 }

@@ -168,7 +168,7 @@
                             android:layout_marginStart="1dp"/>
 
                         <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/toggle_add_schedule_repeat"
+                            android:id="@+id/menu_add_schedule_repeat"
                             android:layout_width="0dp"
                             android:layout_height="22dp"
                             app:thumbTint="@color/white"
@@ -178,9 +178,11 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layout_add_shedule_repeat_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone">
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
@@ -196,6 +198,7 @@
                                 style="@style/TextAppearance.TimeCAlling.Body2"
                                 android:textColor="@color/gray_700"/>
                             <TextView
+                                android:id="@+id/tv_add_schedule_repeat_start"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="2025.01.07"
@@ -221,6 +224,7 @@
                                 style="@style/TextAppearance.TimeCAlling.Body2"
                                 android:textColor="@color/gray_700"/>
                             <TextView
+                                android:id="@+id/tv_add_schedule_repeat_end"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="2025.02.30"
@@ -279,7 +283,7 @@
                             android:layout_marginStart="1dp"/>
 
                         <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/toggle_add_schedule_music"
+                            android:id="@+id/menu_add_schedule_music"
                             android:layout_width="0dp"
                             android:layout_height="22dp"
                             app:thumbTint="@color/white"
@@ -324,8 +328,9 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="소요시간"
-                        style="@style/TextAppearance.TimeCAlling.Body1.Hint"
+                        android:text="없음"
+                        android:textColor="@color/gray_500"
+                        style="@style/TextAppearance.TimeCAlling.Body1.Bold"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"/>
 
@@ -636,6 +641,7 @@
                     app:layout_constraintTop_toBottomOf="@id/drag_handle_category"/>
                 
                 <ImageView
+                    android:id="@+id/iv_bottom_sheet_category_edit"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:src="@drawable/ic_edit"
@@ -651,7 +657,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginHorizontal="20dp"/>
                 <TextView
-                    android:id="@+id/tv_add_schedule_time_save"
+                    android:id="@+id/tv_add_schedule_category_save"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_rect_999_mint_fill"
