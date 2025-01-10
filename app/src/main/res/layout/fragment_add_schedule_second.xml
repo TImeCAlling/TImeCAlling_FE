@@ -138,17 +138,17 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_add_schedule_date"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/shape_rect_10_gray250_fill"
+                    android:padding="20dp"
+                    android:layout_marginTop="12dp">
 
                     <LinearLayout
-                        android:id="@+id/layout_add_schedule_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/shape_rect_10_gray250_fill"
-                        android:padding="20dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:id="@+id/tv_add_schedule_repeat"
@@ -172,7 +172,62 @@
                             android:layout_width="0dp"
                             android:layout_height="22dp"
                             app:thumbTint="@color/white"
-                            app:trackTint="@color/gray_400"/>
+                            app:trackTint="@color/gray_400"
+                            android:layout_weight="1"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rect_10_white_fill"
+                            android:paddingVertical="15dp"
+                            android:paddingHorizontal="12dp"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="시작"
+                                style="@style/TextAppearance.TimeCAlling.Body2"
+                                android:textColor="@color/gray_700"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="2025.01.07"
+                                style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                                android:textColor="@color/gray_800"
+                                android:gravity="end"/>
+                        </LinearLayout>
+                        <View
+                            android:layout_width="12dp"
+                            android:layout_height="1dp"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rect_10_white_fill"
+                            android:paddingVertical="15dp"
+                            android:paddingHorizontal="12dp"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="종료"
+                                style="@style/TextAppearance.TimeCAlling.Body2"
+                                android:textColor="@color/gray_700"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="2025.02.30"
+                                style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                                android:textColor="@color/gray_800"
+                                android:gravity="end"/>
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -188,7 +243,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="장소"
+                        android:text="음악 알람"
                         style="@style/TextAppearance.TimeCAlling.Body1.Bold"
                         android:layout_weight="1"/>
                 </LinearLayout>
@@ -228,7 +283,8 @@
                             android:layout_width="0dp"
                             android:layout_height="22dp"
                             app:thumbTint="@color/white"
-                            app:trackTint="@color/gray_400"/>
+                            app:trackTint="@color/gray_400"
+                            android:layout_weight="1"/>
 
                     </LinearLayout>
 
@@ -244,7 +300,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="장소"
+                        android:text="카테고리"
                         style="@style/TextAppearance.TimeCAlling.Body1.Bold"
                         android:layout_weight="1"/>
                 </LinearLayout>
@@ -314,7 +370,7 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/bottom_sheet_date"
+                android:id="@+id/bottom_sheet_repeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
@@ -322,21 +378,193 @@
                 android:background="@drawable/shape_bottom_sheet">
 
                 <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-                    android:id="@+id/drag_handle_date"
+                    android:id="@+id/drag_handle_repeat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:id="@+id/tv_title_date"
+                    android:id="@+id/tv_title_repeat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="약속 날짜"
+                    android:text="반복"
                     style="@style/TextAppearance.TimeCAlling.Head2"
                     android:textColor="@color/gray_600"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/drag_handle_date"/>
+                    app:layout_constraintTop_toBottomOf="@id/drag_handle_repeat"/>
+
+                <TextView
+                    android:id="@+id/tv_bottom_sheet_repeat_dof_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="반복 요일"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_repeat"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginHorizontal="20dp"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_bottom_sheet_repeat_dof"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_bottom_sheet_repeat_dof_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginHorizontal="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.TimeCAlling.Regular_20sp"
+                        android:text="월"
+                        android:background="@drawable/shape_rect_8_mint300_fill_mint_line_1"
+                        android:textColor="@color/gray_900"
+                        android:padding="14dp"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.TimeCAlling.Regular_20sp"
+                        android:text="화"
+                        android:background="@drawable/shape_rect_8_gray300_fill"
+                        android:textColor="@color/gray_900"
+                        android:padding="14dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginStart="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.TimeCAlling.Regular_20sp"
+                        android:text="수"
+                        android:background="@drawable/shape_rect_8_gray300_fill"
+                        android:textColor="@color/gray_900"
+                        android:padding="14dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginStart="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.TimeCAlling.Regular_20sp"
+                        android:text="목"
+                        android:background="@drawable/shape_rect_8_gray300_fill"
+                        android:textColor="@color/gray_900"
+                        android:padding="14dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginStart="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.TimeCAlling.Regular_20sp"
+                        android:text="금"
+                        android:background="@drawable/shape_rect_8_gray300_fill"
+                        android:textColor="@color/gray_900"
+                        android:padding="14dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginStart="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.TimeCAlling.Regular_20sp"
+                        android:text="토"
+                        android:background="@drawable/shape_rect_8_gray300_fill"
+                        android:textColor="@color/gray_900"
+                        android:padding="14dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginStart="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.TimeCAlling.Regular_20sp"
+                        android:text="일"
+                        android:background="@drawable/shape_rect_8_gray300_fill"
+                        android:textColor="@color/gray_900"
+                        android:padding="14dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginStart="8dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_bottom_sheet_repeat_period_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="기간 설정"
+                    app:layout_constraintTop_toBottomOf="@id/layout_bottom_sheet_repeat_dof"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginHorizontal="20dp"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_bottom_sheet_repeat_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_bottom_sheet_repeat_period_title"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="20dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rect_10_white_fill_gray300_line_2"
+                        android:paddingVertical="15dp"
+                        android:paddingHorizontal="12dp"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="시작"
+                            style="@style/TextAppearance.TimeCAlling.Body2"
+                            android:textColor="@color/gray_700"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="2025.01.07"
+                            style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                            android:textColor="@color/gray_800"
+                            android:gravity="end"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="1dp"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rect_10_white_fill_gray300_line_2"
+                        android:paddingVertical="15dp"
+                        android:paddingHorizontal="12dp"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="종료"
+                            style="@style/TextAppearance.TimeCAlling.Body2"
+                            android:textColor="@color/gray_700"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="2025.02.30"
+                            style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                            android:textColor="@color/gray_800"
+                            android:gravity="end"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
                 <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                     android:id="@+id/calendar_view"
@@ -347,7 +575,7 @@
                     android:theme="@style/CalenderViewCustom"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_title_date"
+                    app:layout_constraintTop_toBottomOf="@id/layout_bottom_sheet_repeat_period"
                     android:layout_marginHorizontal="20dp"
                     app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
                     app:mcv_firstDayOfWeek="sunday"
@@ -377,7 +605,7 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+       <!-- <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -490,7 +718,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

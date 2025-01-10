@@ -32,7 +32,7 @@
         <item name="fontFamily">@font/pretendard_regular</item>
     </style>
 
-    <style name="TextAppearance.TimeCAlling.Location_20sp">
+    <style name="TextAppearance.TimeCAlling.Regular_20sp">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/gray_500</item>
         <item name="fontFamily">@font/pretendard_regular</item>
