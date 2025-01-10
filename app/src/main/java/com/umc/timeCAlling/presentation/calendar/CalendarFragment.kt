@@ -13,9 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class CalendarFragment: BaseFragment<FragmentCalendarBinding>(R.layout.fragment_calendar) {
     private lateinit var navController: NavController
     override fun initView() {
-        binding.imgCalendarAddSchedule.setOnClickListener {
-            findNavController().navigate(R.id.action_calendarFragment_to_addScheduleTab)
-        }
         initDetailScheduleRV()
     }
 

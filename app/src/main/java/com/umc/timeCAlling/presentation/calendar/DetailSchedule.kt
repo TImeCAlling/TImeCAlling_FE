@@ -8,5 +8,6 @@ data class DetailSchedule (
     val category: String,
     val isMorning: Boolean,
     val time: String,
-    val memberCount: Int
+    val memberCount: Int,
+    var isChecked: Boolean = false
 )

@@ -1,6 +1,8 @@
 package com.umc.timeCAlling.presentation.home
 
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,20 +11,23 @@ import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.NonCancellable.parent
 
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var navController: NavController
     override fun initView() {
-        binding.tvHomeAddSchedule.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
-        }
         binding.layoutHomeTodayScheduleDetail.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_calendarFragment)
         }
+        binding.ivHomeMypage.setOnSingleClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_mypageFragment)
+        }
 
+        setProgressBar(16, 16)  //나중에 하기
         initLastScheduleRV()
         initTodayScheduleRV()
+
     }
     override fun initObserver() {
 
@@ -71,7 +76,21 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
             TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
             TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
+            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
         )
+        val listSize = list2.size
+        setProgressBar(listSize, list2.size)
         val adapter = TodayScheduleRVA(list2)
         binding.rvHomeTodaySchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -93,8 +112,18 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     binding.rvHomeTodaySchedule.visibility = View.GONE
                     binding.layoutHomeNoTodaySchedule.visibility = View.VISIBLE
                 }
+                setProgressBar(listSize, list2.size)
             }
         }
+    }
+
+    private fun setProgressBar(size: Int, currentSize: Int) {
+        val maxWidth = binding.viewHomeProgressBarBackground.width - 20
+        val progress = ((1-(currentSize.toFloat() / size.toFloat())) * maxWidth).toInt()
+        binding.viewHomeProgressBarForeground.layoutParams = (binding.viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
+            width = if(progress <= 20) 20 else progress
+        }
+        binding.tvHomeProgress.text = "${((1 - (currentSize.toFloat() / size.toFloat())) * 100).toInt()}%"
     }
 
 }

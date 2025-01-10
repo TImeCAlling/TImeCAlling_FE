@@ -105,8 +105,7 @@
                 android:layout_height="wrap_content"
                 tools:text="일상"
                 android:textColor="@color/blue"
-                android:textSize="14sp"
-                android:fontFamily="@font/pretendard_bold"
+                style="@style/TextAppearance.TimeCAlling.Body1.Bold"
                 android:layout_marginStart="6dp"/>
         </LinearLayout>
 

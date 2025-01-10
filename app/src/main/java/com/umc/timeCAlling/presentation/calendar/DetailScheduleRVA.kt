@@ -48,11 +48,15 @@ class DetailScheduleRVA(
 
         holder.checkBtn.setOnClickListener {
             Toast.makeText(holder.itemView.context, "${detailSchedules[position].title} Clicked!", Toast.LENGTH_SHORT).show()
+            detailSchedules[position].isChecked = !detailSchedules[position].isChecked
+            holder.checkBtn.setImageResource(if(detailSchedules[position].isChecked) R.drawable.ic_schedule_detail_check_mint else R.drawable.ic_schedule_detail_check)
         }
 
+        //일정에 참여중인 인원이 3명 이상일 때
         if(detailSchedules[position].memberCount >= 3) {
             holder.extraMembersCount.text = "+${detailSchedules[position].memberCount - 2}"
         }
+        //3명 미만
         else {
             holder.extraMembers.visibility = ViewGroup.GONE
             holder.memberSecond.layoutParams = (holder.memberSecond.layoutParams as ViewGroup.MarginLayoutParams).apply {
