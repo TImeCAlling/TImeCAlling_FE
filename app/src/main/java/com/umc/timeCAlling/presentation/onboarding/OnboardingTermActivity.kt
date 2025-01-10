@@ -2,7 +2,6 @@ package com.umc.timeCAlling.presentation.onboarding
 
 import android.content.Intent
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityOnboardingTermBinding
 import com.umc.timeCAlling.presentation.base.BaseActivity
