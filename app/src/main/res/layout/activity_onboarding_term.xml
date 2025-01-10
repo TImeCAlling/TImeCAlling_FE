@@ -25,7 +25,7 @@
                 android:id="@+id/iv_onboarding_term_back"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@drawable/ic_arrow_left"
+                android:background="@drawable/ic_arrow_left"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,20 +94,20 @@
             android:layout_marginTop="44dp">
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_oval_all"
+                android:id="@+id/iv_onboarding_term_oval_all"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/shape_rect_999_gray300_fill"
+                android:background="@drawable/shape_rect_999_gray300_fill"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_check_all"
+                android:id="@+id/iv_onboarding_term_check_all"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_check_white"
+                android:background="@drawable/ic_check_white"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="0.7"
                 app:layout_constraintStart_toStartOf="parent"
@@ -156,20 +156,20 @@
             android:layout_marginTop="44dp">
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_oval_1"
+                android:id="@+id/iv_onboarding_term_oval_1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/shape_rect_999_gray300_fill"
+                android:background="@drawable/shape_rect_999_gray300_fill"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_check_1"
+                android:id="@+id/iv_onboarding_term_check_1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_check_white"
+                android:background="@drawable/ic_check_white"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="0.7"
                 app:layout_constraintStart_toStartOf="parent"
@@ -203,20 +203,20 @@
             android:layout_marginTop="28dp">
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_oval_2"
+                android:id="@+id/iv_onboarding_term_oval_2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/shape_rect_999_gray300_fill"
+                android:background="@drawable/shape_rect_999_gray300_fill"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_check_2"
+                android:id="@+id/iv_onboarding_term_check_2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_check_white"
+                android:background="@drawable/ic_check_white"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="0.7"
                 app:layout_constraintStart_toStartOf="parent"
@@ -253,7 +253,7 @@
                 android:id="@+id/iv_onboarding_term_arrow_down_2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_keyboard_arrow_down"
+                android:background="@drawable/ic_keyboard_arrow_down"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -266,7 +266,7 @@
                 android:id="@+id/iv_onboarding_term_arrow_up_2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_keyboard_arrow_up"
+                android:background="@drawable/ic_keyboard_arrow_up"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -288,20 +288,20 @@
             android:layout_marginTop="28dp">
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_oval_3"
+                android:id="@+id/iv_onboarding_term_oval_3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/shape_rect_999_gray300_fill"
+                android:background="@drawable/shape_rect_999_gray300_fill"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_check_3"
+                android:id="@+id/iv_onboarding_term_check_3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_check_white"
+                android:background="@drawable/ic_check_white"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="0.7"
                 app:layout_constraintStart_toStartOf="parent"
@@ -338,7 +338,7 @@
                 android:id="@+id/iv_onboarding_term_arrow_down_3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_keyboard_arrow_down"
+                android:background="@drawable/ic_keyboard_arrow_down"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -351,7 +351,7 @@
                 android:id="@+id/iv_onboarding_term_arrow_up_3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_keyboard_arrow_up"
+                android:background="@drawable/ic_keyboard_arrow_up"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -372,20 +372,20 @@
             android:layout_marginTop="28dp">
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_oval_4"
+                android:id="@+id/iv_onboarding_term_oval_4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/shape_rect_999_gray300_fill"
+                android:background="@drawable/shape_rect_999_gray300_fill"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_check_4"
+                android:id="@+id/iv_onboarding_term_check_4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_check_white"
+                android:background="@drawable/ic_check_white"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="0.7"
                 app:layout_constraintStart_toStartOf="parent"
@@ -422,7 +422,7 @@
                 android:id="@+id/iv_onboarding_term_arrow_down_4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_keyboard_arrow_down"
+                android:background="@drawable/ic_keyboard_arrow_down"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -435,7 +435,7 @@
                 android:id="@+id/iv_onboarding_term_arrow_up_4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_keyboard_arrow_up"
+                android:background="@drawable/ic_keyboard_arrow_up"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -456,20 +456,20 @@
             android:layout_marginTop="28dp">
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_oval_5"
+                android:id="@+id/iv_onboarding_term_oval_5"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/shape_rect_999_gray300_fill"
+                android:background="@drawable/shape_rect_999_gray300_fill"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                android:id="@+id/iv_onboarding_term_unselected_check_5"
+                android:id="@+id/iv_onboarding_term__check_5"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_check_white"
+                android:background="@drawable/ic_check_white"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_percent="0.7"
                 app:layout_constraintStart_toStartOf="parent"
