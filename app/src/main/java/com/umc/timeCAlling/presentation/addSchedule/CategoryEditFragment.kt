@@ -2,14 +2,14 @@ package com.umc.timeCAlling.presentation.addSchedule
 
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.FragmentAddScheduleSecondBinding
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
+import com.umc.timeCAlling.databinding.FragmentCategoryEditBinding
+import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(R.layout.fragment_add_schedule_second) {
+class CategoryEditFragment: BaseFragment<FragmentCategoryEditBinding>(R.layout.fragment_category_edit) {
 
     override fun initView() {
 

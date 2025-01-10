@@ -63,7 +63,32 @@
             android:id="@+id/addScheduleSecondFragment"
             android:name="com.umc.timeCAlling.presentation.addSchedule.AddScheduleSecondFragment"
             android:label="AddScheduleSecondFragment"
-            tools:layout="@layout/fragment_add_schedule_second"/>
+            tools:layout="@layout/fragment_add_schedule_second">
+            <action
+                android:id="@+id/action_addScheduleSecondFragment_to_addScheduleSuccessFragment"
+                app:destination="@id/addScheduleSuccessFragment"/>
+            <action
+                android:id="@+id/action_addScheduleSecondFragment_to_categoryEditFragment"
+                app:destination="@id/categoryEditFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/categoryEditFragment"
+            android:name="com.umc.timeCAlling.presentation.addSchedule.CategoryEditFragment"
+            android:label="CategoryEditFragment"
+            tools:layout="@layout/fragment_category_edit">
+            <action
+                android:id="@+id/action_categoryEditFragment_to_addScheduleSecondFragment"
+                app:destination="@id/addScheduleSecondFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/addScheduleSuccessFragment"
+            android:name="com.umc.timeCAlling.presentation.addSchedule.AddScheduleSuccessFragment"
+            android:label="AddScheduleSuccessFragment"
+            tools:layout="@layout/fragment_add_schedule_success">
+            <action
+                android:id="@+id/action_addScheduleSuccessFragment_to_homeFragment"
+                app:destination="@id/homeFragment"/>
+        </fragment>
     </navigation>
 
 </navigation>

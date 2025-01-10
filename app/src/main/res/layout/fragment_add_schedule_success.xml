@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_add_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="23dp">
+
+            <ImageView
+                android:id="@+id/iv_add_schedule_back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_add_schedule_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="일정추가"
+                style="@style/TextAppearance.TimeCAlling.Head2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/progressindicator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@id/topbar"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:background="@color/gray"/>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_circle_check_mint"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="일정을 추가되었습니다."
+                style="@style/TextAppearance.TimeCAlling.Head1"
+                android:layout_marginTop="25dp"/>
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="24dp"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="확인"
+                style="@style/TextAppearance.TimeCAlling.Bold_18sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/gray_900"
+                android:paddingVertical="16dp"
+                android:background="@drawable/shape_rect_12_mint300_fill"/>
+            
+            <View
+                android:layout_width="12dp"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="공유하기"
+                style="@style/TextAppearance.TimeCAlling.Bold_18sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:paddingVertical="16dp"
+                android:background="@drawable/shape_rect_12_mint_fill"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
