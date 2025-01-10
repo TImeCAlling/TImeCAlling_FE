@@ -92,6 +92,9 @@ dependencies {
     //CardView
     implementation (libs.androidx.cardview)
 
+    // circle ImageView
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
     // Coroutines Dependency
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
