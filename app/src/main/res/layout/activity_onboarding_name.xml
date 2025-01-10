@@ -51,13 +51,16 @@
             app:layout_constraintTop_toBottomOf="@id/topbar"
             android:layout_marginTop="14dp"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/view_onboarding_name_line_mint"
+            android:layout_width="0dp"
             android:layout_height="4dp"
-            android:src="@drawable/ic_line_mint"
+            android:background="@color/mint_main"
+            app:layout_constraintWidth_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/view_onboarding_name_line"/>
-        
+            app:layout_constraintTop_toBottomOf="@id/topbar"
+            android:layout_marginTop="14dp"/>
+
         <!-- 본문 -->
         <TextView
             android:id="@+id/tv_onboarding_name_title1"

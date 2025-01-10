@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -51,13 +52,16 @@
             app:layout_constraintTop_toBottomOf="@id/topbar"
             android:layout_marginTop="14dp"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/view_onboarding_photo_line_mint"
+            android:layout_width="0dp"
             android:layout_height="4dp"
-            android:src="@drawable/ic_line_mint"
+            android:background="@color/mint_main"
+            app:layout_constraintWidth_percent="0.2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/view_onboarding_photo_line"/>
-        
+            app:layout_constraintTop_toBottomOf="@id/topbar"
+            android:layout_marginTop="14dp"/>
+
         <!-- 본문 -->
         <TextView
             android:id="@+id/tv_onboarding_photo_title1"
@@ -85,16 +89,17 @@
             android:layout_marginBottom="40dp"
             android:visibility="visible">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_onboarding_photo_oval_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/shape_rect_999_mint300_fill"
+                android:background="@drawable/shape_rect_999_mint300_fill"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:scaleType="centerCrop"/>
 
             <ImageView
                 android:id="@+id/iv_onboarding_photo_face"
@@ -112,6 +117,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_onboarding_photo_camera"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
@@ -126,7 +132,7 @@
                 android:id="@+id/iv_onboarding_photo_oval_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/shape_rect_999_white_fill_mint300_line_3"
+                android:src="@drawable/shape_rect_999_white_fill_gray400_line_2"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
