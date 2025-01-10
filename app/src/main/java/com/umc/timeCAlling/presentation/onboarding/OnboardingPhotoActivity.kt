@@ -3,7 +3,6 @@ package com.umc.timeCAlling.presentation.onboarding
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,14 +15,22 @@ import dagger.hilt.android.AndroidEntryPoint
 class OnboardingPhotoActivity :
     BaseActivity<ActivityOnboardingPhotoBinding>(R.layout.activity_onboarding_photo) {
 
+    private var isPhotoSelected = false
+
     override fun initView() {
         setClickListener()
+        updateNextButtonState()
     }
 
     override fun initObserver() {}
 
     private fun setClickListener() {
         binding.tvOnboardingPhotoNext.setOnClickListener {
+            if (isPhotoSelected) {
+                navigateToOnboardingNameActivity()
+            }
+        }
+        binding.tvOnboardingPhotoDefault.setOnClickListener {
             navigateToOnboardingNameActivity()
         }
 
@@ -48,6 +55,8 @@ class OnboardingPhotoActivity :
                 val selectedImageUri: Uri? = result.data?.data
                 if (selectedImageUri != null) {
                     updateProfileImage(selectedImageUri)
+                    isPhotoSelected = true
+                    updateNextButtonState()
                 } else {
                     Toast.makeText(this, "이미지를 선택하지 않았습니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -57,7 +66,20 @@ class OnboardingPhotoActivity :
     private fun updateProfileImage(imageUri: Uri) {
         // CircleImageView에 URI로 이미지 설정
         binding.ivOnboardingPhotoOval1.setImageURI(imageUri)
-        // 기존 얼굴 아이콘을 보이지 않게 설정
+        // 기존 얼굴 아이콘을 숨김
         binding.ivOnboardingPhotoFace.visibility = android.view.View.INVISIBLE
+    }
+
+    private fun updateNextButtonState() {
+        binding.tvOnboardingPhotoNext.apply {
+            isClickable = isPhotoSelected
+            setBackgroundResource(
+                if (isPhotoSelected) R.drawable.shape_rect_999_mint_fill else R.drawable.shape_rect_999_gray300_fill
+            )
+            setTextAppearance(
+                if (isPhotoSelected) R.style.TextAppearance_TimeCAlling_Button
+                else R.style.TextAppearance_TimeCAlling_Button_Gray
+            )
+        }
     }
 }
