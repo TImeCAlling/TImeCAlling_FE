@@ -3,11 +3,20 @@ package com.umc.timeCAlling.presentation.addSchedule.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
+import com.umc.timeCAlling.data.LocationResultType
+import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.addSchedule.adapter.LocationResultDetailRVA.LocationResultDetailViewHolder
 
-class CategoryRVA(): RecyclerView.Adapter<CategoryRVA.CategoryViewHolder>() {
+class CategoryRVA(
+    private val viewModel: AddScheduleViewModel,
+    private val lifecycleOwner: LifecycleOwner,
+    private val viewLifecycleOwner: LifecycleOwner,
+    private val navController: NavController
+): RecyclerView.Adapter<CategoryRVA.CategoryViewHolder>() {
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

@@ -15,4 +15,14 @@
         <item name="android:gravity">center</item>
         <item name="android:textAllCaps">false</item>
     </style>
+
+    <style name="PopupMenuStyle" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@android:color/white</item>
+        <item name="android:itemTextAppearance">@style/PopupMenuTextAppearance</item>
+    </style>
+
+    <style name="PopupMenuTextAppearance" parent="@android:style/TextAppearance.Widget.PopupMenu.Large">
+        <item name="android:layout_gravity">end</item>
+        <item name="android:drawablePadding">8dp</item>
+    </style>
 </resources>

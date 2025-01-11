@@ -24,4 +24,13 @@
     <color name="bottomsheet_background">#80000000</color>
     <color name="line">#2B000000</color>
     <color name="track">#EFF5F5</color>
+    <color name="category_orange">#FA9667</color>
+    <color name="category_yellow">#FFB00A</color>
+    <color name="category_skyblue">#8EB9FE</color>
+    <color name="category_blue">#6E8EFF</color>
+    <color name="category_green">#7DBD6B</color>
+    <color name="category_pink">#F494A0</color>
+    <color name="category_mauve">#CDA7D9</color>
+    <color name="category_purple">#A295D4</color>
+
 </resources>

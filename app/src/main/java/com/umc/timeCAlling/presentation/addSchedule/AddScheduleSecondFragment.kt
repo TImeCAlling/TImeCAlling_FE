@@ -1,11 +1,13 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.datepicker.DayViewDecorator
@@ -15,6 +17,8 @@ import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentAddScheduleSecondBinding
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
+import com.umc.timeCAlling.presentation.addSchedule.adapter.CategoryRVA
+import com.umc.timeCAlling.presentation.addSchedule.adapter.SearchResultRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,6 +31,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
     override fun initView() {
 
+        initCategoryList()
         bottomNavigationRemove()
         initRepeatBottomSheet()
         initCategoryBottomSheet()
@@ -127,7 +132,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         categoryBottomSheetBehavior.skipCollapsed = true // 숨김 상태로 바로 전환
 
         // 이미지 클릭 리스너
-        binding.ivAddScheduleCategory.setOnClickListener {
+        binding.ivAddScheduleCategoryList.setOnClickListener {
             if (categoryBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -136,6 +141,10 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 binding.viewBottomSheetBackground.visibility = View.INVISIBLE
             }
+        }
+
+        binding.ivBottomSheetCategoryEdit.setOnClickListener {
+            moveToCategoryEdit()
         }
 
         categoryBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -153,7 +162,23 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         })
     }
 
-    private fun moveToLocationSearch() {
+    private fun initCategoryList() {
+        initCategoryBottomSheet()
+        binding.bottomSheetCategory.visibility = View.VISIBLE
+        binding.bottomSheetRepeat.visibility = View.GONE
+
+        val bottomSheetCategoryRVA = CategoryRVA(
+            viewModel,
+            viewLifecycleOwner,
+            viewLifecycleOwner,
+            findNavController()
+        )
+        binding.rvBottomSheetCategory.adapter = bottomSheetCategoryRVA
+        binding.rvBottomSheetCategory.layoutManager = LinearLayoutManager(requireContext())
+        Log.d("LocationSearchFragment", "결과")
+    }
+
+    private fun moveToCategoryEdit() {
         binding.ivBottomSheetCategoryEdit.setOnClickListener {
             findNavController().navigate(R.id.action_addScheduleSecondFragment_to_categoryEditFragment)
         }

@@ -5,29 +5,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:id="@+id/layout_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:paddingVertical="20dp"
-        android:paddingHorizontal="36dp">
+        android:paddingHorizontal="36dp"
+        android:gravity="center_vertical">
 
         <ImageView
+            android:id="@+id/iv_category_logo"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_icon_orange"/>
+            android:background="@drawable/ic_icon_orange"
+            android:backgroundTint="@color/category_purple"/>
         
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/et_category_name"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:hint="카테고리 이름"
             android:background="@color/transparency"
             style="@style/TextAppearance.TimeCAlling.Head3"
-            android:textColor="@color/gray_900"/>
+            android:textColor="@color/gray_900"
+            android:singleLine="true"/>
 
         <ImageView
+            android:id="@+id/iv_category_more"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_more"/>
@@ -35,6 +42,104 @@
     </LinearLayout>
 
 
+    <GridLayout
+        android:id="@+id/layout_category_color"
+        android:layout_width="226dp"
+        android:layout_height="104dp"
+        android:columnCount="5"
+        android:rowCount="2"
+        app:layout_constraintStart_toStartOf="@id/layout_category"
+        app:layout_constraintTop_toBottomOf="@id/layout_category"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="-20dp"
+        android:paddingVertical="24dp"
+        android:paddingHorizontal="24dp"
+        android:background="@drawable/shape_rect_16_white_fill_shadow"
+        android:visibility="gone">
 
+        <View
+            android:id="@+id/view_category_orange"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/category_orange"/>
+
+        <View
+            android:id="@+id/view_category_yellow"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/category_yellow"
+            android:layout_marginStart="16dp"/>
+
+        <View
+            android:id="@+id/view_category_green"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/category_green"
+            android:layout_marginStart="16dp" />
+
+        <View
+            android:id="@+id/view_category_mint"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/mint_main"
+            android:layout_marginStart="16dp" />
+
+        <View
+            android:id="@+id/view_category_skyblue"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/category_skyblue"
+            android:layout_marginStart="16dp" />
+
+        <View
+            android:id="@+id/view_category_pink"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/category_pink"
+            android:layout_marginTop="9dp"/>
+
+        <View
+            android:id="@+id/view_category_mauve"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/category_mauve"
+            android:layout_marginTop="9dp"
+            android:layout_marginStart="16dp" />
+
+        <View
+            android:id="@+id/view_category_purple"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/category_purple"
+            android:layout_marginTop="9dp"
+            android:layout_marginStart="16dp" />
+
+        <View
+            android:id="@+id/view_category_blue"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/category_blue"
+            android:layout_marginTop="9dp"
+            android:layout_marginStart="16dp" />
+
+        <View
+            android:id="@+id/view_category_gray"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/gray_600"
+            android:layout_marginTop="9dp"
+            android:layout_marginStart="16dp"/>
+
+    </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
