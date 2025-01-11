@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.home
+package com.umc.timeCAlling.presentation.home.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleBinding
+import com.umc.timeCAlling.presentation.home.TodaySchedule
 
 class TodayScheduleRVA(
     private val items: List<TodaySchedule>

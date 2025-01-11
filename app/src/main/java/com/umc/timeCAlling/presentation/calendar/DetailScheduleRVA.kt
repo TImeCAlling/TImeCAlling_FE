@@ -1,6 +1,7 @@
 package com.umc.timeCAlling.presentation.calendar
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.marginEnd
@@ -11,6 +12,12 @@ import com.umc.timeCAlling.databinding.ItemTodayScheduleDetailBinding
 class DetailScheduleRVA(
     private val detailSchedules: List<DetailSchedule>
 ) : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
+
+    interface ItemClick {
+        fun onClick(view: View, position: Int)
+    }
+    var itemClick : ItemClick? = null
+
     inner class DetailScheduleViewHolder(private val binding: ItemTodayScheduleDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.tvDetailScheduleTitle
         val repeatInfo = binding.tvDetailScheduleRepeatInfo
@@ -62,6 +69,10 @@ class DetailScheduleRVA(
             holder.memberSecond.layoutParams = (holder.memberSecond.layoutParams as ViewGroup.MarginLayoutParams).apply {
                 marginEnd = 0
             }
+        }
+
+        holder.itemView.setOnClickListener {
+            itemClick?.onClick(it, position)
         }
     }
 

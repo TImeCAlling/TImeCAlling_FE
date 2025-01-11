@@ -1,17 +1,19 @@
 package com.umc.timeCAlling.presentation.home
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
+import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
+import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.NonCancellable.parent
 
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -118,12 +120,18 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setProgressBar(size: Int, currentSize: Int) {
-        val maxWidth = binding.viewHomeProgressBarBackground.width - 20
+        val maxWidth = binding.viewHomeProgressBarBackground.width
         val progress = ((1-(currentSize.toFloat() / size.toFloat())) * maxWidth).toInt()
         binding.viewHomeProgressBarForeground.layoutParams = (binding.viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
-            width = if(progress <= 20) 20 else progress
+            width = if(progress <= 20) requireContext().toPx(20).toInt() else progress
         }
         binding.tvHomeProgress.text = "${((1 - (currentSize.toFloat() / size.toFloat())) * 100).toInt()}%"
     }
+
+    fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp.toFloat(),
+        resources.displayMetrics
+    )
 
 }

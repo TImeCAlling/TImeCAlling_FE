@@ -1,9 +1,10 @@
-package com.umc.timeCAlling.presentation.home
+package com.umc.timeCAlling.presentation.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.databinding.ItemLastScheduleBinding
+import com.umc.timeCAlling.presentation.home.LastSchedule
 
 class LastScheduleRVA(
     private val lastSchedules: List<LastSchedule>,
