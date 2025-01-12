@@ -16,7 +16,7 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
     }
 
     override fun initObserver() {
-
+        // 필요한 옵저버 설정
     }
 
     private fun setClickListener() {
@@ -28,6 +28,7 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
             binding.clOnboardingTermBtn5 to binding.ivOnboardingTermOval5
         )
 
+        // '모두 동의' 버튼
         binding.clOnboardingTermBtnAll.setOnClickListener {
             val isSelected = toggleButton(binding.ivOnboardingTermOvalAll)
             termButtons.forEach { (_, oval) ->
@@ -36,6 +37,7 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
             updateNextButtonState()
         }
 
+        // 각 약관 버튼
         termButtons.forEach { (container, oval) ->
             container.setOnClickListener {
                 val isSelected = toggleButton(oval)
@@ -53,13 +55,13 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
 
         // 뒤로가기 버튼
         binding.ivOnboardingTermBack.setOnClickListener {
-
+            findNavController().popBackStack() // Navigation Back Stack을 통해 뒤로 이동
         }
 
         // 다음 버튼
         binding.tvOnboardingTermNext.setOnClickListener {
             if (isNextButtonEnabled()) {
-                navigateToSignupPhotoFragment()
+                navigateToSignupPhotoFragment() // 다음 화면으로 이동
             }
         }
     }
@@ -91,9 +93,10 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
             setBackgroundResource(
                 if (allRequiredSelected) R.drawable.shape_rect_999_mint_fill else R.drawable.shape_rect_999_gray300_fill
             )
-            setTextAppearance(
-                if (allRequiredSelected) R.style.TextAppearance_TimeCAlling_Button
-                else R.style.TextAppearance_TimeCAlling_Button_Gray
+            setTextColor(
+                requireContext().getColor(
+                    if (allRequiredSelected) R.color.white else R.color.gray_500
+                )
             )
         }
     }
@@ -120,14 +123,13 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
         }
     }
 
-    // 약관 내용
     private fun loadTermsContent(resourceId: Int): String {
         return resources.openRawResource(resourceId).bufferedReader().use { it.readText() }
     }
 
     private fun setupTermsContent() {
         binding.tvOnboardingTermContent2.text = loadTermsContent(R.raw.term_1)
-        // 추가하기
+        // 추가 약관 내용을 설정할 수 있습니다.
     }
 
     private fun isNextButtonEnabled(): Boolean {

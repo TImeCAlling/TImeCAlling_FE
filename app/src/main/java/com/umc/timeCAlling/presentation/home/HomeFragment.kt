@@ -1,7 +1,9 @@
 package com.umc.timeCAlling.presentation.home
 
+import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
@@ -15,9 +17,27 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.ivGoToAddSchedule.setOnSingleClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
         }
+
+        bottomNavigationVisible()
     }
 
     override fun initObserver() {
 
+    }
+
+    private fun bottomNavigationVisible() {
+        // BottomNavigationView 보이기
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
+        bottomNavigationView?.visibility = View.VISIBLE
+
+        // + 버튼 보이기
+        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
+        addScheduleButton?.visibility = View.VISIBLE
+
+        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
+        shadowImageView?.visibility = View.VISIBLE
+
+        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
+        ovalImageView?.visibility = View.VISIBLE
     }
 }

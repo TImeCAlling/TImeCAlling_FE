@@ -2,6 +2,7 @@ package com.umc.timeCAlling.presentation.signup
 
 import android.content.Context
 import android.graphics.Rect
+import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -9,7 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupNameBinding
@@ -24,6 +25,21 @@ class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.frag
     override fun initView() {
         initEditName() // 입력 필드 초기화
         setClickListener() // 버튼 및 뷰 클릭 리스너 설정
+
+        // 루트 View에 터치 리스너 설정
+        binding.root.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val focusedView = requireActivity().currentFocus
+                if (focusedView != null) {
+                    val rect = Rect()
+                    focusedView.getGlobalVisibleRect(rect)
+                    if (!rect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                        hideKeyboardAndClearFocus()
+                    }
+                }
+            }
+            false
+        }
     }
 
     override fun initObserver() {
@@ -72,8 +88,8 @@ class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.frag
     private fun enableNextButton() {
         binding.tvOnboardingNameNext.apply {
             isEnabled = true
-            background = ContextCompat.getDrawable(this@SignupNameFragment, R.drawable.shape_rect_999_mint_fill)
-            setTextColor(ContextCompat.getColor(this@SignupNameFragment, R.color.white))
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_mint_fill)
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
         }
     }
 
@@ -81,8 +97,8 @@ class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.frag
     private fun disableNextButton() {
         binding.tvOnboardingNameNext.apply {
             isEnabled = false
-            background = ContextCompat.getDrawable(this@SignupNameFragment, R.drawable.shape_rect_999_gray200_fill)
-            setTextColor(ContextCompat.getColor(this@SignupNameFragment, R.color.gray_500))
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray200_fill)
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
         }
     }
 
@@ -91,8 +107,8 @@ class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.frag
         binding.etOnboardingNameInput.apply {
             text = null
             hint = "유효한 문자를 입력해주세요."
-            background = ContextCompat.getDrawable(this@SignupNameFragment, R.drawable.shape_rect_10_white_fill_error_line_1)
-            setHintTextColor(ContextCompat.getColor(this@SignupNameFragment, R.color.gray_500))
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_error_line_1)
+            setHintTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
         }
         toggleErrorVisibility(true)
         disableNextButton()
@@ -131,32 +147,17 @@ class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.frag
     // 입력 필드 스타일 설정
     private fun setInputFieldStyle(backgroundRes: Int, textColorRes: Int) {
         binding.etOnboardingNameInput.apply {
-            background = ContextCompat.getDrawable(this@SignupNameFragment, backgroundRes)
-            setTextColor(ContextCompat.getColor(this@SignupNameFragment, textColorRes))
+            background = ContextCompat.getDrawable(requireContext(), backgroundRes)
+            setTextColor(ContextCompat.getColor(requireContext(), textColorRes))
         }
         binding.clOnboardingNameDelete.visibility = View.INVISIBLE
         binding.clOnboardingNameCheck.visibility = View.INVISIBLE
     }
 
-    // 터치 이벤트 처리: 입력 필드 외부 터치 시 키보드 숨기기
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        currentFocus?.let { focusedView ->
-            val rect = Rect()
-            focusedView.getGlobalVisibleRect(rect)
-            if (!rect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
-                if (binding.etOnboardingNameInput.text.toString().trim().isEmpty()) {
-                    showErrorState() // 공백 입력 시 에러 상태 표시
-                }
-                hideKeyboardAndClearFocus()
-            }
-        }
-        return super.dispatchTouchEvent(ev)
-    }
-
     private fun hideKeyboardAndClearFocus() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-        currentFocus?.clearFocus()
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view?.windowToken, 0)
+        view?.clearFocus()
     }
 
     // 입력 필드 초기화

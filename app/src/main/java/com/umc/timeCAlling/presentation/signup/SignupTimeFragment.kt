@@ -21,10 +21,12 @@ class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.frag
         setClickListener()
     }
 
-    override fun initObserver() {}
+    override fun initObserver() {
+        // 필요한 경우 옵저버 추가 가능
+    }
 
     private fun setupRecyclerView() {
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val adapter = SignupTimeAdapter(timeOptions)
 
         binding.rvOnboardingTimeRecyclerView.apply {
@@ -62,12 +64,14 @@ class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.frag
     }
 
     private fun setClickListener() {
+        // 다음 버튼 클릭 리스너 설정
         binding.tvOnboardingTimeNext.setOnClickListener {
             navigateToSignupSpareFragment()
         }
     }
 
     private fun navigateToSignupSpareFragment() {
+        // Navigation을 통해 다음 Fragment로 이동
         findNavController().navigate(R.id.action_signupTimeFragment_to_signupSpareFragment)
     }
 }

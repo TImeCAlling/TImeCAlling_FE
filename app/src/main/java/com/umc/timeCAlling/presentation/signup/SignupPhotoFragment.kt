@@ -1,11 +1,12 @@
 package com.umc.timeCAlling.presentation.signup
 
-import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupPhotoBinding
@@ -26,40 +27,45 @@ class SignupPhotoFragment :
     override fun initObserver() {}
 
     private fun setClickListener() {
+        // 다음 버튼 클릭 시
         binding.tvOnboardingPhotoNext.setOnClickListener {
             if (isPhotoSelected) {
                 navigateToSignupNameFragment()
             }
         }
+
+        // 기본 이미지로 넘어가기
         binding.tvOnboardingPhotoDefault.setOnClickListener {
             navigateToSignupNameFragment()
         }
 
+        // 갤러리 열기 버튼
         binding.clOnboardingPhotoCamera.setOnClickListener {
             openGallery()
         }
 
         // 뒤로가기 버튼
         binding.ivOnboardingPhotoBack.setOnClickListener {
-
+            findNavController().popBackStack()
         }
     }
 
     private fun openGallery() {
+        // 갤러리를 여는 Intent 실행
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         galleryLauncher.launch(intent)
     }
 
     private val galleryLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == androidx.fragment.app.FragmentActivity.RESULT_OK) {
                 val selectedImageUri: Uri? = result.data?.data
                 if (selectedImageUri != null) {
                     updateProfileImage(selectedImageUri)
                     isPhotoSelected = true
                     updateNextButtonState()
                 } else {
-                    Toast.makeText(this, "이미지를 선택하지 않았습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "이미지를 선택하지 않았습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -67,19 +73,22 @@ class SignupPhotoFragment :
     private fun updateProfileImage(imageUri: Uri) {
         // CircleImageView에 URI로 이미지 설정
         binding.ivOnboardingPhotoOval1.setImageURI(imageUri)
-        // 기존 얼굴 아이콘을 숨김
+        // 기본 얼굴 아이콘 숨기기
         binding.ivOnboardingPhotoFace.visibility = android.view.View.INVISIBLE
     }
 
     private fun updateNextButtonState() {
         binding.tvOnboardingPhotoNext.apply {
             isClickable = isPhotoSelected
-            setBackgroundResource(
+            background = ContextCompat.getDrawable(
+                requireContext(),
                 if (isPhotoSelected) R.drawable.shape_rect_999_mint_fill else R.drawable.shape_rect_999_gray300_fill
             )
-            setTextAppearance(
-                if (isPhotoSelected) R.style.TextAppearance_TimeCAlling_Button
-                else R.style.TextAppearance_TimeCAlling_Button_Gray
+            setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (isPhotoSelected) R.color.white else R.color.gray_500
+                )
             )
         }
     }
