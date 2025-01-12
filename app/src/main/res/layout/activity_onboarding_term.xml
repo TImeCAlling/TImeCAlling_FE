@@ -502,7 +502,9 @@
             android:text="다음"
             android:paddingVertical="20dp"
             style="@style/TextAppearance.TimeCAlling.Button.Gray"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:clickable="false"
+            android:enabled="false"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -77,6 +77,7 @@ class OnboardingTermActivity : BaseActivity<ActivityOnboardingTermBinding>(R.lay
 
         binding.tvOnboardingTermNext.apply {
             isClickable = allRequiredSelected
+            isEnabled = allRequiredSelected
             setBackgroundResource(
                 if (allRequiredSelected) R.drawable.shape_rect_999_mint_fill else R.drawable.shape_rect_999_gray300_fill
             )
