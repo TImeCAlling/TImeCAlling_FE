@@ -1,5 +1,8 @@
 # TImeCAlling_FE
 
+minSdk = 24 
+targetSdk = 35
+
 ## 라이브러리
 1. AndroidX
 2. Material 3
