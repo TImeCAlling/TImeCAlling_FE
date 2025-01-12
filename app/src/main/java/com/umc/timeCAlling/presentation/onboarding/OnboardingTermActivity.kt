@@ -50,6 +50,12 @@ class OnboardingTermActivity : BaseActivity<ActivityOnboardingTermBinding>(R.lay
         // 약관 화살표 클릭 이벤트
         setupArrowClickListeners()
 
+        // 뒤로가기 버튼
+        binding.ivOnboardingTermBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        // 다음 버튼
         binding.tvOnboardingTermNext.setOnClickListener {
             if (isNextButtonEnabled()) {
                 navigateToOnboardingPhotoActivity()

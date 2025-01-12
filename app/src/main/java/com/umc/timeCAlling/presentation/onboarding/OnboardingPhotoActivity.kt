@@ -37,6 +37,11 @@ class OnboardingPhotoActivity :
         binding.clOnboardingPhotoCamera.setOnClickListener {
             openGallery()
         }
+
+        // 뒤로가기 버튼
+        binding.ivOnboardingPhotoBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun navigateToOnboardingNameActivity() {

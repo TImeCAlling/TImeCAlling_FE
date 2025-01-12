@@ -37,6 +37,12 @@ class OnboardingSpareActivity :
             }
         }
 
+        // 뒤로가기 버튼
+        binding.ivOnboardingSpareBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        // 다음 버튼
         binding.tvOnboardingSpareNext.setOnClickListener {
             navigateToMainActivity()
         }
