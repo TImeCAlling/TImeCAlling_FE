@@ -60,6 +60,11 @@ class OnboardingNameActivity : BaseActivity<ActivityOnboardingNameBinding>(R.lay
         }
 
         binding.clOnboardingNameDelete.setOnClickListener { clearInputField() }
+
+        // 뒤로가기 버튼
+        binding.ivOnboardingNameBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     // 다음 버튼 활성화
