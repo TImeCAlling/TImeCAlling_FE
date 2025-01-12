@@ -1,23 +1,47 @@
 package com.umc.timeCAlling.presentation.onboarding
 
 import android.content.Intent
+import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityOnboardingTimeBinding
 import com.umc.timeCAlling.presentation.base.BaseActivity
+import com.umc.timeCAlling.presentation.onboarding.adapter.OnboardingTimeAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class OnboardingTimeActivity : BaseActivity<ActivityOnboardingTimeBinding>(R.layout.activity_onboarding_time) {
 
-    // private val viewModel: OnboardingTimeViewModel by viewModels() // ViewModel 연결
+    private val timeOptions = listOf(" ", " ", "15분", "30분", "45분", "60분", "90분+", " ", " ")
 
     override fun initView() {
-
+        setupRecyclerView()
         setClickListener()
     }
 
-    override fun initObserver() {
+    override fun initObserver() {}
 
+    private fun setupRecyclerView() {
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val adapter = OnboardingTimeAdapter(timeOptions)
+
+        binding.recyclerView.apply {
+            this.layoutManager = layoutManager
+            this.adapter = adapter
+
+            // 스크롤 리스너를 추가하여 중앙 정렬 기능 구현
+            this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        val centerView = layoutManager.findViewByPosition(layoutManager.findFirstCompletelyVisibleItemPosition())
+                        val centerPosition = layoutManager.getPosition(centerView ?: return)
+                        smoothScrollToPosition(centerPosition)
+                    }
+                }
+            })
+        }
     }
 
     private fun setClickListener() {

@@ -89,6 +89,9 @@ dependencies {
     implementation(libs.glide)
     ksp(libs.ksp)
 
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+
     //CardView
     implementation (libs.androidx.cardview)
 

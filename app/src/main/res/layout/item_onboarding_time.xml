@@ -14,13 +14,15 @@
             android:id="@+id/tv_onboarding_time_item"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:background="@drawable/shape_rect_999_mint200_fill_mint_line_1"
             android:gravity="center"
             android:text=""
             android:textSize="20sp"
-            android:textColor="@color/mint_main"
+            android:textColor="@color/gray_400"
             android:fontFamily="@font/pretendard_medium"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
