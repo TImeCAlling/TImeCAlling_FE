@@ -1,25 +1,22 @@
 package com.umc.timeCAlling.presentation.signup
 
-import android.content.Intent
-import android.os.Build
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.ActivityOnboardingBinding
-import com.umc.timeCAlling.presentation.MainActivity
-import com.umc.timeCAlling.presentation.base.BaseActivity
+import com.umc.timeCAlling.databinding.FragmentSignupBinding
+import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignupFragment : BaseActivity<ActivityOnboardingBinding>(R.layout.activity_onboarding) {
+class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_signup) {
 
     private val viewModel: SignupViewModel by viewModels()
+
 
     override fun initView() {
         setClickListener()
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     override fun initObserver() {
 
     }
@@ -27,23 +24,20 @@ class SignupFragment : BaseActivity<ActivityOnboardingBinding>(R.layout.activity
     private fun setClickListener() {
         binding.ivOnboardingKakaoLogin.setOnClickListener {
 
-            navigateToOnboardingTermActivity() // kakao login 구현 후 지우기
+            navigateToSignupTermFragment() // kakao login 구현 후 지우기
         }
 
         binding.ivNavigateHome.setOnClickListener {
 
-            navigateToMainActivity() // 나중에 지우기
+            navigateToHomeFragment() // 나중에 지우기
         }
     }
 
-    private fun navigateToOnboardingTermActivity() {
-        val intent = Intent(this, OnboardingTermActivity::class.java)
-        startActivity(intent)
-        // finish()
+    private fun navigateToSignupTermFragment() {
+        findNavController().navigate(R.id.action_signupFragment_to_signupTermFragment)
     }
 
-    private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+    private fun navigateToHomeFragment() {
+        findNavController().navigate(R.id.action_signupSpareFragment_to_homeFragment)
     }
 }

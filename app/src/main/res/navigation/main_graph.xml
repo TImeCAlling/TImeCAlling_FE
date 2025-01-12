@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/signupTab">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_addScheduleTab"
             app:destination="@id/addScheduleTab"/>
+        <action
+            android:id="@+id/action_homeFragment_to_signupFragment"
+            app:destination="@id/signupFragment"/>
     </fragment>
 
     <fragment
@@ -27,7 +30,8 @@
         android:label="MypageFragment"
         tools:layout="@layout/fragment_mypage"/>
 
-    <navigation android:id="@+id/addScheduleTab"
+    <navigation
+        android:id="@+id/addScheduleTab"
         app:startDestination="@id/addScheduleFragment">
         <fragment
             android:id="@+id/addScheduleFragment"
@@ -54,4 +58,68 @@
             tools:layout="@layout/fragment_location_result"/>
     </navigation>
 
+    <!-- Signup flow -->
+    <navigation
+        android:id="@+id/signupTab"
+        app:startDestination="@id/signupFragment">
+        <fragment
+            android:id="@+id/signupFragment"
+            android:name="com.umc.timeCAlling.presentation.signup.SignupFragment"
+            android:label="SignupFragment"
+            tools:layout="@layout/fragment_signup">
+            <action
+                android:id="@+id/action_signupFragment_to_signupTermFragment"
+                app:destination="@id/signupTermFragment"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/signupTermFragment"
+            android:name="com.umc.timeCAlling.presentation.signup.SignupTermFragment"
+            android:label="SignupTermFragment"
+            tools:layout="@layout/fragment_signup_term">
+            <action
+                android:id="@+id/action_signupTermFragment_to_signupPhotoFragment"
+                app:destination="@id/signupPhotoFragment"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/signupPhotoFragment"
+            android:name="com.umc.timeCAlling.presentation.signup.SignupPhotoFragment"
+            android:label="SignupPhotoFragment"
+            tools:layout="@layout/fragment_signup_photo">
+            <action
+                android:id="@+id/action_signupPhotoFragment_to_signupNameFragment"
+                app:destination="@id/signupNameFragment"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/signupNameFragment"
+            android:name="com.umc.timeCAlling.presentation.signup.SignupNameFragment"
+            android:label="SignupNameFragment"
+            tools:layout="@layout/fragment_signup_name">
+            <action
+                android:id="@+id/action_signupNameFragment_to_signupTimeFragment"
+                app:destination="@id/signupTimeFragment"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/signupTimeFragment"
+            android:name="com.umc.timeCAlling.presentation.signup.SignupTimeFragment"
+            android:label="SignupTimeFragment"
+            tools:layout="@layout/fragment_signup_time">
+            <action
+                android:id="@+id/action_signupTimeFragment_to_signupSpareFragment"
+                app:destination="@id/signupSpareFragment"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/signupSpareFragment"
+            android:name="com.umc.timeCAlling.presentation.signup.SignupSpareFragment"
+            android:label="SignupSpareFragment"
+            tools:layout="@layout/fragment_signup_spare">
+            <action
+                android:id="@+id/action_signupSpareFragment_to_homeFragment"
+                app:destination="@id/homeFragment"/>
+        </fragment>
+    </navigation>
 </navigation>

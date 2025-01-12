@@ -1,7 +1,6 @@
 package com.umc.timeCAlling.presentation.signup
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Rect
 import android.text.Editable
 import android.text.InputFilter
@@ -10,13 +9,15 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.ActivityOnboardingNameBinding
-import com.umc.timeCAlling.presentation.base.BaseActivity
+import com.umc.timeCAlling.databinding.FragmentSignupNameBinding
+import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignupNameFragment : BaseActivity<ActivityOnboardingNameBinding>(R.layout.activity_onboarding_name) {
+class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.fragment_signup_name) {
 
     private var isInputValid = false // 입력 상태를 추적
 
@@ -56,14 +57,14 @@ class SignupNameFragment : BaseActivity<ActivityOnboardingNameBinding>(R.layout.
     private fun setClickListener() {
         binding.tvOnboardingNameNext.setOnClickListener {
             val inputText = binding.etOnboardingNameInput.text.toString().trim()
-            if (inputText.isEmpty()) showErrorState() else navigateToOnboardingTimeActivity()
+            if (inputText.isEmpty()) showErrorState() else navigateToSignupTimeFragment()
         }
 
         binding.clOnboardingNameDelete.setOnClickListener { clearInputField() }
 
         // 뒤로가기 버튼
         binding.ivOnboardingNameBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            findNavController().popBackStack()
         }
     }
 
@@ -165,7 +166,7 @@ class SignupNameFragment : BaseActivity<ActivityOnboardingNameBinding>(R.layout.
     }
 
     // 다음 화면으로 이동
-    private fun navigateToOnboardingTimeActivity() {
-        startActivity(Intent(this, OnboardingTimeActivity::class.java))
+    private fun navigateToSignupTimeFragment() {
+        findNavController().navigate(R.id.action_signupNameFragment_to_signupTimeFragment)
     }
 }

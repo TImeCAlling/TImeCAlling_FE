@@ -1,17 +1,16 @@
 package com.umc.timeCAlling.presentation.signup
 
-import android.content.Intent
 import android.view.View
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.ActivityOnboardingSpareBinding
-import com.umc.timeCAlling.presentation.MainActivity
-import com.umc.timeCAlling.presentation.base.BaseActivity
+import com.umc.timeCAlling.databinding.FragmentSignupSpareBinding
+import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignupSpareFragment :
-    BaseActivity<ActivityOnboardingSpareBinding>(R.layout.activity_onboarding_spare) {
+    BaseFragment<FragmentSignupSpareBinding>(R.layout.fragment_signup_spare) {
 
     private val options by lazy {
         listOf(
@@ -39,12 +38,12 @@ class SignupSpareFragment :
 
         // 뒤로가기 버튼
         binding.ivOnboardingSpareBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+
         }
 
         // 다음 버튼
         binding.tvOnboardingSpareNext.setOnClickListener {
-            navigateToMainActivity()
+            navigateToHomeFragment()
         }
     }
 
@@ -72,8 +71,7 @@ class SignupSpareFragment :
         (option as? TextView)?.setTextAppearance(R.style.TextAppearance_TimeCAlling_Button_Gray)
     }
 
-    private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+    private fun navigateToHomeFragment() {
+        findNavController().navigate(R.id.action_signupSpareFragment_to_homeFragment)
     }
 }

@@ -1,17 +1,17 @@
 package com.umc.timeCAlling.presentation.signup
 
-import android.content.Intent
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.ActivityOnboardingTimeBinding
-import com.umc.timeCAlling.presentation.base.BaseActivity
+import com.umc.timeCAlling.databinding.FragmentSignupTimeBinding
+import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.signup.adapter.SignupTimeAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignupTimeFragment : BaseActivity<ActivityOnboardingTimeBinding>(R.layout.activity_onboarding_time) {
+class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.fragment_signup_time) {
 
     private val timeOptions = listOf(" ", " ", "15분", "30분", "45분", "60분", "90분+", " ", " ")
     private var previousCenterPosition: Int? = null
@@ -63,12 +63,11 @@ class SignupTimeFragment : BaseActivity<ActivityOnboardingTimeBinding>(R.layout.
 
     private fun setClickListener() {
         binding.tvOnboardingTimeNext.setOnClickListener {
-            navigateToOnboardingSpareActivity()
+            navigateToSignupSpareFragment()
         }
     }
 
-    private fun navigateToOnboardingSpareActivity() {
-        val intent = Intent(this, OnboardingSpareActivity::class.java)
-        startActivity(intent)
+    private fun navigateToSignupSpareFragment() {
+        findNavController().navigate(R.id.action_signupTimeFragment_to_signupSpareFragment)
     }
 }

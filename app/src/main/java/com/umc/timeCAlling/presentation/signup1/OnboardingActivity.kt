@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.signup1
 
 import android.content.Intent
 import android.os.Build
@@ -8,6 +8,7 @@ import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityOnboardingBinding
 import com.umc.timeCAlling.presentation.MainActivity
 import com.umc.timeCAlling.presentation.base.BaseActivity
+import com.umc.timeCAlling.presentation.signup.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

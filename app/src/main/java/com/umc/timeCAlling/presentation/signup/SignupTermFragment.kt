@@ -1,14 +1,14 @@
 package com.umc.timeCAlling.presentation.signup
 
-import android.content.Intent
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.ActivityOnboardingTermBinding
-import com.umc.timeCAlling.presentation.base.BaseActivity
+import com.umc.timeCAlling.databinding.FragmentSignupTermBinding
+import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignupTermFragment : BaseActivity<ActivityOnboardingTermBinding>(R.layout.activity_onboarding_term) {
+class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.fragment_signup_term) {
 
     override fun initView() {
         setClickListener()
@@ -53,13 +53,13 @@ class SignupTermFragment : BaseActivity<ActivityOnboardingTermBinding>(R.layout.
 
         // 뒤로가기 버튼
         binding.ivOnboardingTermBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+
         }
 
         // 다음 버튼
         binding.tvOnboardingTermNext.setOnClickListener {
             if (isNextButtonEnabled()) {
-                navigateToOnboardingPhotoActivity()
+                navigateToSignupPhotoFragment()
             }
         }
     }
@@ -134,8 +134,7 @@ class SignupTermFragment : BaseActivity<ActivityOnboardingTermBinding>(R.layout.
         return binding.tvOnboardingTermNext.isClickable
     }
 
-    private fun navigateToOnboardingPhotoActivity() {
-            val intent = Intent(this, OnboardingPhotoActivity::class.java)
-            startActivity(intent)
+    private fun navigateToSignupPhotoFragment() {
+        findNavController().navigate(R.id.action_signupTermFragment_to_signupPhotoFragment)
     }
 }

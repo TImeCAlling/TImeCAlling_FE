@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.signup1
 
 import android.app.Activity
 import android.content.Intent

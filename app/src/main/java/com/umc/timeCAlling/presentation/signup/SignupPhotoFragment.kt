@@ -6,14 +6,15 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.ActivityOnboardingPhotoBinding
-import com.umc.timeCAlling.presentation.base.BaseActivity
+import com.umc.timeCAlling.databinding.FragmentSignupPhotoBinding
+import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignupPhotoFragment :
-    BaseActivity<ActivityOnboardingPhotoBinding>(R.layout.activity_onboarding_photo) {
+    BaseFragment<FragmentSignupPhotoBinding>(R.layout.fragment_signup_photo) {
 
     private var isPhotoSelected = false
 
@@ -27,11 +28,11 @@ class SignupPhotoFragment :
     private fun setClickListener() {
         binding.tvOnboardingPhotoNext.setOnClickListener {
             if (isPhotoSelected) {
-                navigateToOnboardingNameActivity()
+                navigateToSignupNameFragment()
             }
         }
         binding.tvOnboardingPhotoDefault.setOnClickListener {
-            navigateToOnboardingNameActivity()
+            navigateToSignupNameFragment()
         }
 
         binding.clOnboardingPhotoCamera.setOnClickListener {
@@ -40,13 +41,8 @@ class SignupPhotoFragment :
 
         // 뒤로가기 버튼
         binding.ivOnboardingPhotoBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-    }
 
-    private fun navigateToOnboardingNameActivity() {
-        val intent = Intent(this, OnboardingNameActivity::class.java)
-        startActivity(intent)
+        }
     }
 
     private fun openGallery() {
@@ -86,5 +82,9 @@ class SignupPhotoFragment :
                 else R.style.TextAppearance_TimeCAlling_Button_Gray
             )
         }
+    }
+
+    private fun navigateToSignupNameFragment() {
+        findNavController().navigate(R.id.action_signupPhotoFragment_to_signupNameFragment)
     }
 }
