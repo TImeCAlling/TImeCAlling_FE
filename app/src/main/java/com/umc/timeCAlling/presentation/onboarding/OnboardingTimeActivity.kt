@@ -3,6 +3,7 @@ package com.umc.timeCAlling.presentation.onboarding
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityOnboardingTimeBinding
@@ -30,17 +31,10 @@ class OnboardingTimeActivity : BaseActivity<ActivityOnboardingTimeBinding>(R.lay
             this.layoutManager = layoutManager
             this.adapter = adapter
 
-            // 스크롤 리스너를 추가하여 중앙 정렬 기능 구현
-            this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        val centerView = layoutManager.findViewByPosition(layoutManager.findFirstCompletelyVisibleItemPosition())
-                        val centerPosition = layoutManager.getPosition(centerView ?: return)
-                        smoothScrollToPosition(centerPosition)
-                    }
-                }
-            })
+
+            // LinearSnapHelper를 사용하여 중앙 정렬 활성화
+            val snapHelper = LinearSnapHelper()
+            snapHelper.attachToRecyclerView(this)
         }
     }
 
