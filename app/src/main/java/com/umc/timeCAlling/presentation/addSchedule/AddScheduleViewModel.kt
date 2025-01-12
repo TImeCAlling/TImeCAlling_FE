@@ -61,6 +61,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _timeTaken = MutableLiveData<Int>()
     val timeTaken: LiveData<Int> = _timeTaken
 
+    val selectedCategory = MutableLiveData<String>() // selectedCategory LiveData 추가
+
     fun setTimeTaken(time: Int) {
         _timeTaken.value = time
     }

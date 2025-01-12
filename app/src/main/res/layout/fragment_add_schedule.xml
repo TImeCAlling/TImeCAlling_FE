@@ -549,6 +549,7 @@
                     android:paddingVertical="20dp"
                     style="@style/TextAppearance.TimeCAlling.Bold_18sp"
                     android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@id/layout_time_picker"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

@@ -30,11 +30,6 @@ class CategoryEditRVA(
     class CategoryEditViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     }
-
-    init {
-        CategoryManager.loadCategories(context) // 초기화 시 데이터 로드
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryEditViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_category, parent, false)
@@ -80,18 +75,6 @@ class CategoryEditRVA(
             R.color.category_blue,
             R.color.gray_600
         )
-
-        for (i in colorViews.indices) {
-            colorViews[i].setOnClickListener {
-                // 로고 색상 변경 및 CategoryManager 업데이트
-                ivCategoryLogo.setColorFilter(ContextCompat.getColor(itemView.context, colorResources[i]))
-                ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(itemView.context, colorResources[i]))
-                val updatedCategory = category.copy(color = colorResources[i])
-                CategoryManager.updateCategory(position, updatedCategory)
-                layoutCategoryColor.visibility = View.GONE
-            }
-        }
-
         ivCategoryLogo.setOnClickListener {
             if (etCategoryName.isEnabled) { // 수정하기 선택된 경우에만 color 팔레트 표시
                 layoutCategoryColor.visibility = if (layoutCategoryColor.visibility == View.VISIBLE) View.GONE else View.VISIBLE
@@ -120,7 +103,6 @@ class CategoryEditRVA(
                 setForceShowIcon(true)
             }.show()
         }
-
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {

@@ -1,10 +1,20 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
+import android.content.Context
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
+import androidx.core.view.setMargins
+import androidx.core.view.setPadding
+import androidx.databinding.adapters.TextViewBindingAdapter
+import androidx.databinding.adapters.ViewBindingAdapter.setPadding
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +31,7 @@ import com.umc.timeCAlling.presentation.addSchedule.adapter.CategoryRVA
 import com.umc.timeCAlling.presentation.addSchedule.adapter.SearchResultRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.threeten.bp.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(R.layout.fragment_add_schedule_second) {
@@ -30,6 +41,8 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private lateinit var categoryBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun initView() {
+
+        binding.viewBottomSheetBackground.isClickable = false
 
         initCategoryList()
         bottomNavigationRemove()
@@ -67,6 +80,43 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         var startDate: CalendarDay? = null
         var endDate: CalendarDay? = null
 
+        val daysOfWeek = listOf("월", "화", "수", "목", "금", "토", "일")
+        val selectedDays = mutableSetOf<String>() // 선택된 요일을 저장할 Set
+        val dayTextViews = daysOfWeek.map { dayOfWeek ->
+            TextView(requireContext()).apply {
+                text = dayOfWeek
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                    val marginInPx = if (dayOfWeek != "월") {
+                        8.dpToPx(requireContext())
+                    } else {
+                        0
+                    }
+                    setMargins(marginInPx, 0, 0, 0)
+                }
+                gravity = Gravity.CENTER
+                setPadding(14.dpToPx(requireContext()), 14.dpToPx(requireContext()), 14.dpToPx(requireContext()), 14.dpToPx(requireContext()))
+                setBackgroundResource(R.drawable.shape_rect_8_gray300_fill) // 초기 배경 설정
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
+                this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+
+                setOnClickListener {
+                    // 배경 변경 및 선택 상태 업데이트
+                    if (selectedDays.contains(dayOfWeek)) { // 이미 선택된 경우
+                        selectedDays.remove(dayOfWeek) // 선택 취소
+                        setBackgroundResource(R.drawable.shape_rect_8_gray300_fill) // 배경 변경
+                    } else { // 선택되지 않은 경우
+                        selectedDays.add(dayOfWeek) // 선택 추가
+                        setBackgroundResource(R.drawable.shape_rect_8_mint300_fill_mint_line_1) // 배경 변경
+                    }
+                }
+            }
+        }
+
+        binding.layoutBottomSheetRepeatDof.removeAllViews()
+        dayTextViews.forEach { textView ->
+            binding.layoutBottomSheetRepeatDof.addView(textView)
+        }
+
         val bottomSheet = binding.bottomSheetRepeat // BottomSheet 레이아웃 ID
         repeatBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
@@ -82,23 +132,23 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                     startDate = date
                 } else if (endDate == null) {
                     endDate = date
-                    // 시작일과 종료일이 선택되었으므로 범위를 표시합니다.
                     calendarView.selectRange(startDate, endDate)
                 } else {
-                    // 시작일과 종료일이 이미 선택되어 있으므로 초기화하고 새 범위를 시작합니다.
                     startDate = date
                     endDate = null
                     calendarView.clearSelection()
                     calendarView.setDateSelected(date, true)
                 }
             }
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            binding.tvBottomSheetRepeatStart.text = startDate?.date?.format(formatter) ?: ""
+            binding.tvBottomSheetRepeatEnd.text = endDate?.date?.format(formatter) ?: ""
         }
 
-            // 이미지 클릭 리스너
         binding.ivAddScheduleRepeat.setOnClickListener {
             if (repeatBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 시간 BottomSheet 숨기기
+                categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 binding.viewBottomSheetBackground.visibility = View.VISIBLE
             } else {
                 repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -165,9 +215,9 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private fun initCategoryList() {
         initCategoryBottomSheet()
         binding.bottomSheetCategory.visibility = View.VISIBLE
-        binding.bottomSheetRepeat.visibility = View.GONE
 
         val bottomSheetCategoryRVA = CategoryRVA(
+            requireContext(),
             viewModel,
             viewLifecycleOwner,
             viewLifecycleOwner,
@@ -176,6 +226,11 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         binding.rvBottomSheetCategory.adapter = bottomSheetCategoryRVA
         binding.rvBottomSheetCategory.layoutManager = LinearLayoutManager(requireContext())
         Log.d("LocationSearchFragment", "결과")
+    }
+
+    private fun Int.dpToPx(context: Context): Int {
+        val metrics = context.resources.displayMetrics
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), metrics).toInt()
     }
 
     private fun moveToCategoryEdit() {

@@ -109,6 +109,8 @@ dependencies {
     implementation(libs.play.services.location)
 
     implementation(libs.android.colorpicker)
+
+    implementation(libs.threetenabp)
 }
 configurations.all {
     exclude(group = "com.android.support")
