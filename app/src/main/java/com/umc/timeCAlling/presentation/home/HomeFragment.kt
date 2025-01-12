@@ -26,7 +26,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_homeFragment_to_mypageFragment)
         }
 
-        setProgressBar(16, 16)  //나중에 하기
+        setProgressBar(6, 6)  //나중에 하기
         initLastScheduleRV()
         initTodayScheduleRV()
 
@@ -44,6 +44,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
         LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
     )
+    val listSize = list.size
 
     private fun initLastScheduleRV() {
         val adapter = LastScheduleRVA(list,
@@ -70,6 +71,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             binding.rvHomeLastSchedule.visibility = View.GONE
             binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
         }
+        setProgressBar(listSize ,list.size)
     }
 
     private fun initTodayScheduleRV() {
@@ -92,7 +94,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
         )
         val listSize = list2.size
-        setProgressBar(listSize, list2.size)
         val adapter = TodayScheduleRVA(list2)
         binding.rvHomeTodaySchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -114,7 +115,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     binding.rvHomeTodaySchedule.visibility = View.GONE
                     binding.layoutHomeNoTodaySchedule.visibility = View.VISIBLE
                 }
-                setProgressBar(listSize, list2.size)
             }
         }
     }

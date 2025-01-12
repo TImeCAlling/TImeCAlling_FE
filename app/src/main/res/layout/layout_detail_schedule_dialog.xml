@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/shape_rect_20_white_fill_shadow"
+    android:background="@drawable/shape_rect_20_white_fill"
     android:padding="28dp">
 
     <ImageView

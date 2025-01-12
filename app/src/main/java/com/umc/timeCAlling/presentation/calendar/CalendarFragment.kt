@@ -90,7 +90,7 @@ class CalendarFragment: BaseFragment<FragmentCalendarBinding>(R.layout.fragment_
         val btnYes = dialog.findViewById<TextView>(R.id.btn_dialog_yes)
         val btnNo = dialog.findViewById<TextView>(R.id.btn_dialog_no)
 
-        title.text = scheduleTitle
+        title.text = "' ${scheduleTitle} '"
         btnYes.setOnClickListener {
             dialog.dismiss()
             behavior.state = BottomSheetBehavior.STATE_HIDDEN
