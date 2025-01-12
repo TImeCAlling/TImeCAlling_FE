@@ -286,24 +286,29 @@
                         android:visibility="invisible"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/tv_onboarding_term_content_2"
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/sv_onboarding_term_content_2"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:maxHeight="300dp"
-                    android:text="약관 내용\n내용\n내용"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/pretendard_regular"
-                    android:textColor="@color/gray_500"
-                    android:background="@drawable/shape_rect_10_white_fill_gray300_line_2"
+                    android:layout_height="300dp"
+                    android:background="@drawable/shape_rect_10_white_fill_gray300_line_1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cl_onboarding_term_btn_2"
-                    android:paddingHorizontal="20dp"
-                    android:paddingVertical="20dp"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="8.5dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_onboarding_term_content_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="약관 내용"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:textColor="@color/gray_500"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="16dp" />
+                </androidx.core.widget.NestedScrollView>
 
                 <!-- 약관 3 -->
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -313,7 +318,7 @@
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintWidth_percent="0.048"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_onboarding_term_content_2"
+                    app:layout_constraintTop_toBottomOf="@id/sv_onboarding_term_content_2"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="28dp">
 
@@ -389,24 +394,30 @@
                         android:visibility="invisible"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/tv_onboarding_term_content_3"
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/sv_onboarding_term_content_3"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="300dp"
                     android:maxHeight="300dp"
-                    android:text="약관 내용"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/pretendard_regular"
-                    android:textColor="@color/gray_500"
-                    android:background="@drawable/shape_rect_10_white_fill_gray300_line_2"
+                    android:background="@drawable/shape_rect_10_white_fill_gray300_line_1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cl_onboarding_term_btn_3"
-                    android:paddingHorizontal="20dp"
-                    android:paddingVertical="20dp"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="8.5dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_onboarding_term_content_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="약관 내용"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:textColor="@color/gray_500"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="16dp" />
+                </androidx.core.widget.NestedScrollView>
 
                 <!-- 약관 4 -->
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -416,7 +427,7 @@
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintWidth_percent="0.048"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_onboarding_term_content_3"
+                    app:layout_constraintTop_toBottomOf="@id/sv_onboarding_term_content_3"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="28dp">
 
@@ -492,24 +503,29 @@
                         android:visibility="invisible"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/tv_onboarding_term_content_4"
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/sv_onboarding_term_content_4"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:maxHeight="300dp"
-                    android:text="약관 내용"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/pretendard_regular"
-                    android:textColor="@color/gray_500"
-                    android:background="@drawable/shape_rect_10_white_fill_gray300_line_2"
+                    android:layout_height="300dp"
+                    android:background="@drawable/shape_rect_10_white_fill_gray300_line_1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cl_onboarding_term_btn_4"
-                    android:paddingHorizontal="20dp"
-                    android:paddingVertical="20dp"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="8.5dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_onboarding_term_content_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="약관 내용"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:textColor="@color/gray_500"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="16dp" />
+                </androidx.core.widget.NestedScrollView>
 
                 <!-- 약관 5 -->
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -519,7 +535,7 @@
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintWidth_percent="0.048"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_onboarding_term_content_4"
+                    app:layout_constraintTop_toBottomOf="@id/sv_onboarding_term_content_4"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="28dp">
 

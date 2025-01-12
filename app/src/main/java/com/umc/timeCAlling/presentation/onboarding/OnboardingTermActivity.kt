@@ -12,6 +12,7 @@ class OnboardingTermActivity : BaseActivity<ActivityOnboardingTermBinding>(R.lay
 
     override fun initView() {
         setClickListener()
+        setupTermsContent()
     }
 
     override fun initObserver() {
@@ -99,7 +100,7 @@ class OnboardingTermActivity : BaseActivity<ActivityOnboardingTermBinding>(R.lay
 
     private fun setupArrowClickListeners() {
         val arrowConfigs = listOf(
-            Triple(binding.ivOnboardingTermArrowUp2, binding.ivOnboardingTermArrowDown2, binding.tvOnboardingTermContent2),
+            Triple(binding.ivOnboardingTermArrowUp2, binding.ivOnboardingTermArrowDown2, binding.svOnboardingTermContent2),
             Triple(binding.ivOnboardingTermArrowUp3, binding.ivOnboardingTermArrowDown3, binding.tvOnboardingTermContent3),
             Triple(binding.ivOnboardingTermArrowUp4, binding.ivOnboardingTermArrowDown4, binding.tvOnboardingTermContent4)
         )
@@ -117,6 +118,16 @@ class OnboardingTermActivity : BaseActivity<ActivityOnboardingTermBinding>(R.lay
                 contentView.visibility = View.VISIBLE
             }
         }
+    }
+
+    // 약관 내용
+    private fun loadTermsContent(resourceId: Int): String {
+        return resources.openRawResource(resourceId).bufferedReader().use { it.readText() }
+    }
+
+    private fun setupTermsContent() {
+        binding.tvOnboardingTermContent2.text = loadTermsContent(R.raw.term_1)
+        // 추가하기
     }
 
     private fun isNextButtonEnabled(): Boolean {
