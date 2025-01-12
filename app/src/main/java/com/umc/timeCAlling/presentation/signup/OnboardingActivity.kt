@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.onboarding
+package com.umc.timeCAlling.presentation.signup
 
 import android.content.Intent
 import android.os.Build
@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(R.layout.activity_onboarding) {
 
-    private val viewModel: OnboardingViewModel by viewModels()
+    private val viewModel: SignupViewModel by viewModels()
 
     override fun initView() {
         setClickListener()

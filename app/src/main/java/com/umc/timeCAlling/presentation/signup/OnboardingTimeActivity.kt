@@ -1,14 +1,13 @@
-package com.umc.timeCAlling.presentation.onboarding
+package com.umc.timeCAlling.presentation.signup
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityOnboardingTimeBinding
 import com.umc.timeCAlling.presentation.base.BaseActivity
-import com.umc.timeCAlling.presentation.onboarding.adapter.OnboardingTimeAdapter
+import com.umc.timeCAlling.presentation.signup.adapter.SignupTimeAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,7 +25,7 @@ class OnboardingTimeActivity : BaseActivity<ActivityOnboardingTimeBinding>(R.lay
 
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val adapter = OnboardingTimeAdapter(timeOptions)
+        val adapter = SignupTimeAdapter(timeOptions)
 
         binding.rvOnboardingTimeRecyclerView.apply {
             this.layoutManager = layoutManager

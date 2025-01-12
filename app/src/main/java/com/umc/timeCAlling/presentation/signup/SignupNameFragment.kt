@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.onboarding
+package com.umc.timeCAlling.presentation.signup
 
 import android.content.Context
 import android.content.Intent
@@ -16,7 +16,7 @@ import com.umc.timeCAlling.presentation.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OnboardingNameActivity : BaseActivity<ActivityOnboardingNameBinding>(R.layout.activity_onboarding_name) {
+class SignupNameFragment : BaseActivity<ActivityOnboardingNameBinding>(R.layout.activity_onboarding_name) {
 
     private var isInputValid = false // 입력 상태를 추적
 
@@ -71,8 +71,8 @@ class OnboardingNameActivity : BaseActivity<ActivityOnboardingNameBinding>(R.lay
     private fun enableNextButton() {
         binding.tvOnboardingNameNext.apply {
             isEnabled = true
-            background = ContextCompat.getDrawable(this@OnboardingNameActivity, R.drawable.shape_rect_999_mint_fill)
-            setTextColor(ContextCompat.getColor(this@OnboardingNameActivity, R.color.white))
+            background = ContextCompat.getDrawable(this@SignupNameFragment, R.drawable.shape_rect_999_mint_fill)
+            setTextColor(ContextCompat.getColor(this@SignupNameFragment, R.color.white))
         }
     }
 
@@ -80,8 +80,8 @@ class OnboardingNameActivity : BaseActivity<ActivityOnboardingNameBinding>(R.lay
     private fun disableNextButton() {
         binding.tvOnboardingNameNext.apply {
             isEnabled = false
-            background = ContextCompat.getDrawable(this@OnboardingNameActivity, R.drawable.shape_rect_999_gray200_fill)
-            setTextColor(ContextCompat.getColor(this@OnboardingNameActivity, R.color.gray_500))
+            background = ContextCompat.getDrawable(this@SignupNameFragment, R.drawable.shape_rect_999_gray200_fill)
+            setTextColor(ContextCompat.getColor(this@SignupNameFragment, R.color.gray_500))
         }
     }
 
@@ -90,8 +90,8 @@ class OnboardingNameActivity : BaseActivity<ActivityOnboardingNameBinding>(R.lay
         binding.etOnboardingNameInput.apply {
             text = null
             hint = "유효한 문자를 입력해주세요."
-            background = ContextCompat.getDrawable(this@OnboardingNameActivity, R.drawable.shape_rect_10_white_fill_error_line_1)
-            setHintTextColor(ContextCompat.getColor(this@OnboardingNameActivity, R.color.gray_500))
+            background = ContextCompat.getDrawable(this@SignupNameFragment, R.drawable.shape_rect_10_white_fill_error_line_1)
+            setHintTextColor(ContextCompat.getColor(this@SignupNameFragment, R.color.gray_500))
         }
         toggleErrorVisibility(true)
         disableNextButton()
@@ -130,8 +130,8 @@ class OnboardingNameActivity : BaseActivity<ActivityOnboardingNameBinding>(R.lay
     // 입력 필드 스타일 설정
     private fun setInputFieldStyle(backgroundRes: Int, textColorRes: Int) {
         binding.etOnboardingNameInput.apply {
-            background = ContextCompat.getDrawable(this@OnboardingNameActivity, backgroundRes)
-            setTextColor(ContextCompat.getColor(this@OnboardingNameActivity, textColorRes))
+            background = ContextCompat.getDrawable(this@SignupNameFragment, backgroundRes)
+            setTextColor(ContextCompat.getColor(this@SignupNameFragment, textColorRes))
         }
         binding.clOnboardingNameDelete.visibility = View.INVISIBLE
         binding.clOnboardingNameCheck.visibility = View.INVISIBLE

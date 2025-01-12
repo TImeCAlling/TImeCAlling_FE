@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.onboarding.adapter
+package com.umc.timeCAlling.presentation.signup.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemOnboardingTimeBinding
 
-class OnboardingTimeAdapter(
+class SignupTimeAdapter(
     private val timeOptions: List<String>
-) : RecyclerView.Adapter<OnboardingTimeAdapter.TimeViewHolder>() {
+) : RecyclerView.Adapter<SignupTimeAdapter.TimeViewHolder>() {
 
     private var selectedPosition: Int? = null
 

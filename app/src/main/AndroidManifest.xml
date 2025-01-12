@@ -22,7 +22,7 @@
 
 
         <activity
-            android:name=".presentation.onboarding.OnboardingActivity"
+            android:name=".presentation.signup.OnboardingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,11 +31,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.onboarding.OnboardingTermActivity" />
-        <activity android:name=".presentation.onboarding.OnboardingPhotoActivity" />
-        <activity android:name=".presentation.onboarding.OnboardingNameActivity" />
-        <activity android:name=".presentation.onboarding.OnboardingTimeActivity" />
-        <activity android:name=".presentation.onboarding.OnboardingSpareActivity" />
+        <activity android:name=".presentation.signup.OnboardingTermActivity" />
+        <activity android:name=".presentation.signup.OnboardingPhotoActivity" />
+        <activity android:name=".presentation.signup.OnboardingNameActivity" />
+        <activity android:name=".presentation.signup.OnboardingTimeActivity" />
+        <activity android:name=".presentation.signup.OnboardingSpareActivity" />
 
         <activity
             android:name=".presentation.MainActivity"

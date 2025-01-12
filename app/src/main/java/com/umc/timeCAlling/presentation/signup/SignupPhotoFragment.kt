@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.onboarding
+package com.umc.timeCAlling.presentation.signup
 
 import android.app.Activity
 import android.content.Intent
@@ -12,7 +12,7 @@ import com.umc.timeCAlling.presentation.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OnboardingPhotoActivity :
+class SignupPhotoFragment :
     BaseActivity<ActivityOnboardingPhotoBinding>(R.layout.activity_onboarding_photo) {
 
     private var isPhotoSelected = false

@@ -6,7 +6,7 @@ import android.os.Looper
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivitySplashBinding
 import com.umc.timeCAlling.presentation.base.BaseActivity
-import com.umc.timeCAlling.presentation.onboarding.OnboardingActivity
+import com.umc.timeCAlling.presentation.signup.OnboardingActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

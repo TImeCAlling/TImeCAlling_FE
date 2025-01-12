@@ -1,11 +1,11 @@
-package com.umc.timeCAlling.presentation.onboarding
+package com.umc.timeCAlling.presentation.signup
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardingViewModel @Inject constructor(
+class SignupViewModel @Inject constructor(
     // private val onboardingRepository: OnboardingRepository
 ) : ViewModel(){
 
