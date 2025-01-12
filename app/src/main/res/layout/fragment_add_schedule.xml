@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/topbar"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="20dp"
             app:indicatorColor="@color/mint_main"
             app:trackColor="@color/track"
             app:trackStopIndicatorSize="0dp"/>
@@ -82,7 +82,8 @@
                         style="@style/TextAppearance.TimeCAlling.Head1"
                         android:background="@color/transparency"
                         android:layout_marginTop="12dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:singleLine="true"/>
 
                     <TextView
                         android:id="@+id/tv_add_schedule_title_count"
@@ -155,7 +156,8 @@
                         android:hint="메모를 입력해주세요"
                         style="@style/TextAppearance.TimeCAlling.Body1"
                         android:background="@color/transparency"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:singleLine="true"/>
 
                     <ImageView
                         android:id="@+id/iv_add_schedule_memo_check"
@@ -360,7 +362,7 @@
             android:layout_marginBottom="20dp"
             android:text="다음"
             android:paddingVertical="20dp"
-            style="@style/TextAppearance.TimeCAlling.Button"
+            style="@style/TextAppearance.TimeCAlling.Bold_18sp"
             android:gravity="center"/>
 
         <View
@@ -429,7 +431,7 @@
                     android:layout_marginBottom="20dp"
                     android:text="저장하기"
                     android:paddingVertical="20dp"
-                    style="@style/TextAppearance.TimeCAlling.Button"
+                    style="@style/TextAppearance.TimeCAlling.Bold_18sp"
                     android:gravity="center"
                     app:layout_constraintTop_toBottomOf="@id/calendar_view"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -545,7 +547,7 @@
                     android:layout_marginBottom="20dp"
                     android:text="저장하기"
                     android:paddingVertical="20dp"
-                    style="@style/TextAppearance.TimeCAlling.Button"
+                    style="@style/TextAppearance.TimeCAlling.Bold_18sp"
                     android:gravity="center"
                     app:layout_constraintTop_toBottomOf="@id/layout_time_picker"
                     app:layout_constraintBottom_toBottomOf="parent"

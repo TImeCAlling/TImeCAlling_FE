@@ -7,6 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.skt.tmap.TMapData
 import com.skt.tmap.TMapTapi
@@ -20,14 +23,13 @@ class SearchResultRVA(
     private val viewModel: AddScheduleViewModel,
     private val lifecycleOwner: LifecycleOwner,
     private val onSearchResultClickListener: (SearchResult) -> Unit,
-    private val tMapView: TMapView,
-    private val tmapData: TMapData
+    private val navController: NavController
 ) : RecyclerView.Adapter<SearchResultRVA.SearchResultViewHolder>() {
 
     private var searchResults: List<SearchResult> = emptyList()
 
     init {
-        viewModel.searchResults.observe(lifecycleOwner) { results ->
+        viewModel.searchLocation.observe(lifecycleOwner) { results ->
             searchResults = results
             notifyDataSetChanged() // 데이터 변경 알림
         }
@@ -50,45 +52,15 @@ class SearchResultRVA(
         holder.address.text = searchResult.address
 
         holder.itemView.setOnClickListener {
-            onSearchResultClickListener(searchResult)
+            onSearchResultClickListener(searchResult) // 기존 콜백 호출
+            viewModel.setSelectedLocationName(searchResult.name) // ViewModel 함수 호출
         }
         val nextButton = holder.itemView.findViewById<ImageView>(R.id.iv_search_result_next)
         nextButton.setOnClickListener {
-            // next 버튼 클릭 시 경로 계산 로직 실행
-            viewModel.currentLocation.observe(lifecycleOwner) { currentLocation ->
-                lifecycleOwner.lifecycleScope.launch {
-                    val result = viewModel.getCarTransportation(
-                        currentLocation.longitude,
-                        currentLocation.latitude,
-                        searchResult.longitude,
-                        searchResult.latitude
-                    )
-                }
-            }
-            viewModel.currentLocation.observe(lifecycleOwner) { currentLocation ->
-                lifecycleOwner.lifecycleScope.launch {
-                    val result = viewModel.getWalkTransportation(
-                        currentLocation.longitude,
-                        currentLocation.latitude,
-                        searchResult.longitude,
-                        searchResult.latitude
-                    )
-                }
-            }
-            viewModel.currentLocation.observe(lifecycleOwner) { currentLocation ->
-                lifecycleOwner.lifecycleScope.launch {
-                    val result = viewModel.getPublicTransportation(
-                        currentLocation.longitude,
-                        currentLocation.latitude,
-                        searchResult.longitude,
-                        searchResult.latitude
-                    )
-                }
-            }
-
+            viewModel.setSelectedLocationName(searchResult.name) // ViewModel 함수 호출
+            navController.navigate(R.id.action_locationSearchFragment_to_locationResultFragment)
         }
     }
-
     override fun getItemCount(): Int {
         return searchResults.size
     }
