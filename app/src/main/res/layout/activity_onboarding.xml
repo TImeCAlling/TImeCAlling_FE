@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_onboarding_foreground_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_percent="0.325"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_onboarding_text"
+            android:layout_marginBottom="46dp"/>
+
+        <ImageView
+            android:id="@+id/iv_onboarding_foreground_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/shape_rect_999_mint_fill"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_percent="0.082"
+            app:layout_constraintEnd_toEndOf="@id/iv_onboarding_foreground_1"
+            app:layout_constraintBottom_toTopOf="@id/iv_onboarding_foreground_1"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="-2dp"/>
+
+        <ImageView
+            android:id="@+id/iv_onboarding_foreground_3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/shape_rect_999_mint_fill"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_percent="0.053"
+            app:layout_constraintEnd_toEndOf="@id/iv_onboarding_foreground_1"
+            app:layout_constraintBottom_toTopOf="@id/iv_onboarding_foreground_1"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="40dp"/>
+
+
+        <TextView
+            android:id="@+id/tv_onboarding_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24dp"
+            android:text="타임콜링과 함께하는\n효율적인 시간관리"
+            android:textAlignment="center"
+            android:fontFamily="@font/pretendard_bold"
+            android:textColor="@color/gray_900"
+            android:layout_marginTop="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/iv_onboarding_kakao_login"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_login_kakao"
+            app:layout_constraintDimensionRatio="300:45"
+            app:layout_constraintWidth_percent="0.833"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_onboarding_text"
+            android:layout_marginTop="68dp"/>
+
+        <ImageView
+            android:id="@+id/iv_navigate_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_selected_home"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_onboarding_kakao_login"
+            android:layout_marginTop="50dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
