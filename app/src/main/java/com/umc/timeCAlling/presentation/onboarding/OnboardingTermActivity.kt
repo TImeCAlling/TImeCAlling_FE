@@ -47,6 +47,9 @@ class OnboardingTermActivity : BaseActivity<ActivityOnboardingTermBinding>(R.lay
             }
         }
 
+        // 약관 화살표 클릭 이벤트
+        setupArrowClickListeners()
+
         binding.tvOnboardingTermNext.setOnClickListener {
             if (isNextButtonEnabled()) {
                 navigateToOnboardingPhotoActivity()
@@ -85,6 +88,28 @@ class OnboardingTermActivity : BaseActivity<ActivityOnboardingTermBinding>(R.lay
                 if (allRequiredSelected) R.style.TextAppearance_TimeCAlling_Button
                 else R.style.TextAppearance_TimeCAlling_Button_Gray
             )
+        }
+    }
+
+    private fun setupArrowClickListeners() {
+        val arrowConfigs = listOf(
+            Triple(binding.ivOnboardingTermArrowUp2, binding.ivOnboardingTermArrowDown2, binding.tvOnboardingTermContent2),
+            Triple(binding.ivOnboardingTermArrowUp3, binding.ivOnboardingTermArrowDown3, binding.tvOnboardingTermContent3),
+            Triple(binding.ivOnboardingTermArrowUp4, binding.ivOnboardingTermArrowDown4, binding.tvOnboardingTermContent4)
+        )
+
+        arrowConfigs.forEach { (arrowUp, arrowDown, contentView) ->
+            arrowUp.setOnClickListener {
+                arrowUp.visibility = View.INVISIBLE
+                arrowDown.visibility = View.VISIBLE
+                contentView.visibility = View.GONE
+            }
+
+            arrowDown.setOnClickListener {
+                arrowDown.visibility = View.INVISIBLE
+                arrowUp.visibility = View.VISIBLE
+                contentView.visibility = View.VISIBLE
+            }
         }
     }
 
