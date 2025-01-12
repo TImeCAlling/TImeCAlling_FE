@@ -28,7 +28,7 @@ class OnboardingTimeActivity : BaseActivity<ActivityOnboardingTimeBinding>(R.lay
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val adapter = OnboardingTimeAdapter(timeOptions)
 
-        binding.recyclerView.apply {
+        binding.rvOnboardingTimeRecyclerView.apply {
             this.layoutManager = layoutManager
             this.adapter = adapter
 

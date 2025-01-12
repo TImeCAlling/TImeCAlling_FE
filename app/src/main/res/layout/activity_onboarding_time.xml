@@ -93,7 +93,7 @@
 
         <!-- recycler view -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/rv_onboarding_time_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="72dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -101,6 +101,23 @@
             app:layout_constraintTop_toBottomOf="@id/tv_onboarding_time_title1"
             android:layout_marginTop="80dp"
             tools:listitem="@layout/item_onboarding_time"/>
+
+        <!-- 양 끝 연하게 -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_onboarding_rv_1"
+            android:alpha="0.7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/rv_onboarding_time_recyclerView"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_onboarding_rv_2"
+            android:alpha="0.7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/rv_onboarding_time_recyclerView"/>
 
         <!-- btn -->
         <TextView
