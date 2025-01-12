@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/shape_rect_20_white_fill"
+    android:padding="28dp">
+
+    <ImageView
+        android:id="@+id/img_dialog_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_dialog_warning"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="' 컴퓨터 구조 '"
+        style="@style/TextAppearance.TimeCAlling.Head1"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/img_dialog_icon"
+        android:layout_marginTop="16dp"/>
+    
+    <TextView
+        android:id="@+id/tv_dialog_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="일정을 삭제하시겠습니까?"
+        style="@style/TextAppearance.TimeCAlling.Head1"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_dialog_title"/>
+
+    <TextView
+        android:id="@+id/tv_dialog_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="❗일정을 삭제하면 해당 일정의\n정보가 사라져요"
+        android:textColor="@color/gray_600"
+        style="@style/TextAppearance.TimeCAlling.Body1"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_dialog_text"
+        android:layout_marginTop="12dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_dialog_alert">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_dialog_yes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rect_12_mint300_fill"
+            android:backgroundTint="@null"
+            android:text="네"
+            android:fontFamily="@font/pretendard_bold"
+            android:textColor="@color/gray_900"
+            android:textSize="18sp"/>
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_dialog_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rect_12_mint_fill"
+            android:text="아니요"
+            android:fontFamily="@font/pretendard_bold"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

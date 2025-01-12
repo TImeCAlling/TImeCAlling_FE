@@ -19,4 +19,15 @@
         <item name="android:textColor">@drawable/sel_calender_textcolor</item>
         <item name="android:textAppearance">@style/TextAppearance.TimeCAlling.Calender</item>
     </style>
+
+    <!-- 팝업 메뉴 스타일 설정 -->
+    <style name="CustomPopupMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/shape_rect_4_white_fill</item>
+    </style>
+
+    <style name="PopupMenuItemStyle">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/gray_900</item>
+    </style>
 </resources>
