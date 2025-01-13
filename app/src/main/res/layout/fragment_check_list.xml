@@ -130,7 +130,8 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_checklist_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="다음"
@@ -138,7 +139,6 @@
             android:layout_marginHorizontal="21dp"
             android:layout_marginBottom="48dp"
             android:paddingVertical="20dp"
-            android:textAlignment="center"
             android:background="@drawable/shape_rect_999_mint_fill"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
