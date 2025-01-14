@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="black_500">#9E9E9E</color>
     <color name="black_700">#616161</color>
+    <color name="black_900">#222222</color>
     <color name="white">#FFFFFFFF</color>
     <color name="warning">#F26E6E</color>
     <color name="red">#FF0000</color>
     <color name="gray">#767373</color>
+    <color name="gray_100">#F9F9F9</color>"
+    <color name="gray_180">#F7F7F7</color>
     <color name="gray_200">#F5F5F5</color>
     <color name="gray_250">#F0F0F0</color>
-    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_300">#EDEDED</color>
     <color name="gray_400">#BDBDBD</color>
     <color name="gray_500">#9E9E9E</color>
     <color name="gray_600">#757575</color>
@@ -26,6 +30,8 @@
     <color name="bottomsheet_background">#80000000</color>
     <color name="line">#2B000000</color>
     <color name="track">#EFF5F5</color>
+    <color name="blue">#4A71FF</color>
+    <color name="yellow">#FBC960</color>
     <color name="category_orange">#FA9667</color>
     <color name="category_yellow">#FFB00A</color>
     <color name="category_skyblue">#8EB9FE</color>
@@ -34,5 +40,4 @@
     <color name="category_pink">#F494A0</color>
     <color name="category_mauve">#CDA7D9</color>
     <color name="category_purple">#A295D4</color>
-
 </resources>

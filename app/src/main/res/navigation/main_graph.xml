@@ -14,6 +14,12 @@
             android:id="@+id/action_homeFragment_to_addScheduleTab"
             app:destination="@id/addScheduleTab"/>
         <action
+            android:id="@+id/action_homeFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mypageFragment"
+            app:destination="@id/mypageFragment" />
+        <action
             android:id="@+id/action_homeFragment_to_signupFragment"
             app:destination="@id/signupFragment"/>
     </fragment>
@@ -22,7 +28,11 @@
         android:id="@+id/calendarFragment"
         android:name="com.umc.timeCAlling.presentation.calendar.CalendarFragment"
         android:label="CalendarFragment"
-        tools:layout="@layout/fragment_calendar"/>
+        tools:layout="@layout/fragment_calendar">
+        <action
+            android:id="@+id/action_calendarFragment_to_addScheduleTab"
+            app:destination="@id/addScheduleTab" />
+    </fragment>
 
     <fragment
         android:id="@+id/mypageFragment"
@@ -95,6 +105,13 @@
         </fragment>
     </navigation>
 
+    <!-- 홈프래그먼트로 전환 -->
+    <action
+        android:id="@+id/action_global_home"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@+id/homeFragment"
+        app:popUpToInclusive="false" />
+</navigation>
     <!-- Signup flow -->
     <navigation
         android:id="@+id/signupTab"
