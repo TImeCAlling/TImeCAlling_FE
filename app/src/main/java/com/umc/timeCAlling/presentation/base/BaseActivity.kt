@@ -5,6 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.navigation.NavController
 
 abstract class BaseActivity<V : ViewDataBinding>(@LayoutRes val layoutResource: Int) :
     AppCompatActivity() {

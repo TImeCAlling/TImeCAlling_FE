@@ -90,8 +90,14 @@ dependencies {
     implementation(libs.glide)
     ksp(libs.ksp)
 
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+
     //CardView
     implementation (libs.androidx.cardview)
+
+    // circle ImageView
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 
     // Coroutines Dependency
     implementation(libs.kotlinx.coroutines.core)
@@ -108,6 +114,10 @@ dependencies {
     implementation(files("libs/vsm-tmap-sdk-v2-android-1.7.23.aar"))
 
     implementation(libs.play.services.location)
+
+    implementation(libs.android.colorpicker)
+
+    implementation(libs.threetenabp)
 }
 configurations.all {
     exclude(group = "com.android.support")

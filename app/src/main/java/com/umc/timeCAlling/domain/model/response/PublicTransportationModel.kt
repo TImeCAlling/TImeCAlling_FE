@@ -53,7 +53,9 @@ data class PublicTransportationModel(
 
                 data class PublicLegModel(
                     val mode: String?,
+                    val routeColor:String?,
                     val sectionTime: Int?,
+                    val route: String?,
                     val distance: Int?,
                     val start: PublicStartModel?,
                     val end: PublicEndModel?,

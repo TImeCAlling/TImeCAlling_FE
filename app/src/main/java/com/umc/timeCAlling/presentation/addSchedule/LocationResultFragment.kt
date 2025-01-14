@@ -1,33 +1,19 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
+import android.graphics.PorterDuff
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.location.LocationServices
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.skt.tmap.TMapData
-import com.skt.tmap.TMapPoint
-import com.skt.tmap.TMapTapi
-import com.skt.tmap.TMapView
-import com.skt.tmap.overlay.TMapMarkerItem
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.data.SearchResult
 import com.umc.timeCAlling.databinding.FragmentLocationResultBinding
-import com.umc.timeCAlling.databinding.FragmentLocationSearchBinding
 import com.umc.timeCAlling.presentation.addSchedule.adapter.LocationResultTransportationListVPA
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -39,10 +25,6 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
     private var _transportationListVPA: LocationResultTransportationListVPA? = null
     private val transportationListVPA get() = _transportationListVPA
 
-    private lateinit var tMapView: TMapView
-    private lateinit var tmapTapi: TMapTapi
-    private lateinit var tmapData: TMapData
-
     override fun initObserver() {
 
     }
@@ -50,27 +32,28 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
     override fun initView() {
         bottomNavigationRemove()
         initLocationResultTransportationListVPAdapter()
-        initTMapView()
-    }
+        initSearchText()
+        moveToLocationSearch()
 
-    private fun bottomNavigationRemove() {
-        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
-        bottomNavigationView?.visibility = View.GONE
-    }
-
-    private fun initCarTime() {
-        viewModel.currentLocation.observe(viewLifecycleOwner) {location ->
-            if(location != null) {
-                tmapData.findAroundNamePOI(TMapPoint(location.latitude, location.longitude), "내 위치",1000, 10){poiItems ->
-
-                }
-            }
+        binding.ivLocationResultBack.setOnSingleClickListener {
+            findNavController().popBackStack()
         }
     }
 
-    private fun initTMapView() {
-        tMapView = TMapView(requireContext())
-        tMapView.setSKTMapApiKey(getString(R.string.tmap_app_key)) // T map API 키로 변경
+    private fun bottomNavigationRemove() {
+        // BottomNavigationView 숨기기
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
+        bottomNavigationView?.visibility = View.GONE
+
+        // + 버튼 숨기기
+        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
+        addScheduleButton?.visibility = View.GONE
+
+        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
+        shadowImageView?.visibility = View.GONE
+
+        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
+        ovalImageView?.visibility = View.GONE
     }
 
     private fun initLocationResultTransportationListVPAdapter(){
@@ -83,19 +66,30 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
             }.attach()
 
             tabLocationResultTransportation.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewModel.refreshCategoryPage(tab?.text?.toString() ?: "자동차")
+                override fun onTabSelected(tab: TabLayout.Tab) {
+                    viewModel.refreshCategoryPage(tab.text?.toString() ?: "자동차")
                 }
 
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                override fun onTabUnselected(tab: TabLayout.Tab) {
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab) {
 
                 }
 
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-
-                }
 
             })
+        }
+    }
+
+    private fun initSearchText(){
+        Log.d("selectedLocationName", "selectedLocationName: ${viewModel.selectedLocationName.value}")
+        binding.tvLocationSearchEnd.text = viewModel.selectedLocationName.value
+    }
+
+    private fun moveToLocationSearch() {
+        binding.tvLocationResultLocationSave.setOnClickListener {
+            findNavController().navigate(R.id.action_locationResultFragment_to_addScheduleFragment)
         }
     }
 
