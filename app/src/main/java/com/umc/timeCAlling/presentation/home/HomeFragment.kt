@@ -19,7 +19,13 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     override fun initView() {
+
+        binding.ivGoToAddSchedule.setOnSingleClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
+        }
+
         bottomNavigationShow()
+
     }
 
     private fun bottomNavigationShow() {

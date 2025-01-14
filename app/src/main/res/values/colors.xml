@@ -4,6 +4,7 @@
     <color name="black_700">#616161</color>
     <color name="white">#FFFFFFFF</color>
     <color name="warning">#F26E6E</color>
+    <color name="red">#FF0000</color>
     <color name="gray">#767373</color>
     <color name="gray_200">#F5F5F5</color>
     <color name="gray_250">#F0F0F0</color>
@@ -19,6 +20,7 @@
     <color name="mint_200">#ECF4F1</color>
     <color name="mint_300">#E0F2F1</color>
     <color name="mint_400">#ADE6D1</color>
+    <color name="mint_500">#84E0BE</color>
     <color name="mint_600">#009278</color>
     <color name="transparency">#00ff0000</color>
     <color name="bottomsheet_background">#80000000</color>
