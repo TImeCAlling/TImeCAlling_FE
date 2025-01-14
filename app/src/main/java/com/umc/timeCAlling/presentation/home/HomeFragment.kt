@@ -13,24 +13,25 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var navController: NavController
-    override fun initView() {
-        binding.ivGoToAddSchedule.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
-        }
-
-        bottomNavigationVisible()
-    }
 
     override fun initObserver() {
 
     }
 
-    private fun bottomNavigationVisible() {
-        // BottomNavigationView 보이기
+    override fun initView() {
+
+        binding.ivGoToAddSchedule.setOnSingleClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
+        }
+
+        bottomNavigationShow()
+
+    }
+
+    private fun bottomNavigationShow() {
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
         bottomNavigationView?.visibility = View.VISIBLE
 
-        // + 버튼 보이기
         val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
         addScheduleButton?.visibility = View.VISIBLE
 

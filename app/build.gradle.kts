@@ -113,6 +113,10 @@ dependencies {
     implementation(files("libs/vsm-tmap-sdk-v2-android-1.7.23.aar"))
 
     implementation(libs.play.services.location)
+
+    implementation(libs.android.colorpicker)
+
+    implementation(libs.threetenabp)
 }
 configurations.all {
     exclude(group = "com.android.support")
