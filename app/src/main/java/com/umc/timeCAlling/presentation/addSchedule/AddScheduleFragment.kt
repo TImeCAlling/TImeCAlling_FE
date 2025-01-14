@@ -6,17 +6,20 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentAddScheduleBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fragment_add_schedule) {
 
+    private val viewModel: AddScheduleViewModel by activityViewModels() // ViewModel 초기화
     private lateinit var dateBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
@@ -31,7 +34,15 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         initScheduleName()
         initScheduleMemo()
         moveToLocationSearch()
+        moveToAddScheduleSecond()
 
+        binding.ivAddScheduleBack.setOnSingleClickListener {
+            findNavController().popBackStack()
+        }
+        viewModel.timeTaken.observe(viewLifecycleOwner) { timeTaken ->
+            binding.tvAddScheduleMinute.text = timeTaken.toString()
+            binding.tvAddScheduleMinute.visibility = if (timeTaken != null && timeTaken != 0) View.VISIBLE else View.INVISIBLE
+        }
     }
 
     override fun initObserver() {
@@ -220,13 +231,17 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 // 텍스트 변경 후
             }
         })
-
     }
 
     private fun moveToLocationSearch() {
         binding.layoutAddScheduleLocation.setOnClickListener {
             findNavController().navigate(R.id.action_addScheduleFragment_to_locationSearchFragment)
         }
+    }
 
+    private fun moveToAddScheduleSecond() {
+        binding.tvAddScheduleNext.setOnClickListener {
+            findNavController().navigate(R.id.action_addScheduleFragment_to_addScheduleSecondFragment)
+        }
     }
 }
