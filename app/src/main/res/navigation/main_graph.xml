@@ -12,13 +12,16 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_addScheduleTab"
-            app:destination="@id/addScheduleTab"/>
+            app:destination="@id/addScheduleTab" />
         <action
             android:id="@+id/action_homeFragment_to_calendarFragment"
             app:destination="@id/calendarFragment" />
         <action
             android:id="@+id/action_homeFragment_to_mypageFragment"
             app:destination="@id/mypageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_checkListFragment"
+            app:destination="@id/checkListFragment" />
     </fragment>
 
     <fragment
@@ -63,11 +66,29 @@
             android:label="LocationResultFragment"
             tools:layout="@layout/fragment_location_result"/>
     </navigation>
+    <fragment
+        android:id="@+id/checkListFragment"
+        android:name="com.umc.timeCAlling.presentation.checkList.CheckListFragment"
+        android:label="CheckListFragment">
+        <argument
+            android:name="scheduleIndex"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_checkListFragment_to_checkListResultFragment"
+            app:destination="@id/checkListResultFragment" />
+    </fragment>
 
-    <!-- 홈프래그먼트로 전환 -->
     <action
-        android:id="@+id/action_global_home"
-        app:destination="@id/homeFragment"
-        app:popUpTo="@+id/homeFragment"
-        app:popUpToInclusive="false" />
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment" />
+    <fragment
+        android:id="@+id/checkListResultFragment"
+        android:name="com.umc.timeCAlling.presentation.checkList.CheckListResultFragment"
+        android:label="CheckListResultFragment" >
+        <action
+            android:id="@+id/action_checkListResultFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
 </navigation>
