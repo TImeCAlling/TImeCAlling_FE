@@ -105,6 +105,10 @@
         <item name="fontFamily">@font/pretendard_bold</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.Button">
+        <!-- 오류 수정 중 -->
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Button.Mint">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/mint_main</item>
