@@ -7,8 +7,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="warning">#F26E6E</color>
     <color name="red">#FF0000</color>
+    <color name="wakeup_context">#8B8B8B</color>
     <color name="gray">#767373</color>
-    <color name="gray_100">#F9F9F9</color>"
+    <color name="gray_100">#F9F9F9</color>
     <color name="gray_180">#F7F7F7</color>
     <color name="gray_200">#F5F5F5</color>
     <color name="gray_250">#F0F0F0</color>

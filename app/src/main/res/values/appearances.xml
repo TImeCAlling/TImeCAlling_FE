@@ -38,6 +38,12 @@
         <item name="fontFamily">@font/pretendard_regular</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.SemiBold_20sp">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/gray_900</item>
+        <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Head4">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/gray_800</item>
@@ -91,6 +97,12 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/black_700</item>
         <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
+    <style name="TextAppearance.TimeCAlling.Detail.Medium">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/wakeup_context</item>
+        <item name="fontFamily">@font/pretendard_medium</item>
     </style>
 
     <style name="TextAppearance.TimeCAlling.Detail.Bold">
