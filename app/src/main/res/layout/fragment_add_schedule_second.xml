@@ -247,63 +247,6 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="음악 알람"
-                        style="@style/TextAppearance.TimeCAlling.Body1.Bold"
-                        android:layout_weight="1"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:id="@+id/layout_add_schedule_music"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/shape_rect_10_gray250_fill"
-                        android:padding="20dp">
-
-                        <TextView
-                            android:id="@+id/tv_add_schedule_music"
-                            style="@style/TextAppearance.TimeCAlling.Body1.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="없음"
-                            android:layout_gravity="center_vertical"/>
-
-                        <ImageView
-                            android:id="@+id/iv_add_schedule_music"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_arrow_right"
-                            android:layout_marginStart="1dp"/>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/menu_add_schedule_music"
-                            android:layout_width="0dp"
-                            android:layout_height="22dp"
-                            app:thumbTint="@color/white"
-                            app:trackTint="@color/gray_400"
-                            android:layout_weight="1"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="24dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
                         android:text="카테고리"
                         style="@style/TextAppearance.TimeCAlling.Body1.Bold"
                         android:layout_weight="1"/>
