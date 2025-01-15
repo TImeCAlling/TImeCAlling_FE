@@ -164,7 +164,7 @@
 
         <!-- 바텀 bg -->
         <View
-            android:id="@+id/view_myprofile_bottom_bg"
+            android:id="@+id/view_myprofile_bg"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/bg_bottom"
@@ -184,7 +184,7 @@
             android:textColor="@color/gray_900"
             style="@style/MaterialAlertDialog.Material3.Body.Text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/view_myprofile_bottom_bg"
+            app:layout_constraintTop_toTopOf="@id/view_myprofile_bg"
             android:layout_marginStart="32dp"
             android:layout_marginTop="30dp"/>
 
@@ -428,6 +428,9 @@
                     android:layout_marginHorizontal="20dp"
                     android:hint="EX) 김타임"
                     android:text=""
+                    android:focusableInTouchMode="true"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:paddingVertical="20dp"
                     style="@style/TextAppearance.TimeCAlling.Body1.Hint"
                     android:gravity="left"
