@@ -111,7 +111,7 @@
         app:destination="@id/homeFragment"
         app:popUpTo="@+id/homeFragment"
         app:popUpToInclusive="false" />
-</navigation>
+
     <!-- Signup flow -->
     <navigation
         android:id="@+id/signupTab"
