@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CheckListFragment: BaseFragment<FragmentCheckListBinding>(R.layout.fragment_check_list) {
+    private lateinit var args : CheckListFragmentArgs
 
     private var questionIndex = 0
     private var selectedIndex: Int? = null
@@ -46,10 +47,10 @@ class CheckListFragment: BaseFragment<FragmentCheckListBinding>(R.layout.fragmen
     )
 
     override fun initView() {
+        args = CheckListFragmentArgs.fromBundle(requireArguments())
         bottomNavigationRemove()
         initCheckList()
-        val args = CheckListFragmentArgs.fromBundle(requireArguments())
-        val idx = args.scheduleIndex
+
         binding.apply{
             ivChecklistBack.setOnClickListener {
                 findNavController().navigate(R.id.action_global_homeFragment)
@@ -110,7 +111,9 @@ class CheckListFragment: BaseFragment<FragmentCheckListBinding>(R.layout.fragmen
                     showQuestion(questionIndex)
                 } else {
                     Log.d("userAnswers", userAnswers)
-                    findNavController().navigate(R.id.action_checkListFragment_to_checkListResultFragment)
+                    val idx = args.scheduleIndex
+                    val action = CheckListFragmentDirections.actionCheckListFragmentToCheckListResultFragment(idx)
+                    findNavController().navigate(action)
                 }
             }
         }

@@ -26,8 +26,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.ivHomeMypage.setOnSingleClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_mypageFragment)
         }
-
-        setProgressBar(6, 6)  //나중에 하기
         initLastScheduleRV()
         initTodayScheduleRV()
 
@@ -41,10 +39,10 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
             LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
             LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
-            LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
-            LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
-            LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
+            LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00")
         )
+        val listSize = list.size
+        setProgressBar(listSize, listSize)
         val adapter = LastScheduleRVA(list)
         binding.rvHomeLastSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -61,8 +59,20 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         adapter.itemClick = object : LastScheduleRVA.ItemClick {
             override fun onItemClick(view: View, position: Int) {
                 Toast.makeText(requireContext(), "${list[position].title} Clicked", Toast.LENGTH_SHORT).show()
-                val action = HomeFragmentDirections.actionHomeFragmentToCheckListFragment(position)
+                val action = HomeFragmentDirections.actionHomeFragmentToCheckListFragment(scheduleIndex =position)
                 findNavController().navigate(action)
+            }
+        }
+
+        val args = HomeFragmentArgs.fromBundle(requireArguments())
+        val idx = args.scheduleIndex
+        if(idx != -1) {
+            list.removeAt(idx)
+            adapter.notifyDataSetChanged()
+            setProgressBar(listSize, list.size)
+            if(list.isEmpty()) {
+                binding.rvHomeLastSchedule.visibility = View.GONE
+                binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
             }
         }
     }
@@ -116,7 +126,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         val maxWidth = binding.viewHomeProgressBarBackground.width
         val progress = ((1-(currentSize.toFloat() / size.toFloat())) * maxWidth).toInt()
         binding.viewHomeProgressBarForeground.layoutParams = (binding.viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
-            width = if(progress <= 20) requireContext().toPx(20).toInt() else progress
+            width = if(progress <= 20) requireContext().toPx(20).toInt() else requireContext().toPx(progress).toInt()
         }
         binding.tvHomeProgress.text = "${((1 - (currentSize.toFloat() / size.toFloat())) * 100).toInt()}%"
     }

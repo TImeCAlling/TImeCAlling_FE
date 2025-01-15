@@ -10,6 +10,10 @@
         android:name="com.umc.timeCAlling.presentation.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
+        <argument
+            android:name="scheduleIndex"
+            app:argType="integer"
+            android:defaultValue="-1"/>
         <action
             android:id="@+id/action_homeFragment_to_addScheduleTab"
             app:destination="@id/addScheduleTab" />
@@ -82,10 +86,15 @@
     <action
         android:id="@+id/action_global_homeFragment"
         app:destination="@id/homeFragment" />
+
     <fragment
         android:id="@+id/checkListResultFragment"
         android:name="com.umc.timeCAlling.presentation.checkList.CheckListResultFragment"
         android:label="CheckListResultFragment" >
+        <argument
+            android:name="scheduleIndex"
+            app:argType="integer"
+            android:defaultValue="-1"/>
         <action
             android:id="@+id/action_checkListResultFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
