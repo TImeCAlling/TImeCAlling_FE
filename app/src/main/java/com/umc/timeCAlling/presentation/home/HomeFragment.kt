@@ -7,13 +7,10 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.View
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
+import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
@@ -22,10 +19,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var navController: NavController
-
-    override fun initObserver() {
-
-    }
 
     override fun initView() {
         binding.layoutHomeTodayScheduleDetail.setOnClickListener{
@@ -41,10 +34,12 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     }
     override fun initObserver() {
+/*
 
         binding.ivGoToAddSchedule.setOnSingleClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
         }
+*/
 
         bottomNavigationShow()
 
