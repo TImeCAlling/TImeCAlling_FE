@@ -17,8 +17,8 @@
             android:id="@+id/action_homeFragment_to_calendarFragment"
             app:destination="@id/calendarFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_mypageFragment"
-            app:destination="@id/mypageFragment" />
+            android:id="@+id/action_homeFragment_to_mypageTab"
+            app:destination="@id/mypageTab" />
         <action
             android:id="@+id/action_homeFragment_to_signupFragment"
             app:destination="@id/signupFragment"/>
@@ -34,11 +34,24 @@
             app:destination="@id/addScheduleTab" />
     </fragment>
 
-    <fragment
-        android:id="@+id/mypageFragment"
-        android:name="com.umc.timeCAlling.presentation.mypage.MypageFragment"
-        android:label="MypageFragment"
-        tools:layout="@layout/fragment_mypage"/>
+    <navigation
+        android:id="@+id/mypageTab"
+        app:startDestination="@id/mypageFragment">
+        <fragment
+            android:id="@+id/mypageFragment"
+            android:name="com.umc.timeCAlling.presentation.mypage.MypageFragment"
+            android:label="MypageFragment"
+            tools:layout="@layout/fragment_mypage">
+            <action
+                android:id="@+id/action_mypageFragment_to_myprofileFragment"
+                app:destination="@id/myprofileFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/myprofileFragment"
+            android:name="com.umc.timeCAlling.presentation.mypage.MyprofileFragment"
+            android:label="MyprofileFragment"
+            tools:layout="@layout/fragment_myprofile"/>
+    </navigation>
 
     <navigation
         android:id="@+id/addScheduleTab"

@@ -25,7 +25,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_homeFragment_to_calendarFragment)
         }
         binding.ivHomeMypage.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_mypageFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_mypageTab)
         }
 
         setProgressBar(6, 6)  //나중에 하기
@@ -34,15 +34,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     }
     override fun initObserver() {
-/*
-
-        binding.ivGoToAddSchedule.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
-        }
-*/
-
         bottomNavigationShow()
-
     }
 
     private fun bottomNavigationShow() {
