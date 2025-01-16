@@ -16,7 +16,7 @@
                 android:id="@+id/tv_dialog_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="깨우기 완료"
+                android:text="링크가 복사되었습니다"
                 style="@style/TextAppearance.TimeCAlling.Head1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="28dp"/>
@@ -25,7 +25,7 @@
                 android:id="@+id/tv_dialog_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="000님께 깨우기 알람을 보냈어요!"
+                android:text="친구한테 링크를 보내 일정을 공유해보세요!"
                 style="@style/TextAppearance.TimeCAlling.Body1"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/tv_dialog_title"

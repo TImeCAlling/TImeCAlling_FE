@@ -8,18 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_rect_20_mint200_fill"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:paddingHorizontal="19dp"
         android:paddingVertical="12dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_wakeup_people_profile"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/iv_people_profile_example"/>
+            android:src="@drawable/img_people_profile_example" />
 
         <TextView
             android:id="@+id/tv_wakeup_people_name"
@@ -32,11 +32,13 @@
             android:layout_weight="1"/>
 
         <ImageView
-            android:id="@+id/iv_search_result_next"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:src="@drawable/ic_location_next"
-            android:padding="2dp"/>
+            android:id="@+id/iv_wakeup"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:padding="18dp"
+            android:src="@drawable/img_alarm"
+            android:background="@drawable/shape_circle_white_fill"
+            android:backgroundTint="@color/gray_400"/>
 
     </LinearLayout>
 
