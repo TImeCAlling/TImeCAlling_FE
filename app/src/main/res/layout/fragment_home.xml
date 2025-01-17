@@ -6,7 +6,23 @@
     <data>
 
     </data>
-    <androidx.core.widget.NestedScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--<androidx.core.widget.NestedScrollView
+            android:id="@+id/routeCaptionBottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:layout_behavior=".TopSheetBehavior">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="hello world22222"/>
+
+        </androidx.core.widget.NestedScrollView>-->
+        <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -275,4 +291,218 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:layout_behavior=".TopSheetBehavior"
+            android:background="@color/white"
+            android:id="@+id/layout_home_top_sheet">
+
+            <LinearLayout
+                android:id="@+id/layout_pre_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_rect_999_white_fill_gray300_line_1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <TextView
+                    android:id="@+id/tv_detail_time_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="오전"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="16sp"
+                    android:textColor="@color/gray_700"/>
+                <TextView
+                    android:id="@+id/tv_detail_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="9:00"
+                    android:textColor="@color/mint_600"
+                    style="@style/TextAppearance.TimeCAlling.Head4.Bold"
+                    android:layout_marginStart="4dp"/>
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_pre_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="컴퓨터 구조"
+                style="@style/TextAppearance.TimeCAlling.Head1.Bold"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/layout_pre_time"
+                app:layout_constraintStart_toStartOf="@id/layout_pre_time"
+                app:layout_constraintEnd_toEndOf="@id/layout_pre_time"/>
+            <LinearLayout
+                android:id="@+id/layout_pre_members"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/tv_pre_title"
+                app:layout_constraintStart_toStartOf="@id/tv_pre_title"
+                app:layout_constraintEnd_toEndOf="@id/tv_pre_title">
+                <ImageView
+                    android:id="@+id/img_pre_member_first"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="-12dp"
+                    android:src="@drawable/shape_rect_999_mint_fill"/>
+                <ImageView
+                    android:id="@+id/img_pre_member_second"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="-12dp"
+                    android:src="@drawable/shape_rect_999_mint_fill"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_pre_extra_members"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/shape_rect_999_white_fill_gray300_line_2">
+                    <TextView
+                        android:id="@+id/tv_pre_extra_members"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.TimeCAlling.Body2"
+                        android:textStyle="bold"
+                        android:textColor="@color/gray_600"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:text="+3" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+            <ProgressBar
+                android:id="@+id/progressbar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="236dp"
+                android:layout_height="236dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="28dp"
+                android:indeterminate="false"
+                android:max="100"
+                android:progressBackgroundTint="@color/gray_200"
+                android:progressTint="@color/mint_main"
+                android:background="@drawable/circle_progressbar"
+                app:layout_constraintTop_toBottomOf="@id/layout_pre_members"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+            <TextView
+                android:id="@+id/tv_pre_ment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📣 5분 전입니다. 나갈 준비하세요."
+                style="@style/TextAppearance.TimeCAlling.Body2"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="15dp"
+                android:paddingVertical="10dp"
+                android:gravity="center"
+                android:background="@drawable/shape_rect_999_gray200_fill"
+                app:layout_constraintTop_toBottomOf="@id/progressbar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginHorizontal="15dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_pre_ment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_rect_18_white_fill_gray300_line_1"
+                    android:padding="14dp">
+
+                    <ImageView
+                        android:id="@+id/iv_pre_alarm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pre_alarm"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="총 시간"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:textColor="@color/gray_600"
+                        android:textSize="14sp"
+                        android:layout_marginStart="6dp"
+                        app:layout_constraintStart_toEndOf="@id/iv_pre_alarm"
+                        app:layout_constraintTop_toTopOf="@id/iv_pre_alarm"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_pre_alarm"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1시간 20분"
+                        android:textColor="@color/gray_900"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_pre_alarm"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <View
+                    android:layout_width="25dp"
+                    android:layout_height="0dp"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_rect_18_white_fill_gray300_line_1"
+                    android:padding="14dp">
+
+                    <ImageView
+                        android:id="@+id/iv_pre_rest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pre_alarm"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="남은 시간"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:textColor="@color/gray_600"
+                        android:textSize="14sp"
+                        android:layout_marginStart="6dp"
+                        app:layout_constraintStart_toEndOf="@id/iv_pre_rest"
+                        app:layout_constraintTop_toTopOf="@id/iv_pre_rest"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_pre_rest"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="28분"
+                        android:textColor="@color/gray_900"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_pre_rest"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

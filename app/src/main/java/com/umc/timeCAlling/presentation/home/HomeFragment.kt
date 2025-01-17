@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
+import com.umc.timeCAlling.TopSheetBehavior
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
 import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
@@ -110,14 +111,10 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             binding.rvHomeTodaySchedule.visibility = View.VISIBLE
             binding.layoutHomeNoTodaySchedule.visibility = View.GONE
         }
-        adapter.deleteClick = object : TodayScheduleRVA.DeleteClick {
+        adapter.itemClick = object : TodayScheduleRVA.ItemClick {
             override fun onClick(view: View, position: Int) {
-                list2.removeAt(position)
-                adapter.notifyDataSetChanged()
-                if(list2.isEmpty()) {
-                    binding.rvHomeTodaySchedule.visibility = View.GONE
-                    binding.layoutHomeNoTodaySchedule.visibility = View.VISIBLE
-                }
+                val sheet = binding.layoutHomeTopSheet
+                TopSheetBehavior.from(sheet).state = TopSheetBehavior.STATE_EXPANDED
             }
         }
     }
