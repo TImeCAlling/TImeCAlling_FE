@@ -44,6 +44,12 @@
         <item name="fontFamily">@font/pretendard_semibold</item>
     </style>
 
+    <style name="TextAppearance.TimeCAlling.SemiBold_36sp">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
     <style name="TextAppearance.TimeCAlling.Head4">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/gray_800</item>
