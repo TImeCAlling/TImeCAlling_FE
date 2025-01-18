@@ -83,7 +83,7 @@
 
                 <LinearLayout
                     android:id="@+id/layout_add_schedule_second_spare_time"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_rect_999_gray200_fill"
                     android:layout_marginTop="12dp">
@@ -536,7 +536,7 @@
                     app:mcv_weekDayTextAppearance="@style/TextAppearance.TimeCAlling.Calender.0Day"/>
 
                 <TextView
-                    android:id="@+id/tv_add_schedule_date_save"
+                    android:id="@+id/tv_add_schedule_repeat_save"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_rect_999_mint_fill"

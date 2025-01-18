@@ -20,11 +20,9 @@ object CategoryManager {
         val prefs = getSharedPreferences(context)
         val categoriesJson = prefs.getString(KEY_CATEGORIES, null)
         if (categoriesJson != null) {
-            // 기존에 저장된 데이터가 있으면 초기 카테고리 데이터를 추가하지 않음
             val type = object : TypeToken<List<Category>>() {}.type
             categories.addAll(Gson().fromJson(categoriesJson, type))
         } else {
-            // 기존에 저장된 데이터가 없으면 초기 카테고리 데이터를 추가
             categories.addAll(
                 listOf(
                     Category("일상", R.color.category_orange),

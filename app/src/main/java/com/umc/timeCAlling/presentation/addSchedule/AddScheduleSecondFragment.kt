@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
@@ -49,6 +50,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         initRepeatBottomSheet()
         initCategoryBottomSheet()
         moveToAddScheduleSuccess()
+        initSpareTimeTextViews()
 
         binding.ivAddScheduleSecondBack.setOnSingleClickListener {
             findNavController().popBackStack()
@@ -73,6 +75,27 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         ovalImageView?.visibility = View.GONE
     }
 
+    private fun initSpareTimeTextViews() {
+        val spareTimeTextViews = listOf(
+            binding.tvAddScheduleSecondSpareTime1,
+            binding.tvAddScheduleSecondSpareTime2,
+            binding.tvAddScheduleSecondSpareTime3
+        )
+
+        spareTimeTextViews.forEach { textView ->
+            textView.setOnClickListener { clickedTextView ->
+                spareTimeTextViews.forEach { tv ->
+                    if (tv == clickedTextView) {
+                        // 선택된 TextView 배경 변경
+                        tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_mint300_fill_mint_line_1)
+                    } else {
+                        // 선택되지 않은 TextView 배경 변경
+                        tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray200_fill)
+                    }
+                }
+            }
+        }
+    }
     private fun initRepeatBottomSheet() {
         val calendarView = binding.calendarView // MaterialCalendarView
         val startTextView = binding.tvAddScheduleRepeatStart // 날짜를 표시할 TextView
@@ -166,22 +189,28 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // onStateChanged()에서는 visibility를 변경하지 않음
             }
         })
+
+        binding.tvAddScheduleRepeatSave.setOnClickListener {
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            startTextView.text = startDate?.date?.format(formatter) ?: ""
+            endTextView.text = endDate?.date?.format(formatter) ?: ""
+            binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
+            repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 
     private fun initCategoryBottomSheet() {
-        val bottomSheet = binding.bottomSheetCategory // BottomSheet 레이아웃 ID
+        val bottomSheet = binding.bottomSheetCategory
         categoryBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
+        categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
         categoryBottomSheetBehavior.peekHeight = 0
-        categoryBottomSheetBehavior.isHideable = true // 드래그하여 숨기기 설정
-        categoryBottomSheetBehavior.skipCollapsed = true // 숨김 상태로 바로 전환
+        categoryBottomSheetBehavior.isHideable = true
+        categoryBottomSheetBehavior.skipCollapsed = true
 
-        // 이미지 클릭 리스너
         binding.ivAddScheduleCategoryList.setOnClickListener {
             if (categoryBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -207,7 +236,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // onStateChanged()에서는 visibility를 변경하지 않음
+
             }
         })
     }

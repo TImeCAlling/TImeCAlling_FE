@@ -38,11 +38,9 @@ class CategoryEditFragment: BaseFragment<FragmentCategoryEditBinding>(R.layout.f
     }
 
     private fun bottomNavigationRemove() {
-        // BottomNavigationView 숨기기
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
         bottomNavigationView?.visibility = View.GONE
 
-        // + 버튼 숨기기
         val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
         addScheduleButton?.visibility = View.GONE
 

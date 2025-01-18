@@ -196,7 +196,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_weight="1"
                         android:background="@drawable/shape_rect_10_gray250_fill"
-                        android:paddingHorizontal="20dp"
+                        android:paddingHorizontal="16dp"
                         android:paddingVertical="15dp">
 
                         <ImageView
@@ -208,12 +208,22 @@
 
                         <TextView
                             android:id="@+id/tv_add_schedule_date"
-                            style="@style/TextAppearance.TimeCAlling.Body2.Hint"
-                            android:layout_width="wrap_content"
+                            style="@style/TextAppearance.TimeCAlling.Body2"
+                            android:textColor="@color/gray_500"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:text="날짜를 입력하세요"
-                            android:layout_gravity="center_vertical"/>
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:id="@+id/iv_add_schedule_date_arrow"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:background="@drawable/ic_arrow_right"
+                            android:backgroundTint="@color/gray_400"
+                            android:visibility="invisible"/>
 
                     </LinearLayout>
 
@@ -227,7 +237,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_rect_10_gray250_fill"
                         android:layout_marginTop="12dp"
-                        android:paddingHorizontal="20dp"
+                        android:paddingHorizontal="16dp"
                         android:paddingVertical="15dp"
                         android:layout_weight="1">
 
@@ -240,12 +250,22 @@
 
                         <TextView
                             android:id="@+id/tv_add_schedule_time"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="시간을 입력하세요"
-                            style="@style/TextAppearance.TimeCAlling.Body2.Hint"
+                            style="@style/TextAppearance.TimeCAlling.Body2"
+                            android:textColor="@color/gray_500"
                             android:layout_marginStart="6dp"
-                            android:layout_gravity="center_vertical"/>
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:id="@+id/iv_add_schedule_time_arrow"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:background="@drawable/ic_arrow_right"
+                            android:backgroundTint="@color/gray_400"
+                            android:visibility="invisible"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -279,7 +299,7 @@
                         android:id="@+id/iv_add_schedule_location"
                         android:layout_width="23dp"
                         android:layout_height="23dp"
-                        android:src="@drawable/ic_map"
+                        android:background="@drawable/ic_map"
                         android:layout_gravity="center"/>
 
                     <TextView
@@ -287,15 +307,16 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="장소를 입력해주세요"
-                        style="@style/TextAppearance.TimeCAlling.Body1.Hint"
-                        android:background="@color/transparency"
+                        style="@style/TextAppearance.TimeCAlling.Body1"
+                        android:textColor="@color/gray_500"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"/>
 
                     <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:src="@drawable/ic_search"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/ic_arrow_right"
+                        android:backgroundTint="@color/gray_500"
                         android:layout_gravity="center"/>
 
                 </LinearLayout>
@@ -310,20 +331,27 @@
                     android:paddingVertical="22dp">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:id="@+id/tv_add_schedule_time_taken"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="소요시간"
-                        style="@style/TextAppearance.TimeCAlling.Body1.Hint"
+                        style="@style/TextAppearance.TimeCAlling.Body2.Bold"
                         android:layout_marginStart="8dp"
+                        android:layout_gravity="center"
+                        android:paddingHorizontal="7dp"
+                        android:paddingVertical="5dp"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"/>
 
                     <TextView
                         android:id="@+id/tv_add_schedule_hour"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
-                        style="@style/TextAppearance.TimeCAlling.Time"
-                        android:visibility="invisible"/>
+                        android:text=" "
+                        style="@style/TextAppearance.TimeCAlling.Time"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -335,10 +363,9 @@
                         android:id="@+id/tv_add_schedule_minute"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="20"
+                        android:text="    "
                         style="@style/TextAppearance.TimeCAlling.Time"
-                        android:layout_marginStart="8dp"
-                        android:visibility="invisible"/>
+                        android:layout_marginStart="8dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"

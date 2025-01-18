@@ -64,7 +64,7 @@
                 android:id="@+id/tv_alarm_content_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="준비 끝났지?😤"
+                android:text="준비 끝났지?"
                 android:layout_marginTop="8dp"/>
         </LinearLayout>
 
