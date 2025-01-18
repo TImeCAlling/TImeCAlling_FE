@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.text.color
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
+import com.umc.timeCAlling.data.Category
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.addSchedule.CategoryManager
 
@@ -62,5 +65,4 @@ class CategoryRVA(
     override fun getItemCount(): Int {
         return categories.size
     }
-
 }

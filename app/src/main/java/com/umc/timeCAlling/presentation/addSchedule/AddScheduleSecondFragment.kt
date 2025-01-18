@@ -8,28 +8,18 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.forEach
-import androidx.core.view.setMargins
-import androidx.core.view.setPadding
-import androidx.databinding.adapters.TextViewBindingAdapter
-import androidx.databinding.adapters.ViewBindingAdapter.setPadding
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.datepicker.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentAddScheduleSecondBinding
-import com.umc.timeCAlling.databinding.FragmentCalendarBinding
 import com.umc.timeCAlling.presentation.addSchedule.adapter.CategoryRVA
-import com.umc.timeCAlling.presentation.addSchedule.adapter.SearchResultRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.format.DateTimeFormatter
@@ -211,7 +201,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         categoryBottomSheetBehavior.isHideable = true
         categoryBottomSheetBehavior.skipCollapsed = true
 
-        binding.ivAddScheduleCategoryList.setOnClickListener {
+        binding.ivAddScheduleCategoryList.setOnSingleClickListener {
             if (categoryBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -222,7 +212,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             }
         }
 
-        binding.ivBottomSheetCategoryEdit.setOnClickListener {
+        binding.ivBottomSheetCategoryEdit.setOnSingleClickListener {
             moveToCategoryEdit()
         }
 
@@ -236,13 +226,12 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
+                // Handle state changes if needed
             }
         })
     }
 
     private fun initCategoryList() {
-        initCategoryBottomSheet()
         binding.bottomSheetCategory.visibility = View.VISIBLE
 
         val bottomSheetCategoryRVA = CategoryRVA(
@@ -256,7 +245,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         binding.rvBottomSheetCategory.layoutManager = LinearLayoutManager(requireContext())
         Log.d("LocationSearchFragment", "결과")
     }
-
     private fun Int.dpToPx(context: Context): Int {
         val metrics = context.resources.displayMetrics
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), metrics).toInt()
