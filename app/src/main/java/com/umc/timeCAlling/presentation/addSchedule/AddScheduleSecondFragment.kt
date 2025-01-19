@@ -34,12 +34,15 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private val viewModel: AddScheduleViewModel by activityViewModels() // ViewModel 초기화
     private lateinit var repeatBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var categoryBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private var isRepeatEnabled = false
+    private var selectedDays = mutableListOf<String>() // 선택된 요일들을 저장할 리스트
 
     override fun initView() {
 
         binding.viewBottomSheetBackground.isClickable = false
 
         initCategoryList()
+        initRepeatSwitch()
         bottomNavigationRemove()
         initRepeatBottomSheet()
         initCategoryBottomSheet()
@@ -87,6 +90,41 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             }
         }
     }
+
+    private fun initRepeatSwitch() {
+        binding.menuAddScheduleRepeat.setOnCheckedChangeListener { _, isChecked ->
+            isRepeatEnabled = isChecked
+            updateRepeatInfo()
+        }
+    }
+
+    private fun updateRepeatInfo() {
+        val repeatText = if (isRepeatEnabled) {
+            if (selectedDays.isNotEmpty()) {
+                val selectedDaysOfWeek = selectedDays.joinToString(", ") { day ->
+                    when (day) {
+                        "월" -> "월요일"
+                        "화" -> "화요일"
+                        "수" -> "수요일"
+                        "목" -> "목요일"
+                        "금" -> "금요일"
+                        "토" -> "토요일"
+                        "일" -> "일요일"
+                        else -> day
+                    }
+                }
+                "$selectedDaysOfWeek 마다"
+            } else {
+                "없음"
+            }
+        } else {
+            "없음"
+        }
+        binding.tvAddScheduleRepeat.text = repeatText
+        binding.tvAddScheduleRepeat.visibility = if (isRepeatEnabled) View.VISIBLE else View.GONE
+        binding.layoutAddSheduleRepeatDate.visibility = if (isRepeatEnabled) View.VISIBLE else View.GONE
+    }
+
     private fun initRepeatBottomSheet() {
         val calendarView = binding.calendarView // MaterialCalendarView
         val startTextView = binding.tvAddScheduleRepeatStart // 날짜를 표시할 TextView
@@ -95,7 +133,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         var endDate: CalendarDay? = null
 
         val daysOfWeek = listOf("월", "화", "수", "목", "금", "토", "일")
-        val selectedDays = mutableSetOf<String>() // 선택된 요일을 저장할 Set
+        val selectedDaysSet = mutableSetOf<String>() // 선택된 요일을 저장할 Set
         val dayTextViews = daysOfWeek.map { dayOfWeek ->
             TextView(requireContext()).apply {
                 text = dayOfWeek
@@ -115,11 +153,11 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
                 setOnClickListener {
                     // 배경 변경 및 선택 상태 업데이트
-                    if (selectedDays.contains(dayOfWeek)) { // 이미 선택된 경우
-                        selectedDays.remove(dayOfWeek) // 선택 취소
+                    if (selectedDaysSet.contains(dayOfWeek)) { // 이미 선택된 경우
+                        selectedDaysSet.remove(dayOfWeek) // 선택 취소
                         setBackgroundResource(R.drawable.shape_rect_8_gray300_fill) // 배경 변경
                     } else { // 선택되지 않은 경우
-                        selectedDays.add(dayOfWeek) // 선택 추가
+                        selectedDaysSet.add(dayOfWeek) // 선택 추가
                         setBackgroundResource(R.drawable.shape_rect_8_mint300_fill_mint_line_1) // 배경 변경
                     }
                 }
@@ -184,9 +222,18 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         })
 
         binding.tvAddScheduleRepeatSave.setOnClickListener {
+            // Update the selectedDays list with the selected days from the bottom sheet
+            this@AddScheduleSecondFragment.selectedDays.clear()
+            this@AddScheduleSecondFragment.selectedDays.addAll(selectedDaysSet)
+            // Update the UI
+            updateRepeatInfo()
+            // Update the MaterialSwitch
+            binding.menuAddScheduleRepeat.isChecked = true
+            // Update the start and end dates
             val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
             startTextView.text = startDate?.date?.format(formatter) ?: ""
             endTextView.text = endDate?.date?.format(formatter) ?: ""
+            // Hide the bottom sheet
             binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
