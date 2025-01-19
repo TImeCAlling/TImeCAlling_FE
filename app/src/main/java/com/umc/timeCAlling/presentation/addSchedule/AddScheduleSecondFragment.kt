@@ -83,8 +83,10 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 spareTimeTextViews.forEach { tv ->
                     if (tv == clickedTextView) {
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_mint300_fill_mint_line_1)
+                        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.mint_main))
                     } else {
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray200_fill)
+                        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
                     }
                 }
             }
@@ -121,8 +123,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             "없음"
         }
         binding.tvAddScheduleRepeat.text = repeatText
-        binding.tvAddScheduleRepeat.visibility = if (isRepeatEnabled) View.VISIBLE else View.GONE
-        binding.layoutAddSheduleRepeatDate.visibility = if (isRepeatEnabled) View.VISIBLE else View.GONE
     }
 
     private fun initRepeatBottomSheet() {
@@ -222,18 +222,14 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         })
 
         binding.tvAddScheduleRepeatSave.setOnClickListener {
-            // Update the selectedDays list with the selected days from the bottom sheet
             this@AddScheduleSecondFragment.selectedDays.clear()
             this@AddScheduleSecondFragment.selectedDays.addAll(selectedDaysSet)
-            // Update the UI
             updateRepeatInfo()
-            // Update the MaterialSwitch
             binding.menuAddScheduleRepeat.isChecked = true
-            // Update the start and end dates
             val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
             startTextView.text = startDate?.date?.format(formatter) ?: ""
             endTextView.text = endDate?.date?.format(formatter) ?: ""
-            // Hide the bottom sheet
+
             binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -274,7 +270,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // Handle state changes if needed
+
             }
         })
 
@@ -303,13 +299,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
     private fun updateCategoryUI(category: Category?) {
         if (category == null) {
-            binding.ivAddScheduleCategoryLogo.backgroundTintList =
-                ContextCompat.getColorStateList(requireContext(), R.color.gray_600)
+            binding.ivAddScheduleCategoryLogo.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.gray_600)
+            binding.ivAddScheduleCategoryList.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.gray_600)
             binding.tvAddScheduleCategory.text = "없음"
             binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
         } else {
-            binding.ivAddScheduleCategoryLogo.backgroundTintList =
-                ColorStateList.valueOf(category.color)
+            binding.ivAddScheduleCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color)
+            binding.ivAddScheduleCategoryList.backgroundTintList = ColorStateList.valueOf(category.color)
             binding.tvAddScheduleCategory.text = category.name
             binding.tvAddScheduleCategory.setTextColor(category.color)
         }
