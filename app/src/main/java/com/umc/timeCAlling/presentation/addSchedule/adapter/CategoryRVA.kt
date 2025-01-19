@@ -8,15 +8,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.compose.ui.semantics.text
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.text.color
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.data.Category
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.addSchedule.CategoryManager
 
@@ -29,13 +24,17 @@ class CategoryRVA(
 ): RecyclerView.Adapter<CategoryRVA.CategoryViewHolder>() {
 
     private val categories = CategoryManager.getCategories()
+    private var selectedCategoryPosition: Int = -1
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+        val tvCategoryName: TextView = itemView.findViewById(R.id.tv_category_name)
+        val ivCategoryLogo: ImageView = itemView.findViewById(R.id.iv_category_logo)
+        val ivCategorySelect: ImageView = itemView.findViewById(R.id.iv_category_select)
+        val constraintLayout: LinearLayout = itemView.findViewById(R.id.layout_category_item)
     }
 
     init {
-        CategoryManager.loadCategories(context) // 초기화 시 데이터 로드
+        CategoryManager.loadCategories(context)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -47,16 +46,25 @@ class CategoryRVA(
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categories[position]
 
-        val tvCategoryName = holder.itemView.findViewById<TextView>(R.id.tv_category_name)
-        val ivCategoryLogo = holder.itemView.findViewById<ImageView>(R.id.iv_category_logo)
-        val ivCategorySelect = holder.itemView.findViewById<ImageView>(R.id.iv_category_select)
-        val constraintLayout = holder.itemView.findViewById<LinearLayout>(R.id.layout_category_item)
+        holder.tvCategoryName.text = category.name
+        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color)
 
-        tvCategoryName.text = category.name
-        ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.context, category.color))
-
-        // 아이템 클릭 이벤트 처리
         holder.itemView.setOnClickListener {
+            viewModel.selectedCategory.value = category.name // ViewModel에 선택된 카테고리 업데이트
+            notifyDataSetChanged() // RecyclerView 업데이트
+        }
+
+        // Update UI for selected category
+        if (selectedCategoryPosition == position) {
+            holder.ivCategorySelect.setImageResource(R.drawable.ic_circle_check_mint)
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_mint_fill_shadow)
+        } else {
+            holder.ivCategorySelect.setImageResource(R.drawable.ic_circle_check)
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_shadow)
+        }
+
+        holder.itemView.setOnClickListener {
+            selectedCategoryPosition = holder.adapterPosition
             viewModel.selectedCategory.value = category.name // ViewModel에 선택된 카테고리 업데이트
             notifyDataSetChanged() // RecyclerView 업데이트
         }

@@ -1,16 +1,18 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.content.Context
-import android.text.style.ForegroundColorSpan
+import android.content.res.ColorStateList
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -18,7 +20,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
+import com.umc.timeCAlling.data.Category
 import com.umc.timeCAlling.databinding.FragmentAddScheduleSecondBinding
+import com.umc.timeCAlling.presentation.addSchedule.CategoryManager.getCategoryByName
 import com.umc.timeCAlling.presentation.addSchedule.adapter.CategoryRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +52,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     }
 
     override fun initObserver() {
-
     }
 
     private fun bottomNavigationRemove() {
@@ -76,10 +79,8 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             textView.setOnClickListener { clickedTextView ->
                 spareTimeTextViews.forEach { tv ->
                     if (tv == clickedTextView) {
-                        // 선택된 TextView 배경 변경
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_mint300_fill_mint_line_1)
                     } else {
-                        // 선택되지 않은 TextView 배경 변경
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray200_fill)
                     }
                 }
@@ -229,6 +230,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 // Handle state changes if needed
             }
         })
+
+        binding.tvAddScheduleCategorySave.setOnClickListener {
+            viewModel.selectedCategory.observe(viewLifecycleOwner, Observer { categoryName ->
+                updateCategoryUI(getCategoryByName(categoryName))
+            })
+            categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 
     private fun initCategoryList() {
@@ -245,6 +253,21 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         binding.rvBottomSheetCategory.layoutManager = LinearLayoutManager(requireContext())
         Log.d("LocationSearchFragment", "결과")
     }
+
+    private fun updateCategoryUI(category: Category?) {
+        if (category == null) {
+            binding.ivAddScheduleCategoryLogo.backgroundTintList =
+                ContextCompat.getColorStateList(requireContext(), R.color.gray_600)
+            binding.tvAddScheduleCategory.text = "없음"
+            binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
+        } else {
+            binding.ivAddScheduleCategoryLogo.backgroundTintList =
+                ColorStateList.valueOf(category.color)
+            binding.tvAddScheduleCategory.text = category.name
+            binding.tvAddScheduleCategory.setTextColor(category.color)
+        }
+    }
+
     private fun Int.dpToPx(context: Context): Int {
         val metrics = context.resources.displayMetrics
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), metrics).toInt()
@@ -261,5 +284,4 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment)
         }
     }
-
 }

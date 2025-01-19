@@ -41,6 +41,10 @@ object CategoryManager {
         }
     }
 
+    fun getCategoryByName(categoryName: String): Category? {
+        return categories.find { it.name == categoryName }
+    }
+
     fun saveCategories (context: Context) {
         val prefs = getSharedPreferences(context)
         val categoriesJson = Gson().toJson(categories)
