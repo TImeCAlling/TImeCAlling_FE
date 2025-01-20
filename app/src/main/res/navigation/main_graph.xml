@@ -189,7 +189,17 @@
             android:label="SignupSpareFragment"
             tools:layout="@layout/fragment_signup_spare">
             <action
-                android:id="@+id/action_signupSpareFragment_to_homeFragment"
+                android:id="@+id/action_signupSpareFragment_to_signupCompleteFragment"
+                app:destination="@id/signupCompleteFragment"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/signupCompleteFragment"
+            android:name="com.umc.timeCAlling.presentation.signup.SignupCompleteFragment"
+            android:label="SignupCompleteFragment"
+            tools:layout="@layout/fragment_signup_complete">
+            <action
+                android:id="@+id/action_signupCompleteFragment_to_homeFragment"
                 app:destination="@id/homeFragment"/>
         </fragment>
     </navigation>
