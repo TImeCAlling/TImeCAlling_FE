@@ -1,22 +1,22 @@
-package com.umc.timeCAlling.presentation.signup.adapter
+package com.umc.timeCAlling.presentation.mypage.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.ItemSignupTimeBinding
+import com.umc.timeCAlling.databinding.ItemMyprofileBottomSheetTimeBinding
 
-class SignupTimeAdapter(
+class MyprofileTimeAdapter(
     private val timeOptions: List<String>
-) : RecyclerView.Adapter<SignupTimeAdapter.TimeViewHolder>() {
+) : RecyclerView.Adapter<MyprofileTimeAdapter.TimeViewHolder>() {
 
     private var selectedPosition: Int? = null
 
-    inner class TimeViewHolder(private val binding: ItemSignupTimeBinding) :
+    inner class TimeViewHolder(private val binding: ItemMyprofileBottomSheetTimeBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(time: String, isSelected: Boolean) {
-            binding.tvOnboardingTimeItem.text = time
-            binding.tvOnboardingTimeItem.setTextColor(
+            binding.tvMyprofileTimeItem.text = time
+            binding.tvMyprofileTimeItem.setTextColor(
                 if (isSelected) binding.root.context.getColor(R.color.mint_main)
                 else binding.root.context.getColor(R.color.gray_400)
             )
@@ -24,7 +24,7 @@ class SignupTimeAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeViewHolder {
-        val binding = ItemSignupTimeBinding.inflate(
+        val binding = ItemMyprofileBottomSheetTimeBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false

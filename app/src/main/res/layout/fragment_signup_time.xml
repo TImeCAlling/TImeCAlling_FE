@@ -101,7 +101,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_onboarding_time_title1"
             android:layout_marginTop="80dp"
-            tools:listitem="@layout/item_onboarding_time"/>
+            tools:listitem="@layout/item_signup_time"/>
 
         <!-- 양 끝 연하게 -->
         <ImageView

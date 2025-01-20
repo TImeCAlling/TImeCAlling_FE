@@ -11,7 +11,7 @@
     android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tv_onboarding_time_item"
+            android:id="@+id/tv_myprofile_time_item"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:gravity="center"
