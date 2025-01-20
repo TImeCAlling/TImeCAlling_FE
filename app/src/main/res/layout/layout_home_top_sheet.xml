@@ -89,7 +89,7 @@
                 android:text="+3" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
-    <ProgressBar
+    <!--<ProgressBar
         android:id="@+id/progressbar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="236dp"
@@ -103,7 +103,62 @@
         android:background="@drawable/circle_progressbar"
         app:layout_constraintTop_toBottomOf="@id/layout_pre_members"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>-->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicatorSize="236dp"
+        app:trackThickness="15dp"
+        app:trackColor="@color/gray_200"
+        app:indicatorColor="@color/mint_main"
+        android:layout_gravity="center_horizontal"
+        android:progress="65"
+        app:trackCornerRadius="16dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_pre_members"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@id/progressbar"
+        app:layout_constraintBottom_toBottomOf="@id/progressbar"
+        app:layout_constraintStart_toStartOf="@id/progressbar"
+        app:layout_constraintEnd_toEndOf="@id/progressbar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="준비 진행중"
+            style="@style/TextAppearance.TimeCAlling.Body2"
+            android:textColor="@color/gray_600"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="65"
+                android:textColor="@color/mint_main"
+                android:textSize="56sp"
+                android:fontFamily="@font/pretendard_bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="%"
+                android:textColor="@color/mint_main"
+                android:textSize="38sp"
+                android:fontFamily="@font/pretendard_bold"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
     <TextView
         android:id="@+id/tv_pre_ment"
         android:layout_width="match_parent"
@@ -120,6 +175,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
+        android:id="@+id/layout_pre_time_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
@@ -211,4 +267,46 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_pre_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete_black"
+        app:layout_constraintTop_toBottomOf="@id/layout_pre_time_detail"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="28dp"/>
+
+    <LinearLayout
+        android:id="@+id/layout_pre_show_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="@id/iv_pre_close"
+        app:layout_constraintBottom_toBottomOf="@id/iv_pre_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="자세한 일정 보기"
+            android:textSize="15sp"
+            android:textColor="@color/gray_400"
+            android:fontFamily="@font/pretendard_regular"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right_gray400"/>
+    </LinearLayout>
+    <View
+        android:layout_width="32dp"
+        android:layout_height="4dp"
+        android:background="@drawable/top_sheet_handle"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_pre_close"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

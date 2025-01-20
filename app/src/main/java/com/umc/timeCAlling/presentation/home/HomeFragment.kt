@@ -1,10 +1,12 @@
 package com.umc.timeCAlling.presentation.home
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var navController: NavController
+    private lateinit var behavior: TopSheetBehavior<View>
     override fun initView() {
         binding.layoutHomeTodayScheduleDetail.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_calendarFragment)
@@ -29,10 +32,56 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
         initLastScheduleRV()
         initTodayScheduleRV()
+        initTopSheet()
 
     }
     override fun initObserver() {
 
+    }
+
+    private fun initTopSheet() {
+        behavior = TopSheetBehavior.from(binding.layoutHomeTopSheet)
+        behavior.apply {
+            this.state = TopSheetBehavior.STATE_HIDDEN
+        }
+        behavior.setTopSheetCallback(object: TopSheetBehavior.TopSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    TopSheetBehavior.STATE_HIDDEN -> {
+                        dismissTopSheet()
+                    }
+                    TopSheetBehavior.STATE_COLLAPSED -> {
+                        dismissTopSheet()
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                Log.d("slideOffset", slideOffset.toString())
+            }
+        })
+        binding.ivPreClose.setOnClickListener {
+            behavior.state = TopSheetBehavior.STATE_COLLAPSED
+        }
+        binding.viewHomeTopsheetBackground.setOnClickListener {
+            behavior.state = TopSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+    private fun showTopSheet() {
+        behavior.state = TopSheetBehavior.STATE_EXPANDED
+        binding.viewHomeTopsheetBackground.visibility = View.VISIBLE
+        binding.viewHomeTopsheetBackground.setOnSingleClickListener {
+            behavior.state = TopSheetBehavior.STATE_COLLAPSED
+            binding.viewHomeTopsheetBackground.visibility = View.GONE
+        }
+    }
+
+    private fun dismissTopSheet() {
+        binding.apply {
+            viewHomeTopsheetBackground.visibility = View.GONE
+            layoutTopsheetScroll.scrollTo(0,0)
+        }
     }
 
     private fun initLastScheduleRV() {
@@ -113,8 +162,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
         adapter.itemClick = object : TodayScheduleRVA.ItemClick {
             override fun onClick(view: View, position: Int) {
-                val sheet = binding.layoutHomeTopSheet
-                TopSheetBehavior.from(sheet).state = TopSheetBehavior.STATE_EXPANDED
+                showTopSheet()
             }
         }
     }
