@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:layout_behavior=".TopSheetBehavior"
-    android:background="@color/white"
+    android:background="@drawable/shape_top_sheet"
     android:id="@+id/layout_home_top_sheet">
 
     <LinearLayout
@@ -237,7 +237,7 @@
                 android:id="@+id/iv_pre_rest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_pre_alarm"
+                android:src="@drawable/ic_pre_rest"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
