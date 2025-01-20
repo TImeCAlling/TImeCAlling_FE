@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.fragment_signup_time) {
 
-    private val timeOptions = listOf(" ", " ", "15분", "30분", "45분", "60분", "90분+", " ", " ")
+    private val timeOptions = listOf(" ", " ", " 15분", "30분", "45분", "60분", "90분+", " ", " ")
     private var previousCenterPosition: Int? = null
 
     override fun initView() {

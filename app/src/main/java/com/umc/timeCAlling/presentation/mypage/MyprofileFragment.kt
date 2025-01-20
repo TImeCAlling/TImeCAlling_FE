@@ -15,16 +15,23 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentMyprofileBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.mypage.adapter.MyprofileTimeAdapter
 
 class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragment_myprofile) {
 
     private var isPhotoSelected = false
     private var isInputValid = false
+
+    private val timeOptions = listOf("  ", "  ", " 15분", "30분", "45분", "60분", "90분+", "  ", "  ")
+    private var previousCenterPosition: Int? = null
+
     private lateinit var nameBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var spareBottomSheetBehavior: BottomSheetBehavior<View>
@@ -34,6 +41,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         initBottomSheets()
         initNameBottomSheetActions()
         initEditName()
+        setupRecyclerView()
         observeKeyboardAndClearFocus()
         setupTouchOutsideToClearFocus()
         hideViews(
@@ -283,6 +291,45 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
             } else {
                 Toast.makeText(requireContext(), "이미지를 선택하지 않았습니다.", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    /** 리사이클러뷰 */
+    private fun setupRecyclerView() {
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        val adapter = MyprofileTimeAdapter(timeOptions)
+
+        binding.rvMyprofileTimeRecyclerView.apply {
+            this.layoutManager = layoutManager
+            this.adapter = adapter
+
+            // LinearSnapHelper 설정
+            val snapHelper = LinearSnapHelper()
+            snapHelper.attachToRecyclerView(this)
+
+            // 초기화 시 첫 번째 아이템 선택 처리
+            post {
+                val initialPosition = 2
+                adapter.updateItemColor(initialPosition, true)
+                previousCenterPosition = initialPosition
+            }
+
+            // 중앙 아이템 감지 및 색상 변경
+            this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        val centerView = snapHelper.findSnapView(layoutManager)
+                        val centerPosition = centerView?.let { layoutManager.getPosition(it) }
+                        if (centerPosition != null && centerPosition != previousCenterPosition) {
+                            // 중앙 아이템 색상 변경
+                            adapter.updateItemColor(centerPosition, true)
+                            previousCenterPosition?.let { adapter.updateItemColor(it, false) }
+                            previousCenterPosition = centerPosition
+                        }
+                    }
+                }
+            })
         }
     }
 }

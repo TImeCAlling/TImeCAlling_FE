@@ -15,8 +15,8 @@ class SignupTimeAdapter(
     inner class TimeViewHolder(private val binding: ItemSignupTimeBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(time: String, isSelected: Boolean) {
-            binding.tvOnboardingTimeItem.text = time
-            binding.tvOnboardingTimeItem.setTextColor(
+            binding.tvSignupTimeItem.text = time
+            binding.tvSignupTimeItem.setTextColor(
                 if (isSelected) binding.root.context.getColor(R.color.mint_main)
                 else binding.root.context.getColor(R.color.gray_400)
             )
