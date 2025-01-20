@@ -29,7 +29,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     private var isPhotoSelected = false
     private var isInputValid = false
 
-    private val timeOptions = listOf("  ", "  ", " 15분", "30분", "45분", "60분", "90분+", "  ", "  ")
+    private val timeOptions = listOf("  ", "  ", "15분", "30분", "45분", "60분", "90분+", "  ", "  ")
     private var previousCenterPosition: Int? = null
 
     private lateinit var nameBottomSheetBehavior: BottomSheetBehavior<View>

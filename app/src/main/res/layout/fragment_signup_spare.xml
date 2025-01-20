@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24dp"
-            android:text="원하는 여유시간이 어느 정도인가요?"
+            android:text="원하는 여유시간이\n어느 정도인가요?"
             android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
