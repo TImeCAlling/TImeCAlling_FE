@@ -26,10 +26,12 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     private var isPhotoSelected = false
     private var isInputValid = false
     private lateinit var nameBottomSheetBehavior: BottomSheetBehavior<View>
+    private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<View>
+    private lateinit var spareBottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun initView() {
         setClickListener()
-        initNameBottomSheet()
+        initBottomSheets()
         initNameBottomSheetActions()
         initEditName()
         observeKeyboardAndClearFocus()
@@ -48,19 +50,41 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     private fun setClickListener() {
         binding.clMyprofileCamera.setOnClickListener { openGallery() }
         binding.ivMyprofileBack.setOnClickListener { findNavController().popBackStack() }
+
         binding.ivMyprofileNameArrow.setOnClickListener { toggleBottomSheetState(nameBottomSheetBehavior) }
+        binding.ivMyprofileTimeArrow.setOnClickListener { toggleBottomSheetState(timeBottomSheetBehavior) }
+        binding.ivMyprofileSpareArrow.setOnClickListener { toggleBottomSheetState(spareBottomSheetBehavior) }
+
         binding.clMyprofileNameDelete.setOnClickListener { clearInputField() }
     }
 
-    /** 이름 Bottom Sheet 초기화 */
-    private fun initNameBottomSheet() {
-        val bottomSheet = binding.clMyprofileBottomSheetName
-        nameBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+    // Bottom Sheet 초기화 함수 수정
+    private fun initBottomSheets() {
+        // 기존 name Bottom Sheet 초기화
+        val nameBottomSheet = binding.clMyprofileBottomSheetName
+        nameBottomSheetBehavior = BottomSheetBehavior.from(nameBottomSheet)
         nameBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         nameBottomSheetBehavior.peekHeight = 0
         nameBottomSheetBehavior.isHideable = true
         nameBottomSheetBehavior.skipCollapsed = true
+
+        // 새로운 time Bottom Sheet 초기화
+        val timeBottomSheet = binding.clMyprofileBottomSheetTime
+        timeBottomSheetBehavior = BottomSheetBehavior.from(timeBottomSheet)
+        timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        timeBottomSheetBehavior.peekHeight = 0
+        timeBottomSheetBehavior.isHideable = true
+        timeBottomSheetBehavior.skipCollapsed = true
+
+        // 새로운 spare Bottom Sheet 초기화
+        val spareBottomSheet = binding.clMyprofileBottomSheetSpare
+        spareBottomSheetBehavior = BottomSheetBehavior.from(spareBottomSheet)
+        spareBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        spareBottomSheetBehavior.peekHeight = 0
+        spareBottomSheetBehavior.isHideable = true
+        spareBottomSheetBehavior.skipCollapsed = true
     }
+
 
     /** 이름 Bottom Sheet 동작 설정 */
     private fun initNameBottomSheetActions() {
@@ -77,6 +101,12 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
         binding.ivMyprofileBottomSheetNameClose.setOnClickListener {
             nameBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        binding.ivMyprofileBottomSheetTimeClose.setOnClickListener {
+            timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        binding.ivMyprofileBottomSheetSpareClose.setOnClickListener {
+            spareBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
 
