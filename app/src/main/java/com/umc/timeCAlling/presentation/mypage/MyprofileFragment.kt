@@ -166,7 +166,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     }
 
     private fun initEditName() {
-        binding.etMyprofileNameInput.filters = arrayOf(InputFilter.LengthFilter(20))
+        binding.etMyprofileNameInput.filters = arrayOf(InputFilter.LengthFilter(5))
         binding.etMyprofileNameInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
