@@ -140,12 +140,12 @@ class CalendarFragment: BaseFragment<FragmentCalendarBinding>(R.layout.fragment_
                     binding.layoutDetailExtraMembers.visibility = View.VISIBLE
                     binding.tvDetailExtraMembers.text = "+${list[position].memberCount - 3}"
                     val marginEndInDp = -12
-                    binding.imgDetailMemberThird.layoutParams = (binding.imgDetailMemberThird.layoutParams as MarginLayoutParams).apply {
+                    binding.cvDetailMemberThird.layoutParams = (binding.cvDetailMemberThird.layoutParams as MarginLayoutParams).apply {
                         marginEnd = requireContext().toPx(marginEndInDp).toInt()
                     }
                 } else {
                     binding.layoutDetailExtraMembers.visibility = View.GONE
-                    binding.imgDetailMemberThird.layoutParams = (binding.imgDetailMemberThird.layoutParams as MarginLayoutParams).apply {
+                    binding.cvDetailMemberThird.layoutParams = (binding.cvDetailMemberThird.layoutParams as MarginLayoutParams).apply {
                         marginEnd = 0
                     }
                 }

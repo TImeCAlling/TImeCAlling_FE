@@ -1,7 +1,10 @@
 package com.umc.timeCAlling.presentation.checkList
 
+import android.content.Context
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -125,35 +128,62 @@ class CheckListFragment: BaseFragment<FragmentCheckListBinding>(R.layout.fragmen
         binding.tvChecklistQuestion.text = questionItem.question
         binding.layoutChecklistAnswers.removeAllViews()
 
-        questionItem.answers.forEachIndexed {index, text ->
-            val itemView = layoutInflater.inflate(R.layout.item_checklist_answer, binding.layoutChecklistAnswers, false)
-
-            val tvAnswer = itemView.findViewById<TextView>(R.id.tv_answer)
-            val ivAnswer = itemView.findViewById<ImageView>(R.id.iv_answer)
+        questionItem.answers.forEachIndexed {itemIndex, text ->
+            val itemView = if(index < 5) layoutInflater.inflate(R.layout.item_checklist_answer, binding.layoutChecklistAnswers, false)
+                                else layoutInflater.inflate(R.layout.item_checklist_answer2, binding.layoutChecklistAnswers2, false)
+            val tvAnswer = if(index<5) itemView.findViewById<TextView>(R.id.tv_answer) else itemView.findViewById<TextView>(R.id.tv_answer_2)
 
             tvAnswer.text = text
             itemView.setOnClickListener {
-                selectedIndex = index
-                updateSelectionUI()
+                selectedIndex = itemIndex
+                updateSelectionUI(index)
             }
-            binding.layoutChecklistAnswers.addView(itemView)
+
+            if(index == 5 && itemIndex == 1) {
+                itemView.layoutParams = (itemView.layoutParams as MarginLayoutParams).apply {
+                    marginStart = requireContext().toPx(17).toInt()
+                }
+            }
+            if(index < 5) binding.layoutChecklistAnswers.addView(itemView)
+            else binding.layoutChecklistAnswers2.addView(itemView)
         }
     }
 
-    private fun updateSelectionUI() {
-        for(i in 0 until binding.layoutChecklistAnswers.childCount) {
-            val child = binding.layoutChecklistAnswers.getChildAt(i)
-            val tvAnswer = child.findViewById<TextView>(R.id.tv_answer)
-            val ivAnswer = child.findViewById<ImageView>(R.id.iv_answer)
-            if(i == selectedIndex) {
-                child.setBackgroundResource(R.drawable.shape_rect_26_mint300_fill)
-                ivAnswer.setImageResource(R.drawable.ic_icon_mint_fill)
-                tvAnswer.setTextColor(resources.getColor(R.color.mint_600))
-            } else {
-                child.setBackgroundResource(R.drawable.shape_rect_26_gray200_fill)
-                ivAnswer.setImageResource(R.drawable.ic_icon_gray500_fill)
-                tvAnswer.setTextColor(resources.getColor(R.color.gray_500))
+    private fun updateSelectionUI(index: Int) {
+        if(index < 5) {
+            for(i in 0 until binding.layoutChecklistAnswers.childCount) {
+                val child = binding.layoutChecklistAnswers.getChildAt(i)
+                val tvAnswer = child.findViewById<TextView>(R.id.tv_answer)
+                val ivAnswer = child.findViewById<ImageView>(R.id.iv_answer)
+                if(i == selectedIndex) {
+                    child.setBackgroundResource(R.drawable.shape_rect_26_mint300_fill)
+                    ivAnswer.setImageResource(R.drawable.ic_icon_mint_fill)
+                    tvAnswer.setTextColor(resources.getColor(R.color.mint_600))
+                } else {
+                    child.setBackgroundResource(R.drawable.shape_rect_26_gray200_fill)
+                    ivAnswer.setImageResource(R.drawable.ic_icon_gray500_fill)
+                    tvAnswer.setTextColor(resources.getColor(R.color.gray_500))
+                }
+            }
+        }
+        else {
+            for(i in 0 until binding.layoutChecklistAnswers2.childCount) {
+                val child = binding.layoutChecklistAnswers2.getChildAt(i)
+                val tvAnswer = child.findViewById<TextView>(R.id.tv_answer_2)
+                if(i == selectedIndex) {
+                    child.setBackgroundResource(R.drawable.shape_rect_20_mint300_fill_mint_line_1)
+                    tvAnswer.setTextColor(resources.getColor(R.color.mint_600))
+                } else {
+                    child.setBackgroundResource(R.drawable.shape_rect_20_gray200_fill)
+                    tvAnswer.setTextColor(resources.getColor(R.color.gray_500))
+                }
             }
         }
     }
+
+    fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp.toFloat(),
+        resources.displayMetrics
+    )
 }
