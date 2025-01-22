@@ -232,7 +232,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="1시간"
+            android:text="15분"
             android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/gray_500"
             style="@style/MaterialAlertDialog.Material3.Body.Text"
@@ -332,6 +332,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_myprofile_logout"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- bottomSheet background -->
+        <View
+            android:id="@+id/view_myprofile_bottomSheet_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bottomsheet_background"
+            android:visibility="gone"/>
 
         <!-- 이름 bottomSheet -->
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -692,11 +700,12 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/rv_myprofile_time_recyclerView"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:background="@drawable/shape_rect_999_gray300_fill"
+                    android:background="@drawable/shape_rect_999_mint_fill"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="31dp"
                     android:text="저장하기"
+                    android:textColor="@color/white"
                     android:paddingVertical="20dp"
                     style="@style/TextAppearance.TimeCAlling.Button.Gray"
                     android:gravity="center"/>
@@ -864,11 +873,12 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/tv_myprofile_spare_bg"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:background="@drawable/shape_rect_999_gray300_fill"
+                    android:background="@drawable/shape_rect_999_mint_fill"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="31dp"
                     android:text="저장하기"
+                    android:textColor="@color/white"
                     android:paddingVertical="20dp"
                     style="@style/TextAppearance.TimeCAlling.Button.Gray"
                     android:gravity="center"/>
