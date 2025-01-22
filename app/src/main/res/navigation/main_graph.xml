@@ -142,6 +142,7 @@
             app:destination="@id/homeFragment" />
     </fragment>
 
+
     <!-- Signup flow -->
     <navigation
         android:id="@+id/signupTab"
