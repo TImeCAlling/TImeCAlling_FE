@@ -33,6 +33,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_sig
         binding.ivNavigateHome.setOnClickListener {
 
             navigateToHomeFragment() // 나중에 지우기
+            bottomNavigationShow()
         }
     }
 
@@ -58,5 +59,19 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_sig
 
     private fun navigateToHomeFragment() {
         findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
+    }
+
+    private fun bottomNavigationShow() {
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
+        bottomNavigationView?.visibility = View.VISIBLE
+
+        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
+        addScheduleButton?.visibility = View.VISIBLE
+
+        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
+        shadowImageView?.visibility = View.VISIBLE
+
+        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
+        ovalImageView?.visibility = View.VISIBLE
     }
 }
