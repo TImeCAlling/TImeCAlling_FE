@@ -6,6 +6,7 @@
     <color name="black_900">#222222</color>
     <color name="white">#FFFFFFFF</color>
     <color name="warning">#F26E6E</color>
+    <color name="red">#FF0000</color>
     <color name="gray">#767373</color>
     <color name="gray_100">#F9F9F9</color>"
     <color name="gray_180">#F7F7F7</color>
@@ -23,6 +24,7 @@
     <color name="mint_200">#ECF4F1</color>
     <color name="mint_300">#E0F2F1</color>
     <color name="mint_400">#ADE6D1</color>
+    <color name="mint_500">#84E0BE</color>
     <color name="mint_600">#009278</color>
     <color name="transparency">#00ff0000</color>
     <color name="bottomsheet_background">#80000000</color>
@@ -30,4 +32,12 @@
     <color name="track">#EFF5F5</color>
     <color name="blue">#4A71FF</color>
     <color name="yellow">#FBC960</color>
+    <color name="category_orange">#FA9667</color>
+    <color name="category_yellow">#FFB00A</color>
+    <color name="category_skyblue">#8EB9FE</color>
+    <color name="category_blue">#6E8EFF</color>
+    <color name="category_green">#7DBD6B</color>
+    <color name="category_pink">#F494A0</color>
+    <color name="category_mauve">#CDA7D9</color>
+    <color name="category_purple">#A295D4</color>
 </resources>

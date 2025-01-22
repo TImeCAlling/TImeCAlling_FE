@@ -78,14 +78,16 @@ data class PublicTransportationResponseDto(
 
                 data class PublicLegResponseDto(
                     val mode: String?,
+                    val routeColor:String?,
                     val sectionTime: Int?,
                     val distance: Int?,
+                    val route: String?,
                     val start: PublicStartResponseDto?,
                     val end: PublicEndResponseDto?,
                     val step: List<PublicStepResponseDto?>?
                 ) {
                     fun toPublicLegModel() =
-                        PublicTransportationModel.PublicMetaDataModel.PublicPlanModel.PublicItineraryModel.PublicLegModel(mode, sectionTime, distance, start?.toPublicStartModel(), end?.toPublicEndModel(), step?.map { it?.toPublicStepModel() })
+                        PublicTransportationModel.PublicMetaDataModel.PublicPlanModel.PublicItineraryModel.PublicLegModel(mode,routeColor, sectionTime, route,distance, start?.toPublicStartModel(), end?.toPublicEndModel(), step?.map { it?.toPublicStepModel() })
 
                     data class PublicStartResponseDto(
                         val name: String?,

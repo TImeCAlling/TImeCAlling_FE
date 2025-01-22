@@ -7,11 +7,8 @@ import com.umc.timeCAlling.presentation.addSchedule.list.PublicTransportationLis
 import com.umc.timeCAlling.presentation.addSchedule.list.WalkTransportationListFragment
 
 class LocationResultTransportationListVPA(fragment: Fragment): FragmentStateAdapter(fragment) {
-    override fun getItemCount(): Int {
-        return 6
-    }
+    override fun getItemCount(): Int = 3
 
-    // API 연결하면서 내부 Fragment 바꿀 예정
     override fun createFragment(position: Int): Fragment {
         return when(position){
             0 -> CarTransportationListFragment()

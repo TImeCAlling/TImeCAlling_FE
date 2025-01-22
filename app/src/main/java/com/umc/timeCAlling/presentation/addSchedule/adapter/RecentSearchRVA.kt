@@ -6,13 +6,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
+import com.umc.timeCAlling.data.SearchResult
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 
 class RecentSearchRVA(
     private val viewModel: AddScheduleViewModel,
-    private val lifecycleOwner: LifecycleOwner // LifecycleOwner 추가
+    private val lifecycleOwner: LifecycleOwner,
+    private val onSearchRecentClickListner: (String) -> Unit
 ) : RecyclerView.Adapter<RecentSearchRVA.RecentSearchViewHolder>() {
 
     private var recentSearches: List<String> = viewModel.recentSearches.value ?: emptyList() // 초기값 설정
@@ -41,6 +44,9 @@ class RecentSearchRVA(
         holder.searchTextView.text = recentSearch
         holder.deleteImageView.setOnClickListener {
             viewModel.deleteRecentSearch(recentSearch)
+        }
+        holder.itemView.setOnClickListener {
+            onSearchRecentClickListner(recentSearch)
         }
     }
 
