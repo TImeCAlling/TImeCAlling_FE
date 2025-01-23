@@ -60,6 +60,7 @@ class CategoryEditRVA(
             R.color.gray_600
         )
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryEditViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_category, parent, false)
@@ -77,8 +78,9 @@ class CategoryEditRVA(
         val colorViews = holder.colorViews
         val colorResources = holder.colorResources
 
-        ivCategoryLogo.setColorFilter(ContextCompat.getColor(context, category.color))
-        ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, category.color))
+        ivCategoryLogo.setColorFilter(category.color) // ContextCompat.getColor() 제거
+        ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color) // ContextCompat.getColor() 제거
+
 
         etCategoryName.setText(category.name)
         etCategoryName.isEnabled = false
@@ -89,8 +91,8 @@ class CategoryEditRVA(
                     val updatedCategory = Category(etCategoryName.text.toString(), category.color)
                     modifiedCategories[position] = updatedCategory
                     CategoryManager.updateCategory(position, updatedCategory, context)
-                    ivCategoryLogo.setColorFilter(ContextCompat.getColor(context, category.color))
-                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, category.color))
+                    ivCategoryLogo.setColorFilter(category.color) // ContextCompat.getColor() 제거
+                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color) // ContextCompat.getColor() 제거
                     notifyItemChanged(position)
                     layoutCategoryColor.visibility = View.GONE
                     etCategoryName.isEnabled = false
@@ -106,8 +108,8 @@ class CategoryEditRVA(
                     val updatedCategory = Category(etCategoryName.text.toString(), colorResource)
                     modifiedCategories[position] = updatedCategory
                     CategoryManager.updateCategory(position, updatedCategory, context)
-                    ivCategoryLogo.setColorFilter(ContextCompat.getColor(context, colorResource))
-                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, colorResource))
+                    ivCategoryLogo.setColorFilter(colorResource) // ContextCompat.getColor() 제거
+                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(colorResource) // ContextCompat.getColor() 제거
                     notifyItemChanged(position)
                     layoutCategoryColor.visibility = View.GONE
                 }
