@@ -30,7 +30,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_homeFragment_to_calendarFragment)
         }
         binding.ivHomeMypage.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_mypageFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_mypageTab)
         }
         initLastScheduleRV()
         initTodayScheduleRV()
@@ -38,14 +38,10 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     }
     override fun initObserver() {
-/*
         binding.ivGoToAddSchedule.setOnSingleClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
         }
-*/
-
         bottomNavigationShow()
-
     }
 
     private fun initTopSheet() {

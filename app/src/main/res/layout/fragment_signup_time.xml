@@ -101,7 +101,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_onboarding_time_title1"
             android:layout_marginTop="80dp"
-            tools:listitem="@layout/item_onboarding_time"/>
+            tools:listitem="@layout/item_signup_time"/>
 
         <!-- 양 끝 연하게 -->
         <ImageView
@@ -130,8 +130,9 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="20dp"
             android:text="다음"
+            android:textColor="@color/white"
             android:paddingVertical="20dp"
-            style="@style/TextAppearance.TimeCAlling.Button"
+            style="@style/TextAppearance.TimeCAlling.Button.Gray"
             android:gravity="center"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

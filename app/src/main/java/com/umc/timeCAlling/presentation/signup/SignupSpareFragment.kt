@@ -44,7 +44,7 @@ class SignupSpareFragment :
 
         // 다음 버튼 클릭
         binding.tvOnboardingSpareNext.setOnClickListener {
-            navigateToHomeFragment() // 다음 화면으로 이동
+            navigateToSignupCompleteFragment() // 다음 화면으로 이동
         }
     }
 
@@ -74,8 +74,7 @@ class SignupSpareFragment :
         (option as? TextView)?.setTextAppearance(R.style.TextAppearance_TimeCAlling_Button_Gray)
     }
 
-    private fun navigateToHomeFragment() {
-        // Navigation을 통해 HomeFragment로 이동
-        findNavController().navigate(R.id.action_signupSpareFragment_to_homeFragment)
+    private fun navigateToSignupCompleteFragment() {
+        findNavController().navigate(R.id.action_signupSpareFragment_to_signupCompleteFragment)
     }
 }
