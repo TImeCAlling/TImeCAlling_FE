@@ -1,22 +1,30 @@
 package com.umc.timeCAlling.presentation.home.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.databinding.ItemLastScheduleBinding
 import com.umc.timeCAlling.presentation.home.LastSchedule
 
 class LastScheduleRVA(
-    private val lastSchedules: List<LastSchedule>,
-    val onClickDeleteItem: (lastSchedule: LastSchedule) -> Unit
+    private val lastSchedules: List<LastSchedule>
 ) : RecyclerView.Adapter<LastScheduleRVA.LastScheduleViewHolder>() {
+
+    interface ItemClick {
+        fun onItemClick(view: View, position: Int)
+    }
+    var itemClick: ItemClick? = null
+
     inner class LastScheduleViewHolder(private val binding: ItemLastScheduleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind( lastSchedule: LastSchedule) {
             binding.tvLastScheduleTitle.text = lastSchedule.title
             binding.tvLastScheduleDescription.text = lastSchedule.description
             binding.tvLastScheduleTimeType.text = if (lastSchedule.isMorning) "오전" else "오후"
             binding.tvLastScheduleTime.text = lastSchedule.time
-
+            binding.root.setOnClickListener {
+                itemClick?.onItemClick(it, adapterPosition)
+            }
         }
     }
 
@@ -29,8 +37,5 @@ class LastScheduleRVA(
 
     override fun onBindViewHolder(holder: LastScheduleViewHolder, position: Int) {
         holder.bind(lastSchedules[position])
-        holder.itemView.setOnClickListener {
-            onClickDeleteItem.invoke(lastSchedules[position])
-        }
     }
 }

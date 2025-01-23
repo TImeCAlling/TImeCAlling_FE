@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="177dp"
+    android:layout_height="168dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:background="@drawable/shape_rect_20_gray200_fill"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_checklist_smile"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/tv_answer_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="네"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textColor="@color/gray_500"
+        android:fontFamily="@font/pretendard_semibold"/>
+
+</LinearLayout>
