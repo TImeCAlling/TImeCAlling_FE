@@ -1,8 +1,8 @@
 package com.umc.timeCAlling.domain.repository
 
-import com.umc.timeCAlling.domain.model.response.CarTransportationModel
-import com.umc.timeCAlling.domain.model.response.PublicTransportationModel
-import com.umc.timeCAlling.domain.model.response.WalkTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.CarTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.PublicTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.WalkTransportationModel
 
 
 interface TmapRepository {

@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.di
 
+import com.umc.timeCAlling.data.service.ScheduleService
 import com.umc.timeCAlling.data.service.TestService
 import com.umc.timeCAlling.data.service.TmapService
 import dagger.Module
@@ -28,5 +29,11 @@ object ServiceModule {
     @Named("tmap")
     fun provideTmapRouteService(@Named("tmap") retrofit: Retrofit): TmapService {
         return retrofit.create(TmapService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideScheduleService(retrofit: Retrofit): ScheduleService{
+        return retrofit.buildService()
     }
 }

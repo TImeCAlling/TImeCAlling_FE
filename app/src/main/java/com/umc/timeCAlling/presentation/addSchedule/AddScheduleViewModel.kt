@@ -10,11 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.umc.timeCAlling.data.Category
 import com.umc.timeCAlling.data.SearchResult
-import com.umc.timeCAlling.domain.model.response.CarTransportationModel
-import com.umc.timeCAlling.domain.model.response.PublicTransportationModel
-import com.umc.timeCAlling.domain.model.response.WalkTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.CarTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.PublicTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.WalkTransportationModel
+import com.umc.timeCAlling.domain.repository.ScheduleRepository
 import com.umc.timeCAlling.domain.repository.TmapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,8 @@ import kotlin.collections.toMutableList
 @HiltViewModel
 class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을 받겠다.
     private val spf: SharedPreferences,
-    private val repository: TmapRepository
+    private val tmapRepository: TmapRepository,
+    private val scheduleRepository: ScheduleRepository
     ) : ViewModel() {
 
     private val _categoryNeedsRefresh = MutableStateFlow<String>("대중교통")
@@ -59,13 +60,13 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _selectedLocationName = MutableLiveData<String>()
     val selectedLocationName: LiveData<String> = _selectedLocationName
 
-    private val _timeTaken = MutableLiveData<Int>()
-    val timeTaken: LiveData<Int> = _timeTaken
+    private val _moveTime = MutableLiveData<Int>()
+    val moveTime: LiveData<Int> = _moveTime
 
     val selectedCategory=MutableLiveData<String>()
 
-    fun setTimeTaken(time: Int) {
-        _timeTaken.value = time
+    fun setMoveTime(time: Int) {
+        _moveTime.value = time
     }
 
     fun setSelectedLocationName(name: String) {
@@ -128,7 +129,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     fun getCarTransportation(startX: Double, startY: Double, endX: Double, endY: Double) {
         viewModelScope.launch {
-            repository.getCarTransportation(startX, startY, endX, endY).onSuccess { response ->
+            tmapRepository.getCarTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _carResult.value = response // LiveData에 API 응답 저장
                 Log.d("transportation 자동차 거리", "${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
                 Log.d("transportation 자동차 시간", "${response.features?.get(0)?.properties?.totalTime}") // 로그에 거리 출력
@@ -140,7 +141,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     fun getWalkTransportation(startX: Double, startY: Double, endX: Double, endY: Double) {
         viewModelScope.launch {
-            repository.getWalkTransportation(startX, startY, endX, endY).onSuccess { response ->
+            tmapRepository.getWalkTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _walkResult.value = response // LiveData에 API 응답 저장
                 Log.d("transportation 걷기 거리", "${response.features?.get(0)?.properties?.totalDistance}") // 로그에 거리 출력
                 Log.d("transportation 걷기 시간", "${response.features?.get(0)?.properties?.totalTime}") // 로그에 거리 출력
@@ -153,7 +154,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     fun getPublicTransportation(startX: Double, startY: Double, endX: Double, endY: Double) {
         viewModelScope.launch {
-            repository.getPublicTransportation(startX, startY, endX, endY).onSuccess { response ->
+            tmapRepository.getPublicTransportation(startX, startY, endX, endY).onSuccess { response ->
                 _publicResult.value = response // LiveData에 API 응답 저장
                 Log.d("transportation 대중교통 시간", "${response.metaData?.plan?.itineraries?.get(0)?.totalTime}")
             }.onFailure { error->
@@ -161,4 +162,14 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
             }
         }
     }
+
+/*    fun createSchedule(){
+        viewModelScope.launch {
+             scheduleRepository.createSchedule().onSuccess { response ->
+                 Log.d("createSchedule", "API 호출 성공: $response")
+             }.onFailure {error->
+                 Log.e("createSchedule", "API 호출 실패: $error")
+             }
+        }
+    }*/
 }

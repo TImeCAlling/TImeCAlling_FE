@@ -3,8 +3,11 @@ package com.umc.timeCAlling.di
 import com.google.gson.GsonBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TimeCAllingApplication
+import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.data.datasource.TmapDataSource
+import com.umc.timeCAlling.data.datasourceImpl.ScheduleDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.TmapDataSourceImpl
+import com.umc.timeCAlling.data.service.ScheduleService
 import com.umc.timeCAlling.data.service.TmapService
 import com.umc.timeCAlling.util.TmapInterceptor
 import dagger.Module
@@ -88,4 +91,8 @@ object NetworkModule {
     fun providesTmapRouteDataSource(@Named("tmap") tmapService: TmapService): TmapDataSource {
         return TmapDataSourceImpl(tmapService)
     }
+
+    @Provides
+    @Singleton
+    fun proviedsScheduleDataSource(scheduleService: ScheduleService): ScheduleDataSource = ScheduleDataSourceImpl(scheduleService)
 }

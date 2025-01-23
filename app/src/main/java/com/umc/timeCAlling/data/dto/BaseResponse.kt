@@ -1,8 +1,8 @@
 package  com.umc.timeCAlling.data.dto
 
 data class BaseResponse<T>(
-    val status: Int,
+    val isSuccess: Boolean,
     val code: String,
     val message: String,
-    val data: T,
+    val result: T,
 )
