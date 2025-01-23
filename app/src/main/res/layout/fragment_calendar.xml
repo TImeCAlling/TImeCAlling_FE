@@ -51,14 +51,6 @@
                         android:layout_marginTop="8dp"
                         app:layout_constraintTop_toBottomOf="@id/tv_schedule_date"
                         app:layout_constraintStart_toStartOf="@id/tv_schedule_date"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_schedule_arrow_down"
-                        android:layout_marginStart="9dp"
-                        app:layout_constraintStart_toEndOf="@id/tv_schedule_today"
-                        app:layout_constraintTop_toTopOf="@id/tv_schedule_today"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_schedule_today"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -215,6 +207,29 @@
                                 android:textSize="25sp"
                                 android:textColor="@color/gray_500"/>
                         </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="15dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="화"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/pretendard_regular"
+                                android:textColor="@color/gray_500"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/pretendard_semibold"
+                                android:text="10"
+                                android:textSize="25sp"
+                                android:textColor="@color/gray_500"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -313,62 +328,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_more"/>
             </LinearLayout>
-            <!--<LinearLayout
-                android:id="@+id/layout_detail_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="14dp"
-                android:paddingVertical="24dp"
-                android:paddingHorizontal="12dp"
-                android:elevation="2dp"
-                android:background="@drawable/shape_rect_4_white_fill"
-                app:layout_constraintTop_toBottomOf="@id/layout_detail_top_bar"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="gone">
 
-                <LinearLayout
-                    android:id="@+id/layout_detail_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_edit_schedule"/>
-                    <TextView
-                        android:layout_width="148dp"
-                        android:layout_height="wrap_content"
-                        android:text="수정하기"
-                        android:fontFamily="@font/pretendard_regular"
-                        android:textSize="20sp"
-                        android:textColor="@color/gray_900"
-                        android:layout_marginStart="4dp"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/layout_detail_delete"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_delete_schedule"/>
-                    <TextView
-                        android:layout_width="148dp"
-                        android:layout_height="wrap_content"
-                        android:text="삭제하기"
-                        android:fontFamily="@font/pretendard_regular"
-                        android:textSize="20sp"
-                        android:textColor="@color/gray_900"
-                        android:layout_marginStart="4dp"/>
-                </LinearLayout>
-
-            </LinearLayout>-->
             <View
                 android:id="@+id/view_detail_divider"
                 android:layout_width="match_parent"
@@ -437,42 +397,63 @@
                         app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
                         app:layout_constraintStart_toStartOf="@id/tv_detail_title"
                         app:layout_constraintEnd_toEndOf="@id/tv_detail_title">
-                        <ImageView
-                            android:id="@+id/img_detail_member_first"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginEnd="-12dp"
-                            android:src="@drawable/shape_rect_999_mint_fill"/>
-                        <ImageView
-                            android:id="@+id/img_detail_member_second"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginEnd="-12dp"
-                            android:src="@drawable/shape_rect_999_mint_fill"/>
-                        <ImageView
-                            android:id="@+id/img_detail_member_third"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginEnd="-12dp"
-                            android:src="@drawable/shape_rect_999_mint_fill"/>
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_detail_member_first"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="999dp"
+                            android:layout_marginVertical="1dp"
+                            android:layout_marginEnd="-12dp">
+                            <ImageView
+                                android:id="@+id/img_detail_member_first"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/shape_rect_999_mint_fill"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_detail_member_second"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="999dp"
+                            android:layout_marginVertical="1dp"
+                            android:layout_marginEnd="-12dp">
+                            <ImageView
+                                android:id="@+id/img_detail_member_second"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/shape_rect_999_mint_fill"/>
+                        </androidx.cardview.widget.CardView>
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_detail_member_third"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="999dp"
+                            android:layout_marginVertical="1dp"
+                            android:layout_marginEnd="-12dp">
+                            <ImageView
+                                android:id="@+id/img_detail_member_third"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/shape_rect_999_mint_fill"/>
+                        </androidx.cardview.widget.CardView>
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/layout_detail_extra_members"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:background="@drawable/shape_rect_999_white_fill_gray300_line_2">
+                            app:cardCornerRadius="999dp"
+                            android:background="@drawable/shape_rect_999_white_fill_gray300_line_2"
+                            android:layout_margin="2dp">
                             <TextView
                                 android:id="@+id/tv_detail_extra_members"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 style="@style/TextAppearance.TimeCAlling.Body2"
                                 android:textStyle="bold"
                                 android:textColor="@color/gray_600"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
+                                android:gravity="center"
                                 android:text="+3" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/layout_detail_desc"

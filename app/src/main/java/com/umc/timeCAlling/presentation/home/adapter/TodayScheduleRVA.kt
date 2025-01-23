@@ -13,10 +13,10 @@ class TodayScheduleRVA(
     private val items: List<TodaySchedule>
 ) : RecyclerView.Adapter<TodayScheduleRVA.ViewHolder>() {
 
-    interface DeleteClick {
+    interface ItemClick {
         fun onClick(view: View, position: Int)
     }
-    var deleteClick: DeleteClick? = null
+    var itemClick: ItemClick? = null
 
     inner class ViewHolder(val binding: ItemTodayScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -54,10 +54,10 @@ class TodayScheduleRVA(
         }
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "${items[position].title} Clicked", Toast.LENGTH_SHORT).show()
+            itemClick?.onClick(it, position)
         }
         holder.more.setOnClickListener {
-            deleteClick?.onClick(it, position)
+            Toast.makeText(holder.itemView.context, "${items[position].title} Clicked", Toast.LENGTH_SHORT).show()
         }
     }
 

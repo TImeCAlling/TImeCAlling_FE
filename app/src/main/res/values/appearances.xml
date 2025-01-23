@@ -120,7 +120,9 @@
     </style>
 
     <style name="TextAppearance.TimeCAlling.Button">
-        <!-- 오류 수정 중 -->
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="fontFamily">@font/pretendard_bold</item>
     </style>
 
     <style name="TextAppearance.TimeCAlling.Button.Mint">

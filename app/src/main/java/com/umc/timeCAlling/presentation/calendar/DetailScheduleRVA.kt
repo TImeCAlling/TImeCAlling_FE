@@ -25,9 +25,9 @@ class DetailScheduleRVA(
         val time = binding.tvDetailScheduleTime
         val timeType = binding.tvDetailScheduleTimeType
 
-        val memberFirst = binding.imgDetailScheduleMemberFirst
-        val memberSecond = binding.imgDetailScheduleMemberSecond
-        val extraMembers = binding.layoutDetailScheduleExtraMembers
+        val memberFirst = binding.cvDetailScheduleMemberFirst
+        val memberSecond = binding.cvDetailScheduleMemberSecond
+        val extraMembers = binding.cvDetailScheduleExtraMembers
         val extraMembersCount = binding.tvDetailScheduleExtraMembers
 
         val view = binding.viewDetailSchedule

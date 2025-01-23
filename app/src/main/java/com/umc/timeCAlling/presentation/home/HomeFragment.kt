@@ -1,14 +1,18 @@
 package com.umc.timeCAlling.presentation.home
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.R
+import com.umc.timeCAlling.TopSheetBehavior
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
@@ -19,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var navController: NavController
+    private lateinit var behavior: TopSheetBehavior<View>
 
     override fun initView() {
         binding.layoutHomeTodayScheduleDetail.setOnClickListener{
@@ -27,44 +32,73 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.ivHomeMypage.setOnSingleClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_mypageTab)
         }
-
-        setProgressBar(6, 6)  //나중에 하기
         initLastScheduleRV()
         initTodayScheduleRV()
+        initTopSheet()
 
     }
     override fun initObserver() {
+        binding.ivGoToAddSchedule.setOnSingleClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
+        }
         bottomNavigationShow()
     }
 
-    private fun bottomNavigationShow() {
-        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
-        bottomNavigationView?.visibility = View.VISIBLE
+    private fun initTopSheet() {
+        behavior = TopSheetBehavior.from(binding.layoutHomeTopSheet)
+        behavior.apply {
+            this.state = TopSheetBehavior.STATE_HIDDEN
+        }
+        behavior.setTopSheetCallback(object: TopSheetBehavior.TopSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    TopSheetBehavior.STATE_HIDDEN -> {
+                        dismissTopSheet()
+                    }
+                    TopSheetBehavior.STATE_COLLAPSED -> {
+                        dismissTopSheet()
+                    }
+                }
+            }
 
-        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
-        addScheduleButton?.visibility = View.VISIBLE
-
-        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
-        shadowImageView?.visibility = View.VISIBLE
-
-        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
-        ovalImageView?.visibility = View.VISIBLE
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                Log.d("slideOffset", slideOffset.toString())
+            }
+        })
+        binding.ivPreClose.setOnClickListener {
+            behavior.state = TopSheetBehavior.STATE_COLLAPSED
+        }
+        binding.viewHomeTopsheetBackground.setOnClickListener {
+            behavior.state = TopSheetBehavior.STATE_COLLAPSED
+        }
     }
 
-    //test data
-    var list = arrayListOf<LastSchedule>(
-        LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
-        LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
-        LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
-        LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
-        LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
-        LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
-    )
-    val listSize = list.size
+    private fun showTopSheet() {
+        behavior.state = TopSheetBehavior.STATE_EXPANDED
+        binding.viewHomeTopsheetBackground.visibility = View.VISIBLE
+        binding.viewHomeTopsheetBackground.setOnSingleClickListener {
+            behavior.state = TopSheetBehavior.STATE_COLLAPSED
+            binding.viewHomeTopsheetBackground.visibility = View.GONE
+        }
+    }
+
+    private fun dismissTopSheet() {
+        binding.apply {
+            viewHomeTopsheetBackground.visibility = View.GONE
+            layoutTopsheetScroll.scrollTo(0,0)
+        }
+    }
 
     private fun initLastScheduleRV() {
-        val adapter = LastScheduleRVA(list,
-            onClickDeleteItem = {deleteTask(it)})
+        var list = arrayListOf<LastSchedule>(
+            LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
+            LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
+            LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
+            LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00")
+        )
+        val listSize = list.size
+        setProgressBar(listSize, listSize)
+        val adapter = LastScheduleRVA(list)
         binding.rvHomeLastSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = adapter
@@ -77,17 +111,25 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             binding.rvHomeLastSchedule.visibility = View.VISIBLE
             binding.tvHomeNoLastSchedule.visibility = View.GONE
         }
-
-    }
-
-    fun deleteTask(schedule: LastSchedule) {
-        list.remove(schedule)
-        binding.rvHomeLastSchedule.adapter?.notifyDataSetChanged()
-        if(list.isEmpty()) {
-            binding.rvHomeLastSchedule.visibility = View.GONE
-            binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
+        adapter.itemClick = object : LastScheduleRVA.ItemClick {
+            override fun onItemClick(view: View, position: Int) {
+                Toast.makeText(requireContext(), "${list[position].title} Clicked", Toast.LENGTH_SHORT).show()
+                val action = HomeFragmentDirections.actionHomeFragmentToCheckListFragment(scheduleIndex =position)
+                findNavController().navigate(action)
+            }
         }
-        setProgressBar(listSize ,list.size)
+
+        val args = HomeFragmentArgs.fromBundle(requireArguments())
+        val idx = args.scheduleIndex
+        if(idx != -1) {
+            list.removeAt(idx)
+            adapter.notifyDataSetChanged()
+            setProgressBar(listSize, list.size)
+            if(list.isEmpty()) {
+                binding.rvHomeLastSchedule.visibility = View.GONE
+                binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun initTodayScheduleRV() {
@@ -123,14 +165,9 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             binding.rvHomeTodaySchedule.visibility = View.VISIBLE
             binding.layoutHomeNoTodaySchedule.visibility = View.GONE
         }
-        adapter.deleteClick = object : TodayScheduleRVA.DeleteClick {
+        adapter.itemClick = object : TodayScheduleRVA.ItemClick {
             override fun onClick(view: View, position: Int) {
-                list2.removeAt(position)
-                adapter.notifyDataSetChanged()
-                if(list2.isEmpty()) {
-                    binding.rvHomeTodaySchedule.visibility = View.GONE
-                    binding.layoutHomeNoTodaySchedule.visibility = View.VISIBLE
-                }
+                showTopSheet()
             }
         }
     }
@@ -139,7 +176,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         val maxWidth = binding.viewHomeProgressBarBackground.width
         val progress = ((1-(currentSize.toFloat() / size.toFloat())) * maxWidth).toInt()
         binding.viewHomeProgressBarForeground.layoutParams = (binding.viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
-            width = if(progress <= 20) requireContext().toPx(20).toInt() else progress
+            width = if(progress <= 20) requireContext().toPx(20).toInt() else requireContext().toPx(progress).toInt()
         }
         binding.tvHomeProgress.text = "${((1 - (currentSize.toFloat() / size.toFloat())) * 100).toInt()}%"
     }

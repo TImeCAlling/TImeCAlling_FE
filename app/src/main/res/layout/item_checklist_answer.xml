@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="14dp"
+    android:layout_marginBottom="24dp"
+    android:background="@drawable/shape_rect_26_gray200_fill"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/iv_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_icon_gray500_fill"/>
+
+    <TextView
+        android:id="@+id/tv_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="네, 제 시간에 도착했습니다."
+        android:textSize="20sp"
+        android:textColor="@color/gray_600"
+        android:fontFamily="@font/pretendard_regular"/>
+</LinearLayout>
