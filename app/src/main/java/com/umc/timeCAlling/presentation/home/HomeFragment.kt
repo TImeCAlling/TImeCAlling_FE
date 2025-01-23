@@ -35,13 +35,9 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         initLastScheduleRV()
         initTodayScheduleRV()
         initTopSheet()
-
     }
     override fun initObserver() {
-        binding.ivGoToAddSchedule.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab)
-        }
-        bottomNavigationShow()
+
     }
 
     private fun initTopSheet() {
