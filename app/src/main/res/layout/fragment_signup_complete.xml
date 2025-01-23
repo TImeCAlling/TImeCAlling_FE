@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <!-- 본문 -->
+        <ImageView
+            android:id="@+id/iv_signup_complete_icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="148:230"
+            app:layout_constraintWidth_percent="0.359"
+            android:background="@drawable/ic_signup_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/view_signup_complete_1"/>
+
+        <View
+            android:id="@+id/view_signup_complete_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_percent="0.145"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_signup_complete_body_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24dp"
+            android:text="회원가입이 완료되었어요!"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_signup_complete_1"/>
+
+        <TextView
+            android:id="@+id/tv_onboarding_name_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="이제 타임콜링과 함께\n시간 관리의 새로운 습관을 길러보아요."
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/gray_800"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_signup_complete_body_1"
+            android:gravity="center"
+            />
+
+        <!-- btn -->
+        <TextView
+            android:id="@+id/tv_onboarding_name_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/shape_rect_999_mint_fill"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="확인"
+            android:textColor="@color/white"
+            android:paddingVertical="20dp"
+            style="@style/TextAppearance.TimeCAlling.Button.Mint"
+            android:gravity="center"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

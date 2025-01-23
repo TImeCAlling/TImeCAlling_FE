@@ -1,0 +1,890 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <!-- top bar -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="23dp">
+
+            <ImageView
+                android:id="@+id/iv_myprofile_back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_myprofile_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 프로필"
+                style="@style/TextAppearance.TimeCAlling.Head2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/topbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="18dp"
+            android:background="@color/mint_300"/>
+
+        <!-- 사진 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_myprofile_photo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_percent="0.337"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topbar"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="47dp"
+            android:visibility="visible">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_myprofile_oval_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_rect_999_mint300_fill"
+                app:layout_constraintWidth_percent="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:id="@+id/iv_myprofile_face"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_face"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_percent="0.56"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="visible"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 카메라 버튼 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_myprofile_camera"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintEnd_toEndOf="@id/cl_myprofile_photo"
+            app:layout_constraintBottom_toBottomOf="@id/cl_myprofile_photo"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_myprofile_oval_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/shape_rect_999_white_fill_gray300_line_1"
+                app:layout_constraintWidth_percent="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iv_myprofile_camera"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_camera"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_percent="0.435"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="visible"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 이름 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_myprofile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_myprofile_photo"
+            android:layout_marginTop="30dp">
+
+            <TextView
+                android:id="@+id/tv_myprofile_current_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24dp"
+                android:text="김지각"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24dp"
+                android:text="님"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@id/tv_myprofile_current_name"
+                app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 바텀 bg -->
+        <View
+            android:id="@+id/view_myprofile_bg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_bottom"
+            android:layout_marginTop="55dp"
+            app:layout_constraintTop_toBottomOf="@id/cl_myprofile_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <!-- 이름 -->
+        <TextView
+            android:id="@+id/tv_myprofile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="이름"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/gray_900"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_myprofile_bg"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="30dp"/>
+
+        <TextView
+            android:id="@+id/tv_myprofile_name_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="김지각"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/gray_500"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_myprofile_name"
+            android:layout_marginEnd="60dp"/>
+
+        <ImageView
+            android:id="@+id/iv_myprofile_name_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_arrow_right"
+            android:backgroundTint="@color/gray_500"
+            app:layout_constraintTop_toTopOf="@id/tv_myprofile_name"
+            app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="32dp"/>
+
+        <!-- 평균 준비 시간 -->
+        <TextView
+            android:id="@+id/tv_myprofile_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="평균 준비 시간"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/gray_900"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_myprofile_name"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="41dp"/>
+
+        <TextView
+            android:id="@+id/tv_myprofile_time_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="15분"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/gray_500"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_myprofile_time"
+            android:layout_marginEnd="60dp"/>
+
+        <ImageView
+            android:id="@+id/iv_myprofile_time_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_arrow_right"
+            android:backgroundTint="@color/gray_500"
+            app:layout_constraintTop_toTopOf="@id/tv_myprofile_time"
+            app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="32dp"/>
+
+        <!-- 여유 정도 -->
+        <TextView
+            android:id="@+id/tv_myprofile_spare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="여유 정도"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/gray_900"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_myprofile_time"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="41dp"/>
+
+        <TextView
+            android:id="@+id/tv_myprofile_spare_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="여유"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/gray_500"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_myprofile_spare"
+            android:layout_marginEnd="60dp"/>
+
+        <ImageView
+            android:id="@+id/iv_myprofile_spare_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_arrow_right"
+            android:backgroundTint="@color/gray_500"
+            app:layout_constraintTop_toTopOf="@id/tv_myprofile_spare"
+            app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_spare"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="32dp"/>
+
+        <!-- 로그아웃 -->
+        <TextView
+            android:id="@+id/tv_myprofile_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="로그아웃"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/gray_900"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_myprofile_spare"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="41dp"/>
+
+        <ImageView
+            android:id="@+id/iv_myprofile_logout_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_arrow_right"
+            android:backgroundTint="@color/gray_500"
+            app:layout_constraintTop_toTopOf="@id/tv_myprofile_logout"
+            app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="32dp"/>
+
+        <!-- 회원탈퇴 btn -->
+        <TextView
+            android:id="@+id/tv_myprofile_withdraw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rect_999_white_fill_gray300_line_2"
+            android:text="회원 탈퇴"
+            android:textColor="@color/gray_600"
+            android:textSize="17dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="23dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_myprofile_logout"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- bottomSheet background -->
+        <View
+            android:id="@+id/view_myprofile_bottomSheet_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bottomsheet_background"
+            android:visibility="gone"/>
+
+        <!-- 이름 bottomSheet -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_myprofile_bottom_sheet_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/shape_bottom_sheet">
+
+                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                    android:id="@+id/drag_handle_myprofile_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_myprofile_bottom_sheet_name_close"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.068"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_myprofile_name_title"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_name_title"
+                    android:layout_marginEnd="20dp">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_rect_999_white_fill_gray300_line_1"/>
+                    <ImageView
+                        android:id="@+id/iv_myprofile_bottom_sheet_name_close"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/ic_delete"
+                        android:backgroundTint="@color/gray_700"
+                        app:layout_constraintWidth_percent="0.45"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/tv_myprofile_name_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="이름"
+                    style="@style/TextAppearance.TimeCAlling.Head2"
+                    android:textColor="@color/gray_600"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drag_handle_myprofile_name"/>
+
+                <TextView
+                    android:id="@+id/tv_myprofile_name_title1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24dp"
+                    android:text="변경할 이름을 입력해 주세요"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_name_title"/>
+
+                <!-- 입력 필드 -->
+                <EditText
+                    android:id="@+id/et_myprofile_name_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rect_10_gray200_fill"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_name_title1"
+                    android:layout_marginHorizontal="20dp"
+                    android:hint="EX) 김타임"
+                    android:text=""
+                    android:focusableInTouchMode="true"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:paddingVertical="20dp"
+                    style="@style/TextAppearance.TimeCAlling.Body1.Hint"
+                    android:gravity="left"
+                    android:paddingStart="20dp"
+                    android:layout_marginTop="28dp"/>
+
+                <!-- delete 버튼 -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_myprofile_name_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.048"
+                    app:layout_constraintTop_toTopOf="@id/et_myprofile_name_input"
+                    app:layout_constraintBottom_toBottomOf="@id/et_myprofile_name_input"
+                    app:layout_constraintEnd_toEndOf="@id/et_myprofile_name_input"
+                    android:layout_marginEnd="20dp"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:id="@+id/iv_myprofile_name_delete_oval"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/shape_rect_999_mint500_fill"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintWidth_percent="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <ImageView
+                        android:id="@+id/iv_myprofile_name_delete"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/ic_delete"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintWidth_percent="0.6"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- check 표시 -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_myprofile_name_check"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.048"
+                    app:layout_constraintTop_toTopOf="@id/et_myprofile_name_input"
+                    app:layout_constraintBottom_toBottomOf="@id/et_myprofile_name_input"
+                    app:layout_constraintEnd_toEndOf="@id/et_myprofile_name_input"
+                    android:layout_marginEnd="20dp"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:id="@+id/iv_myprofile_name_check"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/ic_check"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintWidth_percent="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- error 표시 -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_myprofile_name_error"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.048"
+                    app:layout_constraintTop_toTopOf="@id/et_myprofile_name_input"
+                    app:layout_constraintBottom_toBottomOf="@id/et_myprofile_name_input"
+                    app:layout_constraintEnd_toEndOf="@id/et_myprofile_name_input"
+                    android:layout_marginEnd="20dp"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:id="@+id/iv_myprofile_name_error_oval"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/shape_rect_999_error_fill"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintWidth_percent="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <ImageView
+                        android:id="@+id/iv_myprofile_name_error"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/ic_delete"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintWidth_percent="0.6"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- 글자 수 -->
+                <TextView
+                    android:id="@+id/tv_myprofile_name_maxLength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:text="/5"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:textColor="@color/black_700"
+                    app:layout_constraintEnd_toEndOf="@id/et_myprofile_name_input"
+                    app:layout_constraintTop_toBottomOf="@id/et_myprofile_name_input"
+                    android:layout_marginTop="4dp"
+                    android:visibility="visible"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_myprofile_name_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:text="0"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:textColor="@color/mint_main"
+                    app:layout_constraintEnd_toStartOf="@id/tv_myprofile_name_maxLength"
+                    app:layout_constraintTop_toBottomOf="@id/et_myprofile_name_input"
+                    android:layout_marginTop="4dp"
+                    />
+
+                <!-- 저장 btn -->
+                <TextView
+                    android:id="@+id/tv_myprofile_name_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_name_count"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@drawable/shape_rect_999_gray300_fill"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="31dp"
+                    android:text="저장하기"
+                    android:paddingVertical="20dp"
+                    style="@style/TextAppearance.TimeCAlling.Button.Gray"
+                    android:gravity="center"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <!-- 평균 준비 시간 bottomSheet -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_myprofile_bottom_sheet_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/shape_bottom_sheet">
+
+                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                    android:id="@+id/drag_handle_myprofile_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_myprofile_bottom_sheet_time_close"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.068"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_myprofile_time_title"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_time_title"
+                    android:layout_marginEnd="20dp">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_rect_999_white_fill_gray300_line_1"/>
+                    <ImageView
+                        android:id="@+id/iv_myprofile_bottom_sheet_time_close"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/ic_delete"
+                        android:backgroundTint="@color/gray_700"
+                        app:layout_constraintWidth_percent="0.45"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/tv_myprofile_time_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="평균 준비 시간"
+                    style="@style/TextAppearance.TimeCAlling.Head2"
+                    android:textColor="@color/gray_600"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drag_handle_myprofile_time"/>
+
+                <TextView
+                    android:id="@+id/tv_myprofile_time_title1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24dp"
+                    android:text="평균 준비 시간은 어떻게 되시나요?"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_time_title"/>
+
+                <!-- 선택 필드 -->
+                <TextView
+                    android:id="@+id/tv_myprofile_time_item"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/shape_rect_999_mint200_fill_mint_line_1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textColor="@color/mint_main"
+                    android:fontFamily="@font/pretendard_medium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_time_title1"
+                    android:layout_marginTop="40dp"/>
+
+                <!-- recycler view -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_myprofile_time_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_time_title1"
+                    android:layout_marginTop="40dp"
+                    tools:listitem="@layout/item_signup_time"/>
+
+                <!-- 양 끝 연하게 -->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_onboarding_rv_1"
+                    android:alpha="0.7"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/rv_myprofile_time_recyclerView"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_onboarding_rv_2"
+                    android:alpha="0.7"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/rv_myprofile_time_recyclerView"/>
+
+                <!-- 저장 btn -->
+                <TextView
+                    android:id="@+id/tv_myprofile_time_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/rv_myprofile_time_recyclerView"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@drawable/shape_rect_999_mint_fill"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="31dp"
+                    android:text="저장하기"
+                    android:textColor="@color/white"
+                    android:paddingVertical="20dp"
+                    style="@style/TextAppearance.TimeCAlling.Button.Gray"
+                    android:gravity="center"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <!-- 여유 정도 bottomSheet -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_myprofile_bottom_sheet_spare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/shape_bottom_sheet">
+
+                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                    android:id="@+id/drag_handle_myprofile_spare"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_myprofile_bottom_sheet_spare_close"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.068"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_myprofile_spare_title"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_spare_title"
+                    android:layout_marginEnd="20dp">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_rect_999_white_fill_gray300_line_1"/>
+                    <ImageView
+                        android:id="@+id/iv_myprofile_bottom_sheet_spare_close"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/ic_delete"
+                        android:backgroundTint="@color/gray_700"
+                        app:layout_constraintWidth_percent="0.45"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/tv_myprofile_spare_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="여유 정도"
+                    style="@style/TextAppearance.TimeCAlling.Head2"
+                    android:textColor="@color/gray_600"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drag_handle_myprofile_spare"/>
+
+                <!-- 선택 필드 -->
+                <TextView
+                    android:id="@+id/tv_myprofile_spare_title1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24dp"
+                    android:text="원하는 여유 시간이\n어느정도 인가요?"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_spare_title"/>
+
+                <!-- 선택지 배경 -->
+                <TextView
+                    android:id="@+id/tv_myprofile_spare_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" "
+                    android:textSize="16sp"
+                    android:paddingVertical="12dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_spare_title1"
+                    android:background="@drawable/shape_rect_999_gray200_fill"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="40dp"/>
+
+                <!-- 선택지 1 -->
+                <TextView
+                    android:id="@+id/tv_myprofile_spare_option_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="@id/tv_myprofile_spare_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_spare_bg"
+                    app:layout_constraintStart_toStartOf="@id/tv_myprofile_spare_bg"
+                    app:layout_constraintEnd_toStartOf="@id/view_myprofile_spare_1"
+                    android:background="@drawable/shape_rect_999_gray200_fill"
+                    android:text="딱딱"
+                    android:paddingVertical="12dp"
+                    style="@style/TextAppearance.TimeCAlling.Button.Gray"
+                    android:gravity="center"/>
+
+                <!-- 선택지 2 -->
+                <TextView
+                    android:id="@+id/tv_myprofile_spare_option_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="@id/tv_myprofile_spare_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_spare_bg"
+                    app:layout_constraintStart_toEndOf="@id/view_myprofile_spare_1"
+                    app:layout_constraintEnd_toStartOf="@id/view_myprofile_spare_2"
+                    android:background="@drawable/shape_rect_999_mint200_fill_mint_line_1"
+                    android:text="여유"
+                    android:paddingVertical="12dp"
+                    style="@style/TextAppearance.TimeCAlling.Button.Mint"
+                    android:gravity="center"/>
+
+                <!-- 선택지 3 -->
+                <TextView
+                    android:id="@+id/tv_myprofile_spare_option_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="@id/tv_myprofile_spare_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_spare_bg"
+                    app:layout_constraintStart_toEndOf="@id/view_myprofile_spare_2"
+                    app:layout_constraintEnd_toEndOf="@id/tv_myprofile_spare_bg"
+                    android:background="@drawable/shape_rect_999_gray200_fill"
+                    android:text="넉넉"
+                    android:paddingVertical="12dp"
+                    style="@style/TextAppearance.TimeCAlling.Button.Gray"
+                    android:gravity="center" />
+
+                <!-- 공백 view -->
+                <View
+                    android:id="@+id/view_myprofile_spare_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.048"
+                    app:layout_constraintStart_toEndOf="@id/tv_myprofile_spare_option_1"
+                    app:layout_constraintEnd_toStartOf="@id/tv_myprofile_spare_option_2"
+                    app:layout_constraintTop_toTopOf="@id/tv_myprofile_spare_bg"
+                    />
+
+                <View
+                    android:id="@+id/view_myprofile_spare_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintWidth_percent="0.048"
+                    app:layout_constraintStart_toEndOf="@id/tv_myprofile_spare_option_2"
+                    app:layout_constraintEnd_toStartOf="@id/tv_myprofile_spare_option_3"
+                    app:layout_constraintTop_toTopOf="@id/tv_myprofile_spare_bg"
+                    />
+
+                <!-- 저장 btn -->
+                <TextView
+                    android:id="@+id/tv_myprofile_spare_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_myprofile_spare_bg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@drawable/shape_rect_999_mint_fill"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="31dp"
+                    android:text="저장하기"
+                    android:textColor="@color/white"
+                    android:paddingVertical="20dp"
+                    style="@style/TextAppearance.TimeCAlling.Button.Gray"
+                    android:gravity="center"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

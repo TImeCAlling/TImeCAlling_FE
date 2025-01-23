@@ -17,8 +17,8 @@
             android:id="@+id/action_homeFragment_to_calendarFragment"
             app:destination="@id/calendarFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_mypageFragment"
-            app:destination="@id/mypageFragment" />
+            android:id="@+id/action_homeFragment_to_mypageTab"
+            app:destination="@id/mypageTab" />
         <action
             android:id="@+id/action_homeFragment_to_signupFragment"
             app:destination="@id/signupFragment"/>
@@ -43,11 +43,24 @@
         tools:layout="@layout/fragment_wakeup">
     </fragment>
 
-    <fragment
-        android:id="@+id/mypageFragment"
-        android:name="com.umc.timeCAlling.presentation.mypage.MypageFragment"
-        android:label="MypageFragment"
-        tools:layout="@layout/fragment_mypage"/>
+    <navigation
+        android:id="@+id/mypageTab"
+        app:startDestination="@id/mypageFragment">
+        <fragment
+            android:id="@+id/mypageFragment"
+            android:name="com.umc.timeCAlling.presentation.mypage.MypageFragment"
+            android:label="MypageFragment"
+            tools:layout="@layout/fragment_mypage">
+            <action
+                android:id="@+id/action_mypageFragment_to_myprofileFragment"
+                app:destination="@id/myprofileFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/myprofileFragment"
+            android:name="com.umc.timeCAlling.presentation.mypage.MyprofileFragment"
+            android:label="MyprofileFragment"
+            tools:layout="@layout/fragment_myprofile"/>
+    </navigation>
 
     <navigation
         android:id="@+id/addScheduleTab"
@@ -185,7 +198,17 @@
             android:label="SignupSpareFragment"
             tools:layout="@layout/fragment_signup_spare">
             <action
-                android:id="@+id/action_signupSpareFragment_to_homeFragment"
+                android:id="@+id/action_signupSpareFragment_to_signupCompleteFragment"
+                app:destination="@id/signupCompleteFragment"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/signupCompleteFragment"
+            android:name="com.umc.timeCAlling.presentation.signup.SignupCompleteFragment"
+            android:label="SignupCompleteFragment"
+            tools:layout="@layout/fragment_signup_complete">
+            <action
+                android:id="@+id/action_signupCompleteFragment_to_homeFragment"
                 app:destination="@id/homeFragment"/>
         </fragment>
     </navigation>
