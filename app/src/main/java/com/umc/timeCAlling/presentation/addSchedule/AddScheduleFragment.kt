@@ -1,9 +1,12 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
+import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
+import androidx.compose.foundation.background
+import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -39,9 +42,19 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         binding.ivAddScheduleBack.setOnSingleClickListener {
             findNavController().popBackStack()
         }
+        viewModel.searchLocation.observe(viewLifecycleOwner) { locations ->
+            binding.tvAddScheduleLocation.text = locations[0].name
+            binding.ivAddScheduleLocation.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_900))
+            binding.tvAddScheduleLocation.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
+        }
         viewModel.timeTaken.observe(viewLifecycleOwner) { timeTaken ->
-            binding.tvAddScheduleMinute.text = timeTaken.toString()
-            binding.tvAddScheduleMinute.visibility = if (timeTaken != null && timeTaken != 0) View.VISIBLE else View.INVISIBLE
+            binding.tvAddScheduleHour.text = if (timeTaken >= 60) (timeTaken / 60).toString() else "0"
+            binding.tvAddScheduleMinute.text = (timeTaken%60).toString()
+
+            if (timeTaken != null) {
+                binding.tvAddScheduleTimeTaken.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray900_fill)
+                binding.tvAddScheduleTimeTaken.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            }
         }
     }
 
@@ -89,9 +102,9 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         binding.tvAddScheduleDateSave.setOnClickListener { // 저장 버튼 ID를 확인하고 수정해야 할 수 있습니다.
             selectedDate?.let {
                 dateTextView.text = it // TextView에 날짜 설정
-                binding.layoutAddScheduleDate.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_mint_line_2) // 배경 변경
-                binding.tvAddScheduleDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900)) // 글자 색깔 변경
-                binding.ivAddScheduleDate.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_calender_check)) // 아이콘 변경
+                binding.ivAddScheduleDate.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_calendar_black)) // 아이콘 변경
+                binding.tvAddScheduleDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
+                binding.ivAddScheduleDateArrow.visibility = View.VISIBLE
 
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
             }
@@ -150,9 +163,9 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
             val selectedTime = String.format("%s %02d:%02d", selectedAmPm, selectedHour, selectedMinute) // 시간 형식 지정
             timeTextView.text = selectedTime // TextView에 시간 설정
-            binding.layoutAddScheduleTime.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_mint_line_2) // 배경 변경
-            binding.tvAddScheduleTime.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900)) // 글자 색깔 변경
-            binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_alarm_check)) // 아이콘 변경
+            binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_alarm_black)) // 아이콘 변경
+            binding.tvAddScheduleTime.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
+            binding.ivAddScheduleTimeArrow.visibility = View.VISIBLE
 
             timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
         }
@@ -209,26 +222,14 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         binding.etAddScheduleMemo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 텍스트 변경 전
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val textLength = s?.length ?: 0 // 입력된 글자 수
                 binding.tvAddScheduleMemoCount.text = textLength.toString() // 글자 수 표시
-
-                if (textLength > 0) { // 글자가 입력된 경우
-                    binding.layoutAddScheduleMemo.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_white_fill_mint_line_2) // 배경 변경
-                    binding.etAddScheduleMemo.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900)) // 글자 색깔 변경
-                    binding.ivAddScheduleMemoCheck.visibility = View.VISIBLE // 체크 표시 보이기
-                } else { // 글자가 없는 경우
-                    binding.layoutAddScheduleMemo.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_10_gray250_fill) // 배경 변경
-                    binding.etAddScheduleMemo.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_600)) // 글자 색깔 변경
-                    binding.ivAddScheduleMemoCheck.visibility = View.INVISIBLE // 체크 표시 숨기기
-                }
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // 텍스트 변경 후
             }
         })
     }

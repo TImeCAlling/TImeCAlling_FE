@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.umc.timeCAlling.data.Category
 import com.umc.timeCAlling.data.SearchResult
 import com.umc.timeCAlling.domain.model.response.CarTransportationModel
 import com.umc.timeCAlling.domain.model.response.PublicTransportationModel
@@ -61,14 +62,13 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _timeTaken = MutableLiveData<Int>()
     val timeTaken: LiveData<Int> = _timeTaken
 
-    val selectedCategory = MutableLiveData<String>() // selectedCategory LiveData 추가
+    val selectedCategory=MutableLiveData<String>()
 
     fun setTimeTaken(time: Int) {
         _timeTaken.value = time
     }
 
     fun setSelectedLocationName(name: String) {
-        Log.d("dddd","_selectedLocationName: $name")
         _selectedLocationName.value = name
     }
 

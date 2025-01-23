@@ -118,6 +118,9 @@ dependencies {
     implementation(libs.android.colorpicker)
 
     implementation(libs.threetenabp)
+
+    implementation ("de.hdodenhof:circleimageview:3.1.0") // CircularImageView 라이브러리
+
 }
 configurations.all {
     exclude(group = "com.android.support")

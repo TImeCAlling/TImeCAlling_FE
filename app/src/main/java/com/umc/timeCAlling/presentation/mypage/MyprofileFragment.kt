@@ -62,7 +62,9 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         binding.viewMyprofileBottomSheetBg.visibility = View.GONE
     }
 
-    override fun initObserver() {}
+    override fun initObserver() {
+
+    }
 
     private fun setClickListener() {
         binding.clMyprofileCamera.setOnClickListener { openGallery() }

@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -33,6 +34,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         initDetailScheduleRV()
         initBottomSheet()
         bottomNavigationShow()
+
+        binding.layoutDetailMembers.setOnClickListener {
+            findNavController().navigate(R.id.action_calendarFragment_to_wakeupFragment)
+        }
+
     }
 
     override fun initObserver() {

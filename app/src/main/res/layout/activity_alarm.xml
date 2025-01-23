@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_alarm">
+
+        <LinearLayout
+            android:id="@+id/layout_alarm_topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="42dp"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tv_alarm_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="알람 이름"
+                style="@style/TextAppearance.TimeCAlling.Head1"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tv_alarm_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00월 00일 (월)"
+                style="@style/TextAppearance.TimeCAlling.Regular_20sp"
+                android:textColor="@color/gray_900"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/layout_alarm_topbar"
+            android:layout_marginTop="116dp"
+            android:layout_marginHorizontal="71dp">
+            <ImageView
+                android:layout_width="174dp"
+                android:layout_height="174dp"
+                android:src="@drawable/ic_bell"/>
+            <TextView
+                android:id="@+id/tv_alarm_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="'홍길동' 님의 알람"
+                style="@style/TextAppearance.TimeCAlling.SemiBold_36sp"
+                android:layout_marginTop="12dp"/>
+            <TextView
+                android:id="@+id/tv_alarm_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="김콜링님이 빨리 일어나라고 하셨어"
+                style="@style/TextAppearance.TimeCAlling.Head4.Regular"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:id="@+id/tv_alarm_content_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="준비 끝났지?"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_alarm_stop"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_alarm_stop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="100dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
