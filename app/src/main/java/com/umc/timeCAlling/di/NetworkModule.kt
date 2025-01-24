@@ -80,19 +80,9 @@ object NetworkModule {
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://apis.openapi.sk.com/") // Tmap API 기본 URL
+            .baseUrl("https://apis.openapi.sk.com/")
             .addConverterFactory(gsonConverterFactory)
             .client(client)
             .build()
     }
-
-    @Provides
-    @Singleton
-    fun providesTmapRouteDataSource(@Named("tmap") tmapService: TmapService): TmapDataSource {
-        return TmapDataSourceImpl(tmapService)
-    }
-
-    @Provides
-    @Singleton
-    fun proviedsScheduleDataSource(scheduleService: ScheduleService): ScheduleDataSource = ScheduleDataSourceImpl(scheduleService)
 }

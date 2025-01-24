@@ -32,10 +32,10 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providesTmapRouteRepository(tmapDataSource: TmapDataSource): TmapRepository = TmapRepositoryImpl(tmapDataSource)
+    fun providesTmapRepository(tmapRepositoryImpl: TmapRepositoryImpl): TmapRepository = tmapRepositoryImpl
 
     @Provides
     @Singleton
-    fun ProvidesScheduleRepository(scheduleDataSource: ScheduleDataSource): ScheduleRepository = ScheduleRepositoryImpl(scheduleDataSource)
+    fun ProvidesScheduleRepository(scheduleRepositoryImpl: ScheduleRepositoryImpl): ScheduleRepository = scheduleRepositoryImpl
 
 }

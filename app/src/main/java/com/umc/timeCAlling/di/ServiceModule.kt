@@ -26,14 +26,13 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    @Named("tmap")
-    fun provideTmapRouteService(@Named("tmap") retrofit: Retrofit): TmapService {
+    fun provideTmapService(@Named("tmap") retrofit: Retrofit): TmapService {
         return retrofit.create(TmapService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideScheduleService(retrofit: Retrofit): ScheduleService{
+    fun provideScheduleService(@Named("default")retrofit: Retrofit): ScheduleService{
         return retrofit.buildService()
     }
 }
