@@ -135,7 +135,6 @@ class LocationResultRVA(
                 }
             }
 
-            // ViewModel에 선택된 시간 저장
             selectedTime?.let { viewModel.setMoveTime(it) }
 
             // 배경색 업데이트

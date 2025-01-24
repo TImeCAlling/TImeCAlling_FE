@@ -11,6 +11,10 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.umc.timeCAlling.data.SearchResult
+import com.umc.timeCAlling.data.dto.request.CategoriesRequestDto
+import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleRequestDto
+import com.umc.timeCAlling.domain.model.request.CategoriesRequestModel
+import com.umc.timeCAlling.domain.model.request.schedule.CreateScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.tmap.CarTransportationModel
 import com.umc.timeCAlling.domain.model.response.tmap.PublicTransportationModel
 import com.umc.timeCAlling.domain.model.response.tmap.WalkTransportationModel
@@ -35,6 +39,83 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     private val maxRecentSearches = 10 // 최대 검색어 개수
 
+    //일정 생성 값
+    private val _scheduleName = MutableLiveData<String>()
+    val scheduleName : LiveData<String> = _scheduleName
+    fun setScheduleName(name: String) {
+        _scheduleName.value = name
+    }
+
+    private val _scheduleMemo = MutableLiveData<String>()
+    val scheduleMemo : LiveData<String> = _scheduleMemo
+    fun setScheduleMemo(memo: String) {
+        _scheduleMemo.value = memo
+    }
+
+    private val _scheduleDate = MutableLiveData<String>()
+    val scheduleDate : LiveData<String> = _scheduleDate
+    fun setScheduleDate(date: String) {
+        _scheduleDate.value = date
+    }
+
+    private val _scheduleTime = MutableLiveData<String>()
+    val scheduleTime : LiveData<String> = _scheduleTime
+    fun setScheduleTime(time: String) {
+        _scheduleTime.value = time
+    }
+
+    private val _selectedLocationName = MutableLiveData<String>()
+    val selectedLocationName: LiveData<String> = _selectedLocationName
+    fun setSelectedLocationName(name: String) {
+        _selectedLocationName.value = name
+    }
+
+    private val _moveTime = MutableLiveData<Int>()
+    val moveTime: LiveData<Int> = _moveTime
+    fun setMoveTime(time: Int) {
+        _moveTime.value = time
+    }
+
+    private val _freeTime = MutableLiveData<String>()
+    val freeTime:LiveData<String> = _freeTime
+    fun setFreeTime(time: String) {
+        _freeTime.value = time
+    }
+    private val _repeatDates = MutableLiveData<List<String>>(emptyList())
+    val repeatDates: LiveData<List<String>> = _repeatDates
+    fun setRepeatDates(dates: List<String>) {
+        _repeatDates.value = dates
+    }
+
+    private val _isRepeat = MutableLiveData<Boolean>(false)
+    val isRepeat: LiveData<Boolean> = _isRepeat
+    fun setIsRepeat(isRepeat: Boolean) {
+        _isRepeat.value = isRepeat
+    }
+
+    private val _startDate = MutableLiveData<String>()
+    val startDate: LiveData<String> = _startDate
+    fun setStartDate(date: String) {
+        _startDate.value = date
+    }
+
+    private val _endDate = MutableLiveData<String>()
+    val endDate: LiveData<String> = _endDate
+    fun setEndDate(date: String) {
+        _endDate.value = date
+    }
+
+    private val _categoryName = MutableLiveData<String>()
+    val categoryName: LiveData<String> = _categoryName
+    fun setCategoryName(name: String) {
+        _categoryName.value = name
+    }
+
+    private val _categoryColor = MutableLiveData<Int>()
+    val categoryColor: LiveData<Int> = _categoryColor
+    fun setCategoryColor(color: Int) {
+        _categoryColor.value = color
+    }
     private val _recentSearches = MutableLiveData<List<String>>(emptyList())
     val recentSearches: LiveData<List<String>> = _recentSearches
 
@@ -57,21 +138,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
     }
 
-    private val _selectedLocationName = MutableLiveData<String>()
-    val selectedLocationName: LiveData<String> = _selectedLocationName
-
-    private val _moveTime = MutableLiveData<Int>()
-    val moveTime: LiveData<Int> = _moveTime
-
     val selectedCategory=MutableLiveData<String>()
-
-    fun setMoveTime(time: Int) {
-        _moveTime.value = time
-    }
-
-    fun setSelectedLocationName(name: String) {
-        _selectedLocationName.value = name
-    }
 
     fun addRecentSearch(search: String) {
         val updatedSearches = _recentSearches.value?.toMutableList()?.also {
@@ -163,13 +230,29 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         }
     }
 
-/*    fun createSchedule(){
+    fun createSchedule(){
         viewModelScope.launch {
-             scheduleRepository.createSchedule().onSuccess { response ->
+            val request = CreateScheduleRequestModel(
+                name = scheduleName.value ?: "",
+                body = scheduleMemo.value ?: "",
+                meetTime = "${scheduleDate.value ?: ""} ${scheduleTime.value ?: ""}", //일정 날짜 정보랑 시간 나눠줘야함
+                place = selectedLocationName.value ?: "",
+                longitude = "",
+                latitude = "",
+                moveTime = moveTime.value ?: 0,
+                freeTime = freeTime.value ?: "딱딱",
+                repeatDays = repeatDates.value ?: emptyList(),
+                isRepeat =  isRepeat.value ?: false,
+                start = startDate.value ?: "",
+                end = endDate.value ?: "",
+                categories =  listOf(CategoriesRequestModel(categoryName.value ?: "", categoryColor.value ?: 0))
+            )
+            Log.d("","${request}")
+             scheduleRepository.createSchedule(request).onSuccess { response ->
                  Log.d("createSchedule", "API 호출 성공: $response")
              }.onFailure {error->
                  Log.e("createSchedule", "API 호출 실패: $error")
              }
         }
-    }*/
+    }
 }

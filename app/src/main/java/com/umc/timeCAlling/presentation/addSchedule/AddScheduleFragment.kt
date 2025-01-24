@@ -6,6 +6,7 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
 import androidx.compose.foundation.background
+import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -47,11 +48,11 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             binding.ivAddScheduleLocation.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_900))
             binding.tvAddScheduleLocation.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
         }
-        viewModel.timeTaken.observe(viewLifecycleOwner) { timeTaken ->
-            binding.tvAddScheduleHour.text = if (timeTaken >= 60) (timeTaken / 60).toString() else "0"
-            binding.tvAddScheduleMinute.text = (timeTaken%60).toString()
+        viewModel.moveTime.observe(viewLifecycleOwner) { moveTime ->
+            binding.tvAddScheduleHour.text = if (moveTime >= 60) (moveTime / 60).toString() else "0"
+            binding.tvAddScheduleMinute.text = (moveTime%60).toString()
 
-            if (timeTaken != null) {
+            if (moveTime != null) {
                 binding.tvAddScheduleTimeTaken.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray900_fill)
                 binding.tvAddScheduleTimeTaken.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             }
@@ -82,7 +83,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         val calendarView = binding.calendarView // MaterialCalendarView
         val dateTextView = binding.tvAddScheduleDate // 날짜를 표시할 TextView
         var selectedDate: String? = null // 선택된 날짜를 저장할 변수
-
+        var formattedDate: String? = null
         val bottomSheet = binding.bottomSheetDate // BottomSheet 레이아웃 ID
         dateBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태 숨김
@@ -95,6 +96,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         calendarView.setOnDateChangedListener { widget, date, selected ->
             if (selected) {
                 selectedDate = "${date.year}년 ${date.month + 1}월 ${date.day}일" // 선택한 날짜 형식 지정
+                formattedDate = "${date.year}-${date.month + 1}-${date.day}"
             }
         }
 
@@ -107,6 +109,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 binding.ivAddScheduleDateArrow.visibility = View.VISIBLE
 
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
+
+                viewModel.setScheduleDate(formattedDate!!)
             }
         }
 
@@ -160,7 +164,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             val selectedHour = numberPickerHour.value // 선택한 시간
             val selectedMinute = numberPickerMinute.value // 선택한 분
             val selectedAmPm = amPmValues[numberPickerAmPm.value] // 오전/오후 문자열 가져오기
-
+            val formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
             val selectedTime = String.format("%s %02d:%02d", selectedAmPm, selectedHour, selectedMinute) // 시간 형식 지정
             timeTextView.text = selectedTime // TextView에 시간 설정
             binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_alarm_black)) // 아이콘 변경
@@ -168,6 +172,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             binding.ivAddScheduleTimeArrow.visibility = View.VISIBLE
 
             timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
+
+            viewModel.setScheduleTime(formattedTime)
         }
 
         // 이미지 클릭 리스너
@@ -208,13 +214,14 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val textLength = s?.length ?: 0 // 입력된 글자 수
                 binding.tvAddScheduleTitleCount.text = textLength.toString() // 글자 수 표시
+
+                viewModel.setScheduleName(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?) {
                 // 텍스트 변경 후
             }
         })
-
     }
 
     private fun initScheduleMemo(){
@@ -225,8 +232,10 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val textLength = s?.length ?: 0 // 입력된 글자 수
-                binding.tvAddScheduleMemoCount.text = textLength.toString() // 글자 수 표시
+                val textLength = s?.length ?: 0
+                binding.tvAddScheduleMemoCount.text = textLength.toString()
+
+                viewModel.setScheduleMemo(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?) {

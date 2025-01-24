@@ -90,6 +90,7 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
     private fun moveToLocationSearch() {
         binding.tvLocationResultLocationSave.setOnClickListener {
             findNavController().navigate(R.id.action_locationResultFragment_to_addScheduleFragment)
+            viewModel.setSelectedLocationName(binding.tvLocationSearchEnd.text.toString())
         }
     }
 

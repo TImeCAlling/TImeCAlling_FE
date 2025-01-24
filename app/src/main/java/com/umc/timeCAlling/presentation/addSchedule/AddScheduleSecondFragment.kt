@@ -31,11 +31,11 @@ import org.threeten.bp.format.DateTimeFormatter
 @AndroidEntryPoint
 class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(R.layout.fragment_add_schedule_second) {
 
-    private val viewModel: AddScheduleViewModel by activityViewModels() // ViewModel 초기화
+    private val viewModel: AddScheduleViewModel by activityViewModels()
     private lateinit var repeatBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var categoryBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var isRepeatEnabled = false
-    private var selectedDays = mutableListOf<String>() // 선택된 요일들을 저장할 리스트
+    private var selectedDays = mutableListOf<String>()
 
     override fun initView() {
 
@@ -84,6 +84,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                     if (tv == clickedTextView) {
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_mint300_fill_mint_line_1)
                         tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.mint_main))
+                        viewModel.setFreeTime(tv.text.toString())
                     } else {
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray200_fill)
                         tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
@@ -123,6 +124,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             "없음"
         }
         binding.tvAddScheduleRepeat.text = repeatText
+        viewModel.setIsRepeat(isRepeatEnabled)
     }
 
     private fun initRepeatBottomSheet() {
@@ -232,6 +234,10 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
             binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+            viewModel.setRepeatDates(selectedDays)
+            viewModel.setStartDate(startTextView.text.toString())
+            viewModel.setEndDate(endTextView.text.toString())
         }
     }
 
@@ -308,6 +314,8 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             binding.ivAddScheduleCategoryList.backgroundTintList = ColorStateList.valueOf(category.color)
             binding.tvAddScheduleCategory.text = category.name
             binding.tvAddScheduleCategory.setTextColor(category.color)
+            viewModel.setCategoryName(category.name)
+            viewModel.setCategoryColor(category.color)
         }
     }
 
@@ -325,6 +333,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private fun moveToAddScheduleSuccess() {
         binding.tvAddScheduleNext.setOnClickListener {
             findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment)
+            viewModel.createSchedule()
         }
     }
 }
