@@ -70,6 +70,18 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         _selectedLocationName.value = name
     }
 
+    private val _locationLongitude = MutableLiveData<String>()
+    val locationLongitude: LiveData<String> = _locationLongitude
+    fun setLocationLongitude(longitude: String) {
+        _locationLongitude.value = longitude
+    }
+
+    private val _locationLatitude = MutableLiveData<String>()
+    val locationLatitude: LiveData<String> = _locationLatitude
+    fun setLocationLatitude(latitude: String) {
+        _locationLatitude.value = latitude
+    }
+
     private val _moveTime = MutableLiveData<Int>()
     val moveTime: LiveData<Int> = _moveTime
     fun setMoveTime(time: Int) {
@@ -237,8 +249,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                 body = scheduleMemo.value ?: "",
                 meetTime = "${scheduleDate.value ?: ""} ${scheduleTime.value ?: ""}", //일정 날짜 정보랑 시간 나눠줘야함
                 place = selectedLocationName.value ?: "",
-                longitude = "",
-                latitude = "",
+                longitude = locationLongitude.value ?: "",
+                latitude = locationLatitude.value ?: "",
                 moveTime = moveTime.value ?: 0,
                 freeTime = freeTime.value ?: "딱딱",
                 repeatDays = repeatDates.value ?: emptyList(),

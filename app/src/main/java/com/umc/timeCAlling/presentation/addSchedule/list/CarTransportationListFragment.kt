@@ -28,6 +28,8 @@ class CarTransportationListFragment : BaseFragment<FragmentLocationResultTranspo
                     val startY = currentLocation.latitude
                     val endX = searchLocation.longitude
                     val endY = searchLocation.latitude
+                    viewModel.setLocationLongitude(endX.toString())
+                    viewModel.setLocationLatitude(endY.toString())
                     viewModel.getCarTransportation(startX, startY, endX, endY)
                 }
             }
