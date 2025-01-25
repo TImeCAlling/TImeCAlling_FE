@@ -25,6 +25,7 @@ class LocationResultRVA(
 
     private var _locationResultDetailRVA: LocationResultDetailRVA? = null
     private val locationResultDetailRVA get() = _locationResultDetailRVA
+    private var selectedPosition = -1
 
     init {
         if (type == LocationResultType.Public) {
@@ -86,6 +87,7 @@ class LocationResultRVA(
                     )
                 }
             }
+
             LocationResultType.Car -> {
                 Log.d("로그", "로그심기")
                 viewModel.carResult.observe(lifecycleOwner) { carResult ->
@@ -101,6 +103,7 @@ class LocationResultRVA(
                     Log.d("로그", "로그심기 뿡")
                 }
             }
+
             LocationResultType.Walk -> {
                 viewModel.walkResult.observe(lifecycleOwner) { walkResult ->
                     val totalTime = walkResult.features?.get(0)?.properties?.totalTime
@@ -119,28 +122,32 @@ class LocationResultRVA(
         }
 
         holder.itemView.setOnClickListener {
-            holder.isSelected = !holder.isSelected
-            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1)
+            if (holder.isSelected) {
+                holder.isSelected = false
+                holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_shadow)
+                viewModel.setMoveTime(0)
+            } else {
+                if (selectedPosition != -1 && selectedPosition != position) {
+                    notifyItemChanged(selectedPosition)
+                }
+                selectedPosition = holder.adapterPosition
+                holder.isSelected = true
+                holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1)
 
-            // 선택된 아이템의 시간 가져오기
-            val selectedTime = when (type) {
-                LocationResultType.Public -> {
-                    viewModel.publicResult.value?.metaData?.plan?.itineraries?.get(position)?.totalTime?.div(60)
+                val selectedTime = when (type) {
+                    LocationResultType.Public -> { viewModel.publicResult.value?.metaData?.plan?.itineraries?.get(position)?.totalTime?.div(60) }
+                    LocationResultType.Car -> { viewModel.carResult.value?.features?.get(0)?.properties?.totalTime?.div(60) }
+                    LocationResultType.Walk -> { viewModel.walkResult.value?.features?.get(0)?.properties?.totalTime?.div(60) }
                 }
-                LocationResultType.Car -> {
-                    viewModel.carResult.value?.features?.get(0)?.properties?.totalTime?.div(60)
-                }
-                LocationResultType.Walk -> {
-                    viewModel.walkResult.value?.features?.get(0)?.properties?.totalTime?.div(60)
-                }
+                selectedTime?.let { viewModel.setMoveTime(it) }
             }
-
-            selectedTime?.let { viewModel.setMoveTime(it) }
-
-            // 배경색 업데이트
-            notifyItemChanged(position)
+            notifyItemChanged(holder.adapterPosition)
         }
-
+        if (selectedPosition == holder.adapterPosition) { // holder.adapterPosition 사용
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1)
+        } else {
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_shadow)
+        }
     }
 
     override fun getItemCount(): Int {
