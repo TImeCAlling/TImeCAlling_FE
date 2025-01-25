@@ -60,11 +60,14 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 Log.d("slideOffset", slideOffset.toString())
             }
         })
-        binding.ivPreClose.setOnClickListener {
-            behavior.state = TopSheetBehavior.STATE_COLLAPSED
-        }
-        binding.viewHomeTopsheetBackground.setOnClickListener {
-            behavior.state = TopSheetBehavior.STATE_COLLAPSED
+
+        binding.apply {
+            viewHomeTopsheetBackground.setOnClickListener {
+                behavior.state = TopSheetBehavior.STATE_COLLAPSED
+            }
+            ivPreClose.setOnClickListener {
+                behavior.state = TopSheetBehavior.STATE_COLLAPSED
+            }
         }
     }
 
@@ -75,6 +78,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             behavior.state = TopSheetBehavior.STATE_COLLAPSED
             binding.viewHomeTopsheetBackground.visibility = View.GONE
         }
+        bottomNavigationRemove()
     }
 
     private fun dismissTopSheet() {
@@ -82,6 +86,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             viewHomeTopsheetBackground.visibility = View.GONE
             layoutTopsheetScroll.scrollTo(0,0)
         }
+        bottomNavigationShow()
     }
 
     private fun initLastScheduleRV() {
@@ -174,6 +179,36 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             width = if(progress <= 20) requireContext().toPx(20).toInt() else requireContext().toPx(progress).toInt()
         }
         binding.tvHomeProgress.text = "${((1 - (currentSize.toFloat() / size.toFloat())) * 100).toInt()}%"
+    }
+
+    private fun bottomNavigationRemove() {
+        // BottomNavigationView 숨기기
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
+        bottomNavigationView?.visibility = View.GONE
+
+        // + 버튼 숨기기
+        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
+        addScheduleButton?.visibility = View.GONE
+
+        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
+        shadowImageView?.visibility = View.GONE
+
+        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
+        ovalImageView?.visibility = View.GONE
+    }
+
+    private fun bottomNavigationShow() {
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
+        bottomNavigationView?.visibility = View.VISIBLE
+
+        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
+        addScheduleButton?.visibility = View.VISIBLE
+
+        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
+        shadowImageView?.visibility = View.VISIBLE
+
+        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
+        ovalImageView?.visibility = View.VISIBLE
     }
 
     fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(
