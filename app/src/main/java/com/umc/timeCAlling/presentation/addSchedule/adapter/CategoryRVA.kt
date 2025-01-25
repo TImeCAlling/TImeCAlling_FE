@@ -57,7 +57,7 @@ class CategoryRVA(
         // Update UI for selected category
         if (selectedCategoryPosition == position) {
             holder.ivCategorySelect.setImageResource(R.drawable.ic_circle_check_mint)
-            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_mint_fill_shadow)
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1_none_shadow)
         } else {
             holder.ivCategorySelect.setImageResource(R.drawable.ic_circle_check)
             holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_shadow)

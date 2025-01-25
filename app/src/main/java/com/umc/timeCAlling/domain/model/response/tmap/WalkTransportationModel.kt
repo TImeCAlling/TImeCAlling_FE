@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.domain.model.response
+package com.umc.timeCAlling.domain.model.response.tmap
 
 data class WalkTransportationModel(
     val type: String,

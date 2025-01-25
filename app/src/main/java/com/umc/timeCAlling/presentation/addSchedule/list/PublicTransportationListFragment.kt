@@ -28,6 +28,8 @@ class PublicTransportationListFragment  : BaseFragment<FragmentLocationResultTra
                     val startY = currentLocation.latitude
                     val endX = searchLocation.longitude
                     val endY = searchLocation.latitude
+                    viewModel.setLocationLongitude(endX.toString())
+                    viewModel.setLocationLatitude(endY.toString())
                     viewModel.getPublicTransportation(startX, startY, endX, endY)
                 }
             }

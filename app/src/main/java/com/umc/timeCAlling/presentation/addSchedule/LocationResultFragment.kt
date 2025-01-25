@@ -3,6 +3,7 @@ package com.umc.timeCAlling.presentation.addSchedule
 import android.graphics.PorterDuff
 import android.util.Log
 import android.view.View
+import androidx.compose.ui.semantics.text
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -26,10 +27,13 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
     private val transportationListVPA get() = _transportationListVPA
 
     override fun initObserver() {
-
     }
 
     override fun initView() {
+        viewModel.scheduleTime.observe(viewLifecycleOwner) { scheduleTime ->
+            binding.tvLocationResultTime.text = scheduleTime
+        }
+
         bottomNavigationRemove()
         initLocationResultTransportationListVPAdapter()
         initSearchText()
@@ -90,6 +94,7 @@ class LocationResultFragment : BaseFragment<FragmentLocationResultBinding>(R.lay
     private fun moveToLocationSearch() {
         binding.tvLocationResultLocationSave.setOnClickListener {
             findNavController().navigate(R.id.action_locationResultFragment_to_addScheduleFragment)
+            viewModel.setSelectedLocationName(binding.tvLocationSearchEnd.text.toString())
         }
     }
 
