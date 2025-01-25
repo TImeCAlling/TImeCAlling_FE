@@ -54,21 +54,19 @@ class LocationResultRVA(
         when (type) {
             LocationResultType.Public -> {
                 viewModel.publicResult.observe(lifecycleOwner) { publicResult ->
-                    val totalTime =
-                        publicResult.metaData?.plan?.itineraries?.get(position)?.totalTime
+                    val totalTime = publicResult.metaData?.plan?.itineraries?.get(position)?.totalTime
                     val totalMinutes = totalTime?.div(60)
-                    holder.time.text = "${totalMinutes}분"
+                    val totalHours = totalMinutes?.div(60)
+                    val remainingMinutes = totalMinutes?.rem(60)
+                    holder.time.text = "${totalHours}시간 ${remainingMinutes}분"
                     holder.recyclerView.visibility = View.VISIBLE
                     holder.linearLayout.visibility = View.GONE
-
-                    Log.d("로그", "로그심기 빵야")
                     _locationResultDetailRVA = LocationResultDetailRVA(
                         viewModel = viewModel,
                         lifecycleOwner = lifecycleOwner,
                         viewLifecycleOwner = viewLifecycleOwner,
-                        type = LocationResultType.Public
+                        type = LocationResultType.Public,
                     )
-                    Log.d("로그", "ㅎㅇ")
                     holder.recyclerView.adapter = locationResultDetailRVA
                     holder.recyclerView.layoutManager =
                         LinearLayoutManager(holder.recyclerView.context)
@@ -79,12 +77,6 @@ class LocationResultRVA(
                             false
                         )
                     )
-                    holder.recyclerView.addItemDecoration(
-                        DividerItemDecoration(
-                            holder.itemView.context,
-                            DividerItemDecoration.HORIZONTAL
-                        )
-                    )
                 }
             }
 
@@ -93,11 +85,13 @@ class LocationResultRVA(
                 viewModel.carResult.observe(lifecycleOwner) { carResult ->
                     val totalTime = carResult.features?.get(0)?.properties?.totalTime
                     val totalMinutes = totalTime?.div(60)
+                    val totalHours = totalMinutes?.div(60)
+                    val remainingMinutes = totalMinutes?.rem(60)
                     holder.symbol.setImageResource(R.drawable.ic_car)
                     val totalDistance = carResult.features?.get(0)?.properties?.totalDistance
                     val totalKilometers = totalDistance?.div(1000)
                     holder.distance.text = "${totalKilometers}km"
-                    holder.time.text = "${totalMinutes}분"
+                    holder.time.text = "${totalHours}시간 ${remainingMinutes}분"
                     holder.recyclerView.visibility = View.GONE
                     holder.linearLayout.visibility = View.VISIBLE
                     Log.d("로그", "로그심기 뿡")
@@ -132,7 +126,7 @@ class LocationResultRVA(
                 }
                 selectedPosition = holder.adapterPosition
                 holder.isSelected = true
-                holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1)
+                holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1_none_shadow)
 
                 val selectedTime = when (type) {
                     LocationResultType.Public -> { viewModel.publicResult.value?.metaData?.plan?.itineraries?.get(position)?.totalTime?.div(60) }
@@ -144,7 +138,7 @@ class LocationResultRVA(
             notifyItemChanged(holder.adapterPosition)
         }
         if (selectedPosition == holder.adapterPosition) { // holder.adapterPosition 사용
-            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1)
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1_none_shadow)
         } else {
             holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_shadow)
         }

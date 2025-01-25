@@ -27,8 +27,12 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private lateinit var dateBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
+    override fun initObserver() {
+
+    }
 
     override fun initView() {
+        initSavedData()
 
         binding.viewBottomSheetBackground.isClickable = false
 
@@ -59,10 +63,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         }
     }
 
-    override fun initObserver() {
-
-    }
-
     private fun bottomNavigationRemove() {
         // BottomNavigationView 숨기기
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
@@ -77,6 +77,53 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
         ovalImageView?.visibility = View.GONE
+    }
+
+
+    private fun initSavedData() {
+        // ViewModel에서 데이터를 가져와 UI에 설정
+        binding.etAddScheduleName.setText(viewModel.scheduleName.value)
+        binding.etAddScheduleMemo.setText(viewModel.scheduleMemo.value)
+        viewModel.scheduleDate.observe(viewLifecycleOwner) { scheduleDate ->
+            if (scheduleDate.isNullOrEmpty()) {
+                binding.tvAddScheduleDate.text = "날짜를 입력하세요"
+            } else {
+                binding.tvAddScheduleDate.text = scheduleDate
+            }
+        }
+        viewModel.scheduleTime.observe(viewLifecycleOwner) { scheduleTime ->
+            if (scheduleTime.isNullOrEmpty()) {
+                binding.tvAddScheduleTime.text = "시간을 입력하세요"
+            } else {
+                binding.tvAddScheduleTime.text = scheduleTime
+            }
+        }
+        // 위치 정보 설정 (viewModel.searchLocation)
+        viewModel.searchLocation.value?.let { locations ->
+            if (locations.isNotEmpty()) {
+                binding.tvAddScheduleLocation.text = locations[0].name
+                binding.ivAddScheduleLocation.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_900))
+                binding.tvAddScheduleLocation.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
+            }
+        }
+
+        // 이동 시간 설정 (viewModel.moveTime)
+        viewModel.moveTime.value?.let { moveTime ->
+            binding.tvAddScheduleHour.text = if (moveTime >= 60) (moveTime / 60).toString() else "0"
+            binding.tvAddScheduleMinute.text = (moveTime % 60).toString()
+            if (moveTime != 0) { // 0이 아닌 경우에만 배경 변경
+                binding.tvAddScheduleTimeTaken.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray900_fill)
+                binding.tvAddScheduleTimeTaken.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            }
+        }
+
+        // observe 제거
+        viewModel.scheduleName.removeObservers(viewLifecycleOwner)
+        viewModel.scheduleMemo.removeObservers(viewLifecycleOwner)
+        viewModel.scheduleDate.removeObservers(viewLifecycleOwner)
+        viewModel.scheduleTime.removeObservers(viewLifecycleOwner)
+        viewModel.searchLocation.removeObservers(viewLifecycleOwner)
+        viewModel.moveTime.removeObservers(viewLifecycleOwner)
     }
 
     private fun initDateBottomSheet() {

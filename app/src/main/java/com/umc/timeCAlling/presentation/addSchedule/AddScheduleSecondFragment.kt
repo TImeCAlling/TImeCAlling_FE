@@ -55,6 +55,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     }
 
     override fun initObserver() {
+
     }
 
     private fun bottomNavigationRemove() {
