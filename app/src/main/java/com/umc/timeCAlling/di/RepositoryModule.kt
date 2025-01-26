@@ -1,9 +1,12 @@
 package com.umc.timeCAlling.di
 
 import com.umc.timeCAlling.data.datasource.TmapDataSource
+import com.umc.timeCAlling.data.repositoryImpl.LoginRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.TestRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.TmapRepositoryImpl
+import com.umc.timeCAlling.data.service.LoginService
 import com.umc.timeCAlling.data.service.TestService
+import com.umc.timeCAlling.domain.repository.LoginRepository
 import com.umc.timeCAlling.domain.repository.TestRepository
 import com.umc.timeCAlling.domain.repository.TmapRepository
 import dagger.Module
@@ -30,4 +33,10 @@ object RepositoryModule {
     fun providesTmapRouteRepository(tmapDataSource: TmapDataSource): TmapRepository {
         return TmapRepositoryImpl(tmapDataSource)
     }
+
+    @ViewModelScoped
+    @Provides
+    fun providesLoginRepository(
+        loginService: LoginService
+    ): LoginRepository = LoginRepositoryImpl(loginService)
 }

@@ -29,4 +29,11 @@ object ServiceModule {
     fun provideTmapRouteService(@Named("tmap") retrofit: Retrofit): TmapService {
         return retrofit.create(TmapService::class.java)
     }
+
+    @Provides
+    @Singleton
+    @Named("tmap")
+    fun provideKakaoLoginService(@Named("tmap") retrofit: Retrofit): TmapService {
+        return retrofit.create(TmapService::class.java)
+    }
 }

@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.benchmark.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -123,6 +124,9 @@ dependencies {
 
     // 카카오 로그인 SDK
     implementation ("com.kakao.sdk:v2-user:2.15.0")
+
+    // 로깅
+    implementation ("com.jakewharton.timber:timber:5.0.1")
 }
 configurations.all {
     exclude(group = "com.android.support")
