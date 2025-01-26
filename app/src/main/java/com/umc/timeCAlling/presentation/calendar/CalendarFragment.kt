@@ -24,13 +24,19 @@ import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.TextStyle
+import java.util.Locale
 
 @AndroidEntryPoint
 class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment_calendar) {
+    private var selectedDate: LocalDate? = null
     private lateinit var navController: NavController
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun initView() {
+        initCalendar()
         initDetailScheduleRV()
         initBottomSheet()
         bottomNavigationShow()
@@ -147,6 +153,67 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         binding.layoutScrollView.scrollTo(0, 0)
     }
 
+    private fun initCalendar() {
+        // 오늘 날짜 구하기
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월")
+        binding.tvScheduleDate.text = today.format(formatter)
+
+        // 날짜 선택 탭
+        initDatePicker()
+        updateSelectionUI(0)
+    }
+
+    private fun getNext7Days(): List<LocalDate> {
+        val today = LocalDate.now()
+        val dateList = mutableListOf<LocalDate>()
+        for (i in 0 until 7) {
+            dateList.add(today.plusDays(i.toLong()))
+        }
+        return dateList
+    }
+
+    private fun initDatePicker() {
+        selectedDate = LocalDate.now()
+        binding.layoutCalendarDatePick.removeAllViews()
+
+        getNext7Days().forEachIndexed { index, date ->
+            val itemView = layoutInflater.inflate(R.layout.item_calendar_date, binding.layoutCalendarDatePick, false)
+            val dayKo = itemView.findViewById<TextView>(R.id.tv_calendar_day_ko)
+            val day = itemView.findViewById<TextView>(R.id.tv_calendar_day)
+
+            dayKo.text = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale("ko"))
+            day.text = date.dayOfMonth.toString()
+
+            itemView.setOnClickListener {
+                selectedDate = date
+                updateSelectionUI(index)
+            }
+
+            binding.layoutCalendarDatePick.addView(itemView)
+        }
+    }
+
+    private fun updateSelectionUI(index: Int) {
+        for(i in 0 until binding.layoutCalendarDatePick.childCount) {
+            val child = binding.layoutCalendarDatePick.getChildAt(i)
+            val day = child.findViewById<TextView>(R.id.tv_calendar_day)
+            val dayKo = child.findViewById<TextView>(R.id.tv_calendar_day_ko)
+
+            if( i == index) {
+                child.setBackgroundResource(R.drawable.shape_rect_39_mint_fill)
+                day.setTextColor(resources.getColor(R.color.white))
+                dayKo.setTextColor(resources.getColor(R.color.white))
+            } else {
+                child.background = null
+                day.setTextColor(resources.getColor(R.color.gray_500))
+                dayKo.setTextColor(resources.getColor(R.color.gray_500))
+            }
+        }
+    }
+
+
+
     private fun initDetailScheduleRV() {
         val list = arrayListOf(
             DetailSchedule("컴퓨터 구조", "매주 수요일 반복", "일상", true, "9:00", 5),
@@ -222,12 +289,10 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                                 Toast.makeText(requireContext(), "수정하기", Toast.LENGTH_SHORT).show()
                                 true
                             }
-
                             R.id.popup_delete -> {
                                 showDialogBox(list[position].title)
                                 true
                             }
-
                             else -> false
                         }
                     }

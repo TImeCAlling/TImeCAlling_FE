@@ -18,6 +18,8 @@ import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -31,12 +33,19 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.ivHomeMypage.setOnSingleClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_mypageTab)
         }
+        initTodayDate()
         initLastScheduleRV()
         initTodayScheduleRV()
         initTopSheet()
     }
     override fun initObserver() {
 
+    }
+
+    private fun initTodayDate() {
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("M월 d일")
+        binding.tvHomeTodayDate.text = today.format(formatter)
     }
 
     private fun initTopSheet() {

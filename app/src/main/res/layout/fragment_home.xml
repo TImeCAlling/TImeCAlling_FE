@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:background="@color/white"
-            android:paddingTop="12dp"
+            android:paddingTop="20dp"
             android:paddingHorizontal="20dp">
 
             <LinearLayout
@@ -62,6 +62,7 @@
                     android:textColor="@color/black_900"
                     android:textSize="30sp"/>
                 <TextView
+                    android:id="@+id/tv_home_today_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12월 20일"
