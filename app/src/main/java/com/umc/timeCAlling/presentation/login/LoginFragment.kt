@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.presentation.login
 
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -7,7 +8,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kakao.sdk.user.UserApiClient
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentLoginBinding
-import com.umc.timeCAlling.databinding.FragmentSignupBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.login.adapter.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,99 +18,101 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private val viewModel: LoginViewModel by viewModels()
 
-
     override fun initView() {
+        Log.d("LoginFragment", "initView() 호출됨")
         setClickListener()
         bottomNavigationRemove()
     }
 
     override fun initObserver() {
-        // ViewModel의 로그인 결과를 관찰
+        Log.d("LoginFragment", "initObserver() 호출됨")
         viewModel.loginResult.observe(viewLifecycleOwner, { loginResponse ->
             if (loginResponse != null) {
-                navigateToHomeFragment() // 로그인 성공 시 홈 화면으로 이동
+                Log.d("LoginFragment", "로그인 성공: $loginResponse")
+                navigateToHomeFragment()
             } else {
-                navigateToSignupTermFragment() // 로그인 실패 시 약관 동의 화면으로 이동
+                Log.d("LoginFragment", "로그인 실패")
+                navigateToSignupTermFragment()
             }
         })
     }
 
     private fun setClickListener() {
+        Log.d("LoginFragment", "setClickListener() 호출됨")
         binding.ivLoginKakaoLogin.setOnClickListener {
-            // 카카오 로그인 버튼 클릭 시
-            binding.ivLoginKakaoLogin.setOnClickListener {
-                loginWithKakao() // 카카오 로그인 로직 호출
-            }
+            Log.d("LoginFragment", "카카오 로그인 버튼 클릭됨")
+            loginWithKakao()
         }
 
         binding.ivNavigateHome.setOnClickListener {
-
-            navigateToHomeFragment() // 나중에 지우기
+            Log.d("LoginFragment", "홈 화면으로 이동 버튼 클릭됨")
+            navigateToHomeFragment()
             bottomNavigationShow()
         }
     }
 
     private fun loginWithKakao() {
+        Log.d("LoginFragment", "loginWithKakao() 호출됨")
         val context = requireContext()
 
-        // 카카오톡 로그인 가능 여부 확인
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+            Log.d("LoginFragment", "카카오톡으로 로그인 가능")
             loginWithKakaoTalk()
         } else {
-            loginWithKakaoAccount() // 카카오 계정 웹뷰 로그인
+            Log.d("LoginFragment", "카카오 계정으로 로그인 시도")
+            loginWithKakaoAccount()
         }
     }
 
     private fun loginWithKakaoTalk() {
+        Log.d("LoginFragment", "loginWithKakaoTalk() 호출됨")
         UserApiClient.instance.loginWithKakaoTalk(requireContext()) { token, error ->
             if (error != null) {
-                // 카카오톡 로그인 실패 처리
-                Timber.e("카카오톡으로 로그인 실패", error)
-                loginWithKakaoAccount() // 실패 시 카카오 계정으로 로그인 시도
+                Log.e("LoginFragment", "카카오톡으로 로그인 실패: ${error.message}")
+                loginWithKakaoAccount()
             } else if (token != null) {
-                Timber.i("카카오톡으로 로그인 성공: ${token.accessToken}")
+                Log.d("LoginFragment", "카카오톡으로 로그인 성공: ${token.accessToken}")
                 handleLoginSuccess(token.accessToken)
             }
         }
     }
 
     private fun loginWithKakaoAccount() {
+        Log.d("LoginFragment", "loginWithKakaoAccount() 호출됨")
         UserApiClient.instance.loginWithKakaoAccount(requireContext()) { token, error ->
             if (error != null) {
-                // 카카오 계정 로그인 실패 처리
-                Timber.e("카카오 계정으로 로그인 실패", error)
+                Log.e("LoginFragment", "카카오 계정으로 로그인 실패: ${error.message}")
             } else if (token != null) {
-                Timber.i("카카오 계정으로 로그인 성공: ${token.accessToken}")
+                Log.d("LoginFragment", "카카오 계정으로 로그인 성공: ${token.accessToken}")
                 handleLoginSuccess(token.accessToken)
             }
         }
     }
 
     private fun handleLoginSuccess(accessToken: String) {
+        Log.d("LoginFragment", "handleLoginSuccess() 호출됨 - AccessToken: $accessToken")
         UserApiClient.instance.me { user, error ->
             if (user != null) {
                 val kakaoUserId = user.id.toString()
-                Timber.d("로그인 성공, 사용자 ID: $kakaoUserId")
+                Log.d("LoginFragment", "사용자 정보 요청 성공 - 사용자 ID: $kakaoUserId")
 
-                // ViewModel에 사용자 ID 및 accessToken 설정
                 viewModel.setKakaoUserId(kakaoUserId)
                 viewModel.setAccessToken(accessToken)
 
-                // 서버 로그인 처리 호출
+                Log.d("LoginFragment", "서버에 로그인 요청 시작")
                 viewModel.loginWithKakaoAccount()
             } else {
-                Timber.e("사용자 정보 요청 실패: ${error?.message}")
+                Log.e("LoginFragment", "사용자 정보 요청 실패: ${error?.message}")
                 navigateToSignupTermFragment()
             }
         }
     }
 
     private fun bottomNavigationRemove() {
-        // BottomNavigationView 숨기기
+        Log.d("LoginFragment", "bottomNavigationRemove() 호출됨")
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
         bottomNavigationView?.visibility = View.GONE
 
-        // + 버튼 숨기기
         val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
         addScheduleButton?.visibility = View.GONE
 
@@ -122,14 +124,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun navigateToSignupTermFragment() {
+        Log.d("LoginFragment", "navigateToSignupTermFragment() 호출됨")
         findNavController().navigate(R.id.action_loginFragment_to_signupTermFragment)
     }
 
     private fun navigateToHomeFragment() {
+        Log.d("LoginFragment", "navigateToHomeFragment() 호출됨")
         findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
     }
 
     private fun bottomNavigationShow() {
+        Log.d("LoginFragment", "bottomNavigationShow() 호출됨")
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
         bottomNavigationView?.visibility = View.VISIBLE
 
