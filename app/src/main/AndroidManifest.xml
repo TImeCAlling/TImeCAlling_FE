@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="35">
 
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key"/>
 
         <activity
             android:name=".presentation.SplashActivity"
