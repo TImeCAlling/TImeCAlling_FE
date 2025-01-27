@@ -1,6 +1,5 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.login
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
@@ -28,24 +27,24 @@ class SignupPhotoFragment :
 
     private fun setClickListener() {
         // 다음 버튼 클릭 시
-        binding.tvOnboardingPhotoNext.setOnClickListener {
+        binding.tvSignupPhotoNext.setOnClickListener {
             if (isPhotoSelected) {
                 navigateToSignupNameFragment()
             }
         }
 
         // 기본 이미지로 넘어가기
-        binding.tvOnboardingPhotoDefault.setOnClickListener {
+        binding.tvSignupPhotoDefault.setOnClickListener {
             navigateToSignupNameFragment()
         }
 
         // 갤러리 열기 버튼
-        binding.clOnboardingPhotoCamera.setOnClickListener {
+        binding.clSignupPhotoCamera.setOnClickListener {
             openGallery()
         }
 
         // 뒤로가기 버튼
-        binding.ivOnboardingPhotoBack.setOnClickListener {
+        binding.ivSignupPhotoBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
@@ -72,13 +71,13 @@ class SignupPhotoFragment :
 
     private fun updateProfileImage(imageUri: Uri) {
         // CircleImageView에 URI로 이미지 설정
-        binding.ivOnboardingPhotoOval1.setImageURI(imageUri)
+        binding.ivSignupPhotoOval1.setImageURI(imageUri)
         // 기본 얼굴 아이콘 숨기기
-        binding.ivOnboardingPhotoFace.visibility = android.view.View.INVISIBLE
+        binding.ivSignupPhotoFace.visibility = android.view.View.INVISIBLE
     }
 
     private fun updateNextButtonState() {
-        binding.tvOnboardingPhotoNext.apply {
+        binding.tvSignupPhotoNext.apply {
             isClickable = isPhotoSelected
             background = ContextCompat.getDrawable(
                 requireContext(),

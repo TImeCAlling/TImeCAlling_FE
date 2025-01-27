@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.login
 
 import android.view.View
 import android.widget.TextView
@@ -14,9 +14,9 @@ class SignupSpareFragment :
 
     private val options by lazy {
         listOf(
-            binding.tvOnboardingSpareOption1,
-            binding.tvOnboardingSpareOption2,
-            binding.tvOnboardingSpareOption3
+            binding.tvSignupSpareOption1,
+            binding.tvSignupSpareOption2,
+            binding.tvSignupSpareOption3
         )
     }
 
@@ -38,18 +38,18 @@ class SignupSpareFragment :
         }
 
         // 뒤로가기 버튼 클릭
-        binding.ivOnboardingSpareBack.setOnClickListener {
+        binding.ivSignupSpareBack.setOnClickListener {
             findNavController().popBackStack() // Navigation Back Stack에서 이전 화면으로 이동
         }
 
         // 다음 버튼 클릭
-        binding.tvOnboardingSpareNext.setOnClickListener {
+        binding.tvSignupSpareNext.setOnClickListener {
             navigateToSignupCompleteFragment() // 다음 화면으로 이동
         }
     }
 
     private fun setDefaultSelectedOption() {
-        updateSelectedOption(binding.tvOnboardingSpareOption2) // '여유'를 기본 선택
+        updateSelectedOption(binding.tvSignupSpareOption2) // '여유'를 기본 선택
     }
 
     private fun updateSelectedOption(selectedOption: View) {

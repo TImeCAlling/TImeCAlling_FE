@@ -1,18 +1,19 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.login
 
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.FragmentSignupBinding
+import com.umc.timeCAlling.databinding.FragmentLoginBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.login.adapter.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_signup) {
+class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
-    private val viewModel: SignupViewModel by viewModels()
+    private val viewModel: LoginViewModel by viewModels()
 
 
     override fun initView() {
@@ -25,7 +26,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_sig
     }
 
     private fun setClickListener() {
-        binding.ivOnboardingKakaoLogin.setOnClickListener {
+        binding.ivLoginKakaoLogin.setOnClickListener {
 
             navigateToSignupTermFragment() // kakao login 구현 후 지우기
         }
@@ -54,11 +55,11 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_sig
     }
 
     private fun navigateToSignupTermFragment() {
-        findNavController().navigate(R.id.action_signupFragment_to_signupTermFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_signupTermFragment)
     }
 
     private fun navigateToHomeFragment() {
-        findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
     }
 
     private fun bottomNavigationShow() {

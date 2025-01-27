@@ -681,7 +681,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_onboarding_rv_1"
+                    android:background="@drawable/bg_signup_rv_1"
                     android:alpha="0.7"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/rv_myprofile_time_recyclerView"/>
@@ -689,7 +689,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_onboarding_rv_2"
+                    android:background="@drawable/bg_signup_rv_2"
                     android:alpha="0.7"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/rv_myprofile_time_recyclerView"/>

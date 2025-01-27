@@ -12,7 +12,7 @@
         android:background="@color/white">
 
         <ImageView
-            android:id="@+id/iv_onboarding_foreground_1"
+            android:id="@+id/iv_login_foreground_1"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/ic_launcher_foreground"
@@ -20,36 +20,36 @@
             app:layout_constraintWidth_percent="0.325"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tv_onboarding_text"
+            app:layout_constraintBottom_toTopOf="@id/tv_login_text"
             android:layout_marginBottom="46dp"/>
 
         <ImageView
-            android:id="@+id/iv_onboarding_foreground_2"
+            android:id="@+id/iv_login_foreground_2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/shape_rect_999_mint_fill"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_percent="0.082"
-            app:layout_constraintEnd_toEndOf="@id/iv_onboarding_foreground_1"
-            app:layout_constraintBottom_toTopOf="@id/iv_onboarding_foreground_1"
+            app:layout_constraintEnd_toEndOf="@id/iv_login_foreground_1"
+            app:layout_constraintBottom_toTopOf="@id/iv_login_foreground_1"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="-2dp"/>
 
         <ImageView
-            android:id="@+id/iv_onboarding_foreground_3"
+            android:id="@+id/iv_login_foreground_3"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/shape_rect_999_mint_fill"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_percent="0.053"
-            app:layout_constraintEnd_toEndOf="@id/iv_onboarding_foreground_1"
-            app:layout_constraintBottom_toTopOf="@id/iv_onboarding_foreground_1"
+            app:layout_constraintEnd_toEndOf="@id/iv_login_foreground_1"
+            app:layout_constraintBottom_toTopOf="@id/iv_login_foreground_1"
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="40dp"/>
 
 
         <TextView
-            android:id="@+id/tv_onboarding_text"
+            android:id="@+id/tv_login_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24dp"
@@ -64,7 +64,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
-            android:id="@+id/iv_onboarding_kakao_login"
+            android:id="@+id/iv_login_kakao_login"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/ic_login_kakao"
@@ -72,7 +72,7 @@
             app:layout_constraintWidth_percent="0.833"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_onboarding_text"
+            app:layout_constraintTop_toBottomOf="@id/tv_login_text"
             android:layout_marginTop="68dp"/>
 
         <ImageView
@@ -82,7 +82,7 @@
             android:src="@drawable/ic_selected_home"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_onboarding_kakao_login"
+            app:layout_constraintTop_toBottomOf="@id/iv_login_kakao_login"
             android:layout_marginTop="50dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

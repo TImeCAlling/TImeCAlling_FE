@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.login
 
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupTimeBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
-import com.umc.timeCAlling.presentation.signup.adapter.SignupTimeAdapter
+import com.umc.timeCAlling.presentation.login.adapter.SignupTimeAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,7 +29,7 @@ class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.frag
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val adapter = SignupTimeAdapter(timeOptions)
 
-        binding.rvOnboardingTimeRecyclerView.apply {
+        binding.rvSignupTimeRecyclerView.apply {
             this.layoutManager = layoutManager
             this.adapter = adapter
 
@@ -65,7 +65,7 @@ class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.frag
 
     private fun setClickListener() {
         // 다음 버튼 클릭 리스너 설정
-        binding.tvOnboardingTimeNext.setOnClickListener {
+        binding.tvSignupTimeNext.setOnClickListener {
             navigateToSignupSpareFragment()
         }
     }

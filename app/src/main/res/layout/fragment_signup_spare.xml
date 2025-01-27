@@ -23,7 +23,7 @@
             android:layout_marginTop="23dp">
 
             <ImageView
-                android:id="@+id/iv_onboarding_spare_back"
+                android:id="@+id/iv_signup_spare_back"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_arrow_left"
@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_onboarding_spare_title"
+                android:id="@+id/tv_signup_spare_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="회원가입"
@@ -45,7 +45,7 @@
 
         <!-- line -->
         <View
-            android:id="@+id/view_onboarding_spare_line"
+            android:id="@+id/view_signup_spare_line"
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:background="@color/gray_300"
@@ -53,7 +53,7 @@
             android:layout_marginTop="14dp"/>
 
         <View
-            android:id="@+id/view_onboarding_spare_line_mint"
+            android:id="@+id/view_signup_spare_line_mint"
             android:layout_width="0dp"
             android:layout_height="4dp"
             android:background="@color/mint_main"
@@ -64,7 +64,7 @@
 
         <!-- 본문 -->
         <TextView
-            android:id="@+id/tv_onboarding_spare_title1"
+            android:id="@+id/tv_signup_spare_title1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24dp"
@@ -74,28 +74,28 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="24dp"
             android:layout_marginStart="20dp"
-            app:layout_constraintTop_toBottomOf="@id/view_onboarding_spare_line"/>
+            app:layout_constraintTop_toBottomOf="@id/view_signup_spare_line"/>
 
         <!-- 선택지 배경 -->
         <TextView
-            android:id="@+id/tv_onboarding_spare_bg"
+            android:id="@+id/tv_signup_spare_bg"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.06"
-            app:layout_constraintTop_toBottomOf="@id/tv_onboarding_spare_title1"
+            app:layout_constraintTop_toBottomOf="@id/tv_signup_spare_title1"
             android:background="@drawable/shape_rect_999_gray200_fill"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="40dp"/>
 
         <!-- 선택지 1 -->
         <TextView
-            android:id="@+id/tv_onboarding_spare_option_1"
+            android:id="@+id/tv_signup_spare_option_1"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="@id/tv_onboarding_spare_bg"
-            app:layout_constraintBottom_toBottomOf="@id/tv_onboarding_spare_bg"
-            app:layout_constraintStart_toStartOf="@id/tv_onboarding_spare_bg"
-            app:layout_constraintEnd_toStartOf="@id/view_onboarding_spare_1"
+            app:layout_constraintTop_toTopOf="@id/tv_signup_spare_bg"
+            app:layout_constraintBottom_toBottomOf="@id/tv_signup_spare_bg"
+            app:layout_constraintStart_toStartOf="@id/tv_signup_spare_bg"
+            app:layout_constraintEnd_toStartOf="@id/view_signup_spare_1"
             android:background="@drawable/shape_rect_999_gray200_fill"
             android:text="딱딱"
             android:paddingVertical="12dp"
@@ -104,13 +104,13 @@
 
         <!-- 선택지 2 -->
         <TextView
-            android:id="@+id/tv_onboarding_spare_option_2"
+            android:id="@+id/tv_signup_spare_option_2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="@id/tv_onboarding_spare_bg"
-            app:layout_constraintBottom_toBottomOf="@id/tv_onboarding_spare_bg"
-            app:layout_constraintStart_toEndOf="@id/view_onboarding_spare_1"
-            app:layout_constraintEnd_toStartOf="@id/view_onboarding_spare_2"
+            app:layout_constraintTop_toTopOf="@id/tv_signup_spare_bg"
+            app:layout_constraintBottom_toBottomOf="@id/tv_signup_spare_bg"
+            app:layout_constraintStart_toEndOf="@id/view_signup_spare_1"
+            app:layout_constraintEnd_toStartOf="@id/view_signup_spare_2"
             android:background="@drawable/shape_rect_999_mint200_fill_mint_line_1"
             android:text="여유"
             android:paddingVertical="12dp"
@@ -119,13 +119,13 @@
 
         <!-- 선택지 3 -->
         <TextView
-            android:id="@+id/tv_onboarding_spare_option_3"
+            android:id="@+id/tv_signup_spare_option_3"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="@id/tv_onboarding_spare_bg"
-            app:layout_constraintBottom_toBottomOf="@id/tv_onboarding_spare_bg"
-            app:layout_constraintStart_toEndOf="@id/view_onboarding_spare_2"
-            app:layout_constraintEnd_toEndOf="@id/tv_onboarding_spare_bg"
+            app:layout_constraintTop_toTopOf="@id/tv_signup_spare_bg"
+            app:layout_constraintBottom_toBottomOf="@id/tv_signup_spare_bg"
+            app:layout_constraintStart_toEndOf="@id/view_signup_spare_2"
+            app:layout_constraintEnd_toEndOf="@id/tv_signup_spare_bg"
             android:background="@drawable/shape_rect_999_gray200_fill"
             android:text="넉넉"
             android:paddingVertical="12dp"
@@ -134,30 +134,30 @@
 
         <!-- 공백 view -->
         <View
-            android:id="@+id/view_onboarding_spare_1"
+            android:id="@+id/view_signup_spare_1"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_percent="0.048"
-            app:layout_constraintStart_toEndOf="@id/tv_onboarding_spare_option_1"
-            app:layout_constraintEnd_toStartOf="@id/tv_onboarding_spare_option_2"
-            app:layout_constraintTop_toTopOf="@id/tv_onboarding_spare_bg"
+            app:layout_constraintStart_toEndOf="@id/tv_signup_spare_option_1"
+            app:layout_constraintEnd_toStartOf="@id/tv_signup_spare_option_2"
+            app:layout_constraintTop_toTopOf="@id/tv_signup_spare_bg"
             />
 
         <View
-            android:id="@+id/view_onboarding_spare_2"
+            android:id="@+id/view_signup_spare_2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_percent="0.048"
-            app:layout_constraintStart_toEndOf="@id/tv_onboarding_spare_option_2"
-            app:layout_constraintEnd_toStartOf="@id/tv_onboarding_spare_option_3"
-            app:layout_constraintTop_toTopOf="@id/tv_onboarding_spare_bg"
+            app:layout_constraintStart_toEndOf="@id/tv_signup_spare_option_2"
+            app:layout_constraintEnd_toStartOf="@id/tv_signup_spare_option_3"
+            app:layout_constraintTop_toTopOf="@id/tv_signup_spare_bg"
             />
 
         <!-- btn -->
         <TextView
-            android:id="@+id/tv_onboarding_spare_next"
+            android:id="@+id/tv_signup_spare_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

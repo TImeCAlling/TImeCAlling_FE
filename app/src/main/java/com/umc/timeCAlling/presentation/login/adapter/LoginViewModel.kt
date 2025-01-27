@@ -1,13 +1,12 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.login.adapter
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SignupTimeViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
 
-) : ViewModel() {
-
+) : ViewModel(){
 
 }
