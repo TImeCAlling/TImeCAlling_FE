@@ -1,9 +1,9 @@
 package com.umc.timeCAlling.data.repositoryImpl
 
 import com.umc.timeCAlling.data.datasource.TmapDataSource
-import com.umc.timeCAlling.domain.model.response.CarTransportationModel
-import com.umc.timeCAlling.domain.model.response.PublicTransportationModel
-import com.umc.timeCAlling.domain.model.response.WalkTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.CarTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.PublicTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.WalkTransportationModel
 import com.umc.timeCAlling.domain.repository.TmapRepository
 import javax.inject.Inject
 
