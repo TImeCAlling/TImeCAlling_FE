@@ -1,6 +1,5 @@
 package com.umc.timeCAlling.domain.repository
 
-import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
 

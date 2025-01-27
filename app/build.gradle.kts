@@ -18,6 +18,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["KAKAO_APP_KEY"] = "@string/kakao_app_key"
+
     }
 
     buildTypes {

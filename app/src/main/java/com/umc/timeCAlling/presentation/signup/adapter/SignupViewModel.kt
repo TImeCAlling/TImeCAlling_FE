@@ -31,21 +31,27 @@ class SignupViewModel @Inject constructor(
 
     private val context: Context = application
 
+    private val _accessToken = MutableLiveData<String?>()
+    val accessToken: LiveData<String?> get() = _accessToken
+
+    // accessToken 설정
+    fun setAccessToken(token: String) {
+        _accessToken.value = token
+    }
+
     // 카카오 사용자 ID 설정
-    private fun setKakaoUserId(userId: String) {
+    fun setKakaoUserId(userId: String) {
         _kakaoUserId.value = userId
     }
 
     // 카카오 웹뷰 로그인 처리
-    private fun loginWithKakaoAccount() {
-        UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
-            if (error != null) {
-                Timber.e("카카오 웹뷰 로그인 실패: ${error.message}")
-                _loginResult.postValue(null) // 실패 처리
-            } else if (token != null) {
-                Timber.i("카카오 웹뷰 로그인 성공: ${token.accessToken}")
-                handleLoginSuccess(token.accessToken)
-            }
+    fun loginWithKakaoAccount() {
+        val token = _accessToken.value
+        if (token != null) {
+            handleLoginSuccess(token)
+        } else {
+            Timber.e("AccessToken이 설정되지 않았습니다.")
+            _loginResult.postValue(null) // 실패 처리
         }
     }
 

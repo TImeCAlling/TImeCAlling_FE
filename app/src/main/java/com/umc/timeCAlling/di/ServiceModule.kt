@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.di
 
+import com.umc.timeCAlling.data.service.LoginService
 import com.umc.timeCAlling.data.service.TestService
 import com.umc.timeCAlling.data.service.TmapService
 import dagger.Module
@@ -32,8 +33,8 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    @Named("tmap")
-    fun provideKakaoLoginService(@Named("tmap") retrofit: Retrofit): TmapService {
-        return retrofit.create(TmapService::class.java)
+    @Named("kakaoLogin")
+    fun provideKakaoLoginService(@Named("kakaoLogin") retrofit: Retrofit): LoginService {
+        return retrofit.create(LoginService::class.java)
     }
 }

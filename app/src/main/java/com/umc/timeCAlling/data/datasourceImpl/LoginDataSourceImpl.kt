@@ -1,7 +1,6 @@
 package com.umc.timeCAlling.data.datasourceImpl
 
 import com.umc.timeCAlling.data.datasource.LoginDataSource
-import com.umc.timeCAlling.data.datasource.TmapDataSource
 import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.login.KakaoLogintRequestDto
 import com.umc.timeCAlling.data.dto.response.login.KakaoLoginResponseDto

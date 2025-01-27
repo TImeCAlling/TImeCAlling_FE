@@ -2,13 +2,14 @@ package com.umc.timeCAlling.presentation.signup
 
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kakao.sdk.user.UserApiClient
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupBinding
+import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.signup.adapter.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -25,13 +26,13 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_sig
 
     override fun initObserver() {
         // ViewModel의 로그인 결과를 관찰
-        viewModel.loginResult.observe(viewLifecycleOwner) { loginResponse ->
+        viewModel.loginResult.observe(viewLifecycleOwner, { loginResponse ->
             if (loginResponse != null) {
                 navigateToHomeFragment() // 로그인 성공 시 홈 화면으로 이동
             } else {
                 navigateToSignupTermFragment() // 로그인 실패 시 약관 동의 화면으로 이동
             }
-        }
+        })
     }
 
     private fun setClickListener() {
@@ -86,18 +87,20 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_sig
     }
 
     private fun handleLoginSuccess(accessToken: String) {
-        // 카카오 사용자 정보 요청
         UserApiClient.instance.me { user, error ->
             if (user != null) {
                 val kakaoUserId = user.id.toString()
                 Timber.d("로그인 성공, 사용자 ID: $kakaoUserId")
 
-                // ViewModel에 사용자 ID 설정 및 로그인 요청
+                // ViewModel에 사용자 ID 및 accessToken 설정
                 viewModel.setKakaoUserId(kakaoUserId)
-                viewModel.loginWithKakaoAccount(accessToken) // ViewModel에서 서버 로그인 처리
+                viewModel.setAccessToken(accessToken)
+
+                // 서버 로그인 처리 호출
+                viewModel.loginWithKakaoAccount()
             } else {
                 Timber.e("사용자 정보 요청 실패: ${error?.message}")
-                navigateToSignupTermFragment() // 사용자 정보 없을 경우 회원가입 화면으로 이동
+                navigateToSignupTermFragment()
             }
         }
     }
