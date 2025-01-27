@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.presentation.mypage
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -10,6 +11,8 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
@@ -73,6 +76,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         binding.ivMyprofileTimeArrow.setOnClickListener { toggleBottomSheetState(timeBottomSheetBehavior) }
         binding.ivMyprofileSpareArrow.setOnClickListener { toggleBottomSheetState(spareBottomSheetBehavior) }
         binding.clMyprofileNameDelete.setOnClickListener { clearInputField() }
+        binding.tvMyprofileWithdraw.setOnClickListener { showWithdrawDialog() }
     }
 
     private fun handleBackgroundVisibility(newState: Int) {
@@ -340,6 +344,27 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                 }
             })
         }
+    }
+
+    private fun showWithdrawDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.layout_withdraw_account_dialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.8).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+
+        val btn = dialog.findViewById<TextView>(R.id.btn_dialog)
+        btn.setOnClickListener {
+            /* 회원탈퇴 기능 구현 */
+            showToast("회원탈퇴 구현 해주세요!!")
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showToast(message: String) {
