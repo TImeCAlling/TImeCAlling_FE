@@ -1,8 +1,5 @@
-package  com.umc.timeCAlling.domain.model.response
+package  com.umc.timeCAlling.domain.model.response.tmap
 
-
-import com.umc.timeCAlling.domain.model.response.CarTransportationModel
-import com.umc.timeCAlling.domain.model.response.WalkTransportationModel
 
 data class PublicTransportationModel(
     val metaData: PublicMetaDataModel?,

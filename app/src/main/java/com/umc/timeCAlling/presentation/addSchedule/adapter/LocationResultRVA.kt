@@ -25,6 +25,7 @@ class LocationResultRVA(
 
     private var _locationResultDetailRVA: LocationResultDetailRVA? = null
     private val locationResultDetailRVA get() = _locationResultDetailRVA
+    private var selectedPosition = -1
 
     init {
         if (type == LocationResultType.Public) {
@@ -53,21 +54,19 @@ class LocationResultRVA(
         when (type) {
             LocationResultType.Public -> {
                 viewModel.publicResult.observe(lifecycleOwner) { publicResult ->
-                    val totalTime =
-                        publicResult.metaData?.plan?.itineraries?.get(position)?.totalTime
+                    val totalTime = publicResult.metaData?.plan?.itineraries?.get(position)?.totalTime
                     val totalMinutes = totalTime?.div(60)
-                    holder.time.text = "${totalMinutes}분"
+                    val totalHours = totalMinutes?.div(60)
+                    val remainingMinutes = totalMinutes?.rem(60)
+                    holder.time.text = "${totalHours}시간 ${remainingMinutes}분"
                     holder.recyclerView.visibility = View.VISIBLE
                     holder.linearLayout.visibility = View.GONE
-
-                    Log.d("로그", "로그심기 빵야")
                     _locationResultDetailRVA = LocationResultDetailRVA(
                         viewModel = viewModel,
                         lifecycleOwner = lifecycleOwner,
                         viewLifecycleOwner = viewLifecycleOwner,
-                        type = LocationResultType.Public
+                        type = LocationResultType.Public,
                     )
-                    Log.d("로그", "ㅎㅇ")
                     holder.recyclerView.adapter = locationResultDetailRVA
                     holder.recyclerView.layoutManager =
                         LinearLayoutManager(holder.recyclerView.context)
@@ -78,29 +77,27 @@ class LocationResultRVA(
                             false
                         )
                     )
-                    holder.recyclerView.addItemDecoration(
-                        DividerItemDecoration(
-                            holder.itemView.context,
-                            DividerItemDecoration.HORIZONTAL
-                        )
-                    )
                 }
             }
+
             LocationResultType.Car -> {
                 Log.d("로그", "로그심기")
                 viewModel.carResult.observe(lifecycleOwner) { carResult ->
                     val totalTime = carResult.features?.get(0)?.properties?.totalTime
                     val totalMinutes = totalTime?.div(60)
+                    val totalHours = totalMinutes?.div(60)
+                    val remainingMinutes = totalMinutes?.rem(60)
                     holder.symbol.setImageResource(R.drawable.ic_car)
                     val totalDistance = carResult.features?.get(0)?.properties?.totalDistance
                     val totalKilometers = totalDistance?.div(1000)
                     holder.distance.text = "${totalKilometers}km"
-                    holder.time.text = "${totalMinutes}분"
+                    holder.time.text = "${totalHours}시간 ${remainingMinutes}분"
                     holder.recyclerView.visibility = View.GONE
                     holder.linearLayout.visibility = View.VISIBLE
                     Log.d("로그", "로그심기 뿡")
                 }
             }
+
             LocationResultType.Walk -> {
                 viewModel.walkResult.observe(lifecycleOwner) { walkResult ->
                     val totalTime = walkResult.features?.get(0)?.properties?.totalTime
@@ -119,29 +116,32 @@ class LocationResultRVA(
         }
 
         holder.itemView.setOnClickListener {
-            holder.isSelected = !holder.isSelected
-            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1)
+            if (holder.isSelected) {
+                holder.isSelected = false
+                holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_shadow)
+                viewModel.setMoveTime(0)
+            } else {
+                if (selectedPosition != -1 && selectedPosition != position) {
+                    notifyItemChanged(selectedPosition)
+                }
+                selectedPosition = holder.adapterPosition
+                holder.isSelected = true
+                holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1_none_shadow)
 
-            // 선택된 아이템의 시간 가져오기
-            val selectedTime = when (type) {
-                LocationResultType.Public -> {
-                    viewModel.publicResult.value?.metaData?.plan?.itineraries?.get(position)?.totalTime?.div(60)
+                val selectedTime = when (type) {
+                    LocationResultType.Public -> { viewModel.publicResult.value?.metaData?.plan?.itineraries?.get(position)?.totalTime?.div(60) }
+                    LocationResultType.Car -> { viewModel.carResult.value?.features?.get(0)?.properties?.totalTime?.div(60) }
+                    LocationResultType.Walk -> { viewModel.walkResult.value?.features?.get(0)?.properties?.totalTime?.div(60) }
                 }
-                LocationResultType.Car -> {
-                    viewModel.carResult.value?.features?.get(0)?.properties?.totalTime?.div(60)
-                }
-                LocationResultType.Walk -> {
-                    viewModel.walkResult.value?.features?.get(0)?.properties?.totalTime?.div(60)
-                }
+                selectedTime?.let { viewModel.setMoveTime(it) }
             }
-
-            // ViewModel에 선택된 시간 저장
-            selectedTime?.let { viewModel.setTimeTaken(it) }
-
-            // 배경색 업데이트
-            notifyItemChanged(position)
+            notifyItemChanged(holder.adapterPosition)
         }
-
+        if (selectedPosition == holder.adapterPosition) { // holder.adapterPosition 사용
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_mint_line_1_none_shadow)
+        } else {
+            holder.itemView.setBackgroundResource(R.drawable.shape_rect_16_white_fill_shadow)
+        }
     }
 
     override fun getItemCount(): Int {

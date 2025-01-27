@@ -24,6 +24,9 @@ class LocationResultDetailRVA(
         val symbol = itemView.findViewById<ImageView>(R.id.iv_location_result_detail_icon)
         val transport = itemView.findViewById<TextView>(R.id.tv_location_result_detail_transport)
         val time = itemView.findViewById<TextView>(R.id.tv_location_result_detail_time)
+        val arrow = itemView.findViewById<ImageView>(R.id.iv_location_result_detail_arrow)
+        val circle = itemView.findViewById<View>(R.id.view_location_result_circle)
+        val rect = itemView.findViewById<View>(R.id.view_location_result_rect)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationResultDetailViewHolder {
@@ -33,7 +36,6 @@ class LocationResultDetailRVA(
     }
 
     override fun onBindViewHolder(holder: LocationResultDetailViewHolder, position: Int) {
-        Log.d("로그", "로그심기임")
         if (type == LocationResultType.Public) {
             viewModel.publicResult.observe(lifecycleOwner) { publicResult ->
                 val legs = publicResult.metaData?.plan?.itineraries?.get(0)?.legs
@@ -60,8 +62,16 @@ class LocationResultDetailRVA(
                 holder.time.text = "${totalMinute}분" // time 설정
             }
         }
-        Log.d("로그", "로그심기ㅎㅎ")
 
+        if (position < itemCount - 1) {
+            holder.arrow.visibility = View.VISIBLE
+            holder.circle.visibility = View.GONE
+            holder.rect.visibility = View.GONE
+        } else {
+            holder.arrow.visibility = View.GONE
+            holder.circle.visibility = View.VISIBLE
+            holder.rect.visibility = View.VISIBLE
+        }
     }
 
     override fun getItemCount(): Int {

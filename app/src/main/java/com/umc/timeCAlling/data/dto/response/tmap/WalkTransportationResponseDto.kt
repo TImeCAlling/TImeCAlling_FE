@@ -1,8 +1,7 @@
 package  com.umc.timeCAlling.data.dto.response.tmap
 
 
-import com.umc.timeCAlling.domain.model.response.CarTransportationModel
-import com.umc.timeCAlling.domain.model.response.WalkTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.WalkTransportationModel
 
 data class WalkTransportationResponseDto(
     val type: String,
