@@ -28,13 +28,22 @@
 
         <activity
             android:name=".presentation.MainActivity"
+            android:launchMode="singleTask"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+            <intent-filter  android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="myapp"
+                    android:host="50.19.156.109:4000"
+                    android:pathPrefix="/schedules/"/>
+            </intent-filter>
         </activity>
 
         <!-- Trigger Google Play services to install the backported photo picker module. -->

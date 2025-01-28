@@ -5,6 +5,11 @@
     android:id="@+id/main_graph"
     app:startDestination="@id/signupTab">
 
+
+    <action
+        android:id="@+id/action_global_addScheduleFragment"
+        app:destination="@id/addScheduleFragment"/>
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.umc.timeCAlling.presentation.home.HomeFragment"

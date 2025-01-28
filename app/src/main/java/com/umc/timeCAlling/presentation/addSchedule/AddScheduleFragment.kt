@@ -7,10 +7,12 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
+import androidx.compose.ui.semantics.setText
 import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -28,10 +30,14 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun initObserver() {
-
+        // Deep Link를 통해 전달된 scheduleId를 관찰
+        arguments?.getInt("scheduleId")?.let { scheduleId ->
+            // Deep Link를 통해 들어온 경우
+        }
     }
 
     override fun initView() {
+
         initSavedData()
 
         binding.viewBottomSheetBackground.isClickable = false
