@@ -15,13 +15,14 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val loginRepository: LoginRepository
 ) : ViewModel() {
-
-    // LiveData for storing user input from each fragment
     private val _kakaoAccessToken = MutableLiveData<String>()
     val kakaoAccessToken: LiveData<String> get() = _kakaoAccessToken
 
     private val _nickname = MutableLiveData<String>()
     val nickname: LiveData<String> get() = _nickname
+
+    private val _profileImage = MutableLiveData<String>()
+    val profileImage: LiveData<String> get() = _profileImage
 
     private val _avgPrepTime = MutableLiveData<Int>()
     val avgPrepTime: LiveData<Int> get() = _avgPrepTime
@@ -29,17 +30,19 @@ class SignupViewModel @Inject constructor(
     private val _freeTime = MutableLiveData<String>()
     val freeTime: LiveData<String> get() = _freeTime
 
-    // LiveData to observe API response
     private val _signupResult = MutableLiveData<KakaoSignupResponseModel?>()
     val signupResult: LiveData<KakaoSignupResponseModel?> get() = _signupResult
 
-    // Functions to set data from each fragment
     fun setKakaoAccessToken(token: String) {
         _kakaoAccessToken.value = token
     }
 
     fun setNickname(name: String) {
         _nickname.value = name
+    }
+
+    fun setProfileImage(image: String) {
+        _profileImage.value = image
     }
 
     fun setAvgPrepTime(time: Int) {
@@ -52,6 +55,7 @@ class SignupViewModel @Inject constructor(
 
     // Function to call Signup API
     fun signup() {
+        val profileImage = _profileImage.value?:""
         val token = _kakaoAccessToken.value
         val name = _nickname.value
         val prepTime = _avgPrepTime.value
@@ -67,7 +71,7 @@ class SignupViewModel @Inject constructor(
 
             viewModelScope.launch {
                 try {
-                    val result = loginRepository.kakaoSignup(request)
+                    val result = loginRepository.kakaoSignup(profileImage, request)
                     result.onSuccess { response ->
                         _signupResult.postValue(response) // 성공 시 데이터를 LiveData에 전달
                     }.onFailure { error ->

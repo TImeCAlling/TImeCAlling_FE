@@ -88,25 +88,4 @@ object NetworkModule {
             .client(client)
             .build()
     }
-
-    @Provides
-    @Singleton
-    @Named("login")
-    fun providesLoginRetrofit(
-        client: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(TimeCAllingApplication.getString(R.string.base_url))
-            .addConverterFactory(gsonConverterFactory)
-            .client(client)
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    @Named("login")
-    fun providesLoginDataSource(@Named("login") loginService: LoginService): LoginDataSource {
-        return LoginDataSourceImpl(loginService)
-    }
 }

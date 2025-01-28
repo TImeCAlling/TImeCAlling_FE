@@ -15,6 +15,6 @@ class LoginDataSourceImpl @Inject constructor(
     override suspend fun kakaoLogin(requestDto: KakaoLoginRequestDto): BaseResponse<KakaoLoginResponseDto> =
         loginService.kakaoLogin(requestDto)
 
-    override suspend fun kakaoSignup(requestDto: KakaoSignupRequestDto): BaseResponse<KakaoSignupResponseDto> =
-        loginService.kakaoSignup(requestDto)
+    override suspend fun kakaoSignup(profileImage: String, requestDto: KakaoSignupRequestDto): BaseResponse<KakaoSignupResponseDto> =
+        loginService.kakaoSignup(profileImage,requestDto)
 }

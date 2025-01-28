@@ -7,6 +7,6 @@ import com.umc.timeCAlling.domain.model.response.login.KakaoSignupResponseModel
 
 interface LoginRepository {
     suspend fun kakaoLogin(requestModel: KakaoLoginRequestModel): Result<KakaoLoginResponseModel>
-    suspend fun kakaoSignup(requestModel: KakaoSignupRequestModel): Result<KakaoSignupResponseModel>
+    suspend fun kakaoSignup(proflieImage:String, requestModel: KakaoSignupRequestModel): Result<KakaoSignupResponseModel>
 
 }

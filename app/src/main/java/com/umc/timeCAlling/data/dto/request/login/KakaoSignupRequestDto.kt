@@ -7,7 +7,4 @@ data class KakaoSignupRequestDto(
     val nickname: String,
     val avgPrepTime: Int,
     val freeTime: String
-): Serializable {
-    fun toKakaoLoginRequestDto() =
-        KakaoSignupRequestDto(kakaoAccessToken, nickname, avgPrepTime, freeTime)
-}
+)

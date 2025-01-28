@@ -8,6 +8,6 @@ import com.umc.timeCAlling.data.dto.response.login.KakaoSignupResponseDto
 
 interface LoginDataSource {
     suspend fun kakaoLogin(requestDto:KakaoLoginRequestDto): BaseResponse<KakaoLoginResponseDto>
-    suspend fun kakaoSignup(requestDto:KakaoSignupRequestDto): BaseResponse<KakaoSignupResponseDto>
+    suspend fun kakaoSignup(profileImage:String, requestDto:KakaoSignupRequestDto): BaseResponse<KakaoSignupResponseDto>
 
 }

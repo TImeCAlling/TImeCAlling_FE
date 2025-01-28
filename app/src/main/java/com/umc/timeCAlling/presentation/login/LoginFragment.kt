@@ -12,7 +12,6 @@ import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.login.adapter.LoginViewModel
 import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
@@ -41,14 +40,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun setClickListener() {
-        Log.d("LoginFragment", "setClickListener() 호출됨")
         binding.ivLoginKakaoLogin.setOnClickListener {
-            Log.d("LoginFragment", "카카오 로그인 버튼 클릭됨")
             loginWithKakao()
         }
 
         binding.ivNavigateHome.setOnClickListener {
-            Log.d("LoginFragment", "홈 화면으로 이동 버튼 클릭됨")
             navigateToHomeFragment()
             bottomNavigationShow()
         }

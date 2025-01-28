@@ -17,8 +17,8 @@ class LoginRepositoryImpl @Inject constructor(
             loginDataSource.kakaoLogin(requestModel.toKakaoLoginRequestDto()).result.toKakaoLoginResponseModel()
         }
 
-    override suspend fun kakaoSignup(requestModel: KakaoSignupRequestModel): Result<KakaoSignupResponseModel> =
+    override suspend fun kakaoSignup(profileImage:String,requestModel: KakaoSignupRequestModel): Result<KakaoSignupResponseModel> =
         runCatching {
-            loginDataSource.kakaoSignup(requestModel.toKakaoSignupRequestDto()).result.toKakaoSignupResponseModel()
+            loginDataSource.kakaoSignup(profileImage, requestModel.toKakaoSignupRequestDto()).result.toKakaoSignupResponseModel()
         }
 }

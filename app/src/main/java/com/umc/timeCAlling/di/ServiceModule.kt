@@ -39,7 +39,7 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideLoginService(@Named("login") retrofit: Retrofit): LoginService {
-        return retrofit.create(LoginService::class.java)
+    fun provideLoginService(@Named("default") retrofit: Retrofit): LoginService {
+        return retrofit.buildService()
     }
 }

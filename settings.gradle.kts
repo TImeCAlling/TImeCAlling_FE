@@ -9,7 +9,6 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        maven { url = uri("https://devrepo.kakao.com/nexus/content/groups/public/") } // Kakao SDK 저장소 추가
     }
 }
 
@@ -20,7 +19,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
         flatDir { dirs("libs") }
-        maven { url = uri("https://devrepo.kakao.com/nexus/content/groups/public/") } // Kakao SDK 저장소 추가
+        maven { url = uri("https://devrepo.kakao.com/nexus/content/groups/public/") }
     }
 }
 
