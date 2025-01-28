@@ -1,6 +1,7 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.R
@@ -13,6 +14,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding>(R.layout.fragment_add_schedule_success) {
+
+    private val viewModel: AddScheduleViewModel by activityViewModels()
 
     override fun initView() {
 
@@ -47,6 +50,7 @@ class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding
 
     private fun moveToHomeFragment() {
         binding.tvAddScheduleSuccessNext.setOnClickListener {
+            viewModel.deleteSchedule()
             findNavController().navigate(R.id.action_addScheduleSuccessFragment_to_homeFragment)
         }
     }

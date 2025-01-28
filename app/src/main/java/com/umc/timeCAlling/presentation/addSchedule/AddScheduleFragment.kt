@@ -142,8 +142,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         calendarView.setOnDateChangedListener { widget, date, selected ->
             if (selected) {
-                selectedDate = "${date.year}년 ${date.month + 1}월 ${date.day}일" // 선택한 날짜 형식 지정
-                formattedDate = "${date.year}-${date.month + 1}-${date.day}"
+                selectedDate = "${date.year}년 ${date.month}월 ${date.day}일" // 선택한 날짜 형식 지정
+                formattedDate = String.format("%d-%02d-%02d", date.year, date.month, date.day)
             }
         }
 

@@ -85,8 +85,14 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                     if (tv == clickedTextView) {
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_mint300_fill_mint_line_1)
                         tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.mint_main))
-                        viewModel.setFreeTime(tv.text.toString())
-                    } else {
+                        val freeTime = when (tv.text.toString()) { // 텍스트 변환
+                            "딱딱" -> "TIGHT"
+                            "여유" -> "RELAXED"
+                            "넉넉" -> "PLENTY"
+                            else -> ""
+                        }
+                        viewModel.setFreeTime(freeTime) // 변환된 값 전달
+                        } else {
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray200_fill)
                         tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
                     }
@@ -126,6 +132,19 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         }
         binding.tvAddScheduleRepeat.text = repeatText
         viewModel.setIsRepeat(isRepeatEnabled)
+        val selectedDaysEnglish = selectedDays.map { day ->
+            when (day) {
+                "월" -> "MONDAY"
+                "화" -> "TUESDAY"
+                "수" -> "WEDNESDAY"
+                "목" -> "THURSDAY"
+                "금" -> "FRIDAY"
+                "토" -> "SATURDAY"
+                "일" -> "SUNDAY"
+                else -> day
+            }
+        }
+        viewModel.setRepeatDates(selectedDaysEnglish)
     }
 
     private fun initRepeatBottomSheet() {
@@ -229,14 +248,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             this@AddScheduleSecondFragment.selectedDays.addAll(selectedDaysSet)
             updateRepeatInfo()
             binding.menuAddScheduleRepeat.isChecked = true
-            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             startTextView.text = startDate?.date?.format(formatter) ?: ""
             endTextView.text = endDate?.date?.format(formatter) ?: ""
 
             binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-            viewModel.setRepeatDates(selectedDays)
             viewModel.setStartDate(startTextView.text.toString())
             viewModel.setEndDate(endTextView.text.toString())
         }

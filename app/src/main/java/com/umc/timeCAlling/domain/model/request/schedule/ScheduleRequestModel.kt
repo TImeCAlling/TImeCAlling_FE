@@ -1,14 +1,13 @@
 package com.umc.timeCAlling.domain.model.request.schedule
 
-import com.umc.timeCAlling.data.dto.request.CategoriesRequestDto
-import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleRequestDto
-import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleResponseDto
+import com.umc.timeCAlling.data.dto.request.schedule.ScheduleRequestDto
 import com.umc.timeCAlling.domain.model.request.CategoriesRequestModel
 import java.io.Serializable
 
-data class CreateScheduleRequestModel(
+data class ScheduleRequestModel(
     val name : String,
     val body : String,
+    val meetDate : String,
     val meetTime : String,
     val place : String,
     val longitude : String,
@@ -21,6 +20,6 @@ data class CreateScheduleRequestModel(
     val end : String,
     val categories : List<CategoriesRequestModel>
 ): Serializable {
-    fun toCreateScheduleRequestDto() =
-        CreateScheduleRequestDto(name, body, meetTime, place, longitude, latitude, moveTime, freeTime, repeatDays, isRepeat, start, end, categories.map{it.toCategoriesRequestDto()})
+    fun toScheduleRequestDto() =
+        ScheduleRequestDto(name, body, meetDate,meetTime, place, longitude, latitude, moveTime, freeTime, repeatDays, isRepeat, start, end, categories.map{it.toCategoriesRequestDto()})
 }
