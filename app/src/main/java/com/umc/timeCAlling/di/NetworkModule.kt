@@ -3,17 +3,22 @@ package com.umc.timeCAlling.di
 import com.google.gson.GsonBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TimeCAllingApplication
+import com.umc.timeCAlling.data.datasource.LoginDataSource
 import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.data.datasource.TmapDataSource
+import com.umc.timeCAlling.data.datasourceImpl.LoginDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.ScheduleDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.TmapDataSourceImpl
+import com.umc.timeCAlling.data.service.LoginService
 import com.umc.timeCAlling.data.service.ScheduleService
 import com.umc.timeCAlling.data.service.TmapService
+import com.umc.timeCAlling.util.AuthInterceptor
 import com.umc.timeCAlling.util.TmapInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -45,18 +50,27 @@ object NetworkModule {
     @Provides
     @Singleton
     fun providesOkHttpClient(
+        authInterceptor: AuthInterceptor
     ): OkHttpClient {
-        val interceptor = HttpLoggingInterceptor().apply {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder().apply {
-            addInterceptor(interceptor)
+            addInterceptor(authInterceptor)
+            addInterceptor(loggingInterceptor)
             addInterceptor(TmapInterceptor())
-            connectTimeout(5, TimeUnit.SECONDS)
-            readTimeout(5, TimeUnit.SECONDS)
-            writeTimeout(5, TimeUnit.SECONDS)
+            connectTimeout(10, TimeUnit.SECONDS)
+            readTimeout(10, TimeUnit.SECONDS)
+            writeTimeout(10, TimeUnit.SECONDS)
         }.build()
     }
+
+
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(
+        authInterceptor: AuthInterceptor,
+    ): Interceptor = authInterceptor
 
     @Provides
     @Singleton
