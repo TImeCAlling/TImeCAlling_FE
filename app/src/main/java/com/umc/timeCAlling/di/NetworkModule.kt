@@ -12,11 +12,13 @@ import com.umc.timeCAlling.data.datasourceImpl.TmapDataSourceImpl
 import com.umc.timeCAlling.data.service.LoginService
 import com.umc.timeCAlling.data.service.ScheduleService
 import com.umc.timeCAlling.data.service.TmapService
+import com.umc.timeCAlling.util.AuthInterceptor
 import com.umc.timeCAlling.util.TmapInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -48,18 +50,27 @@ object NetworkModule {
     @Provides
     @Singleton
     fun providesOkHttpClient(
+        authInterceptor: AuthInterceptor
     ): OkHttpClient {
-        val interceptor = HttpLoggingInterceptor().apply {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder().apply {
-            addInterceptor(interceptor)
+            addInterceptor(authInterceptor)
+            addInterceptor(loggingInterceptor)
             addInterceptor(TmapInterceptor())
             connectTimeout(10, TimeUnit.SECONDS)
             readTimeout(10, TimeUnit.SECONDS)
             writeTimeout(10, TimeUnit.SECONDS)
         }.build()
     }
+
+
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(
+        authInterceptor: AuthInterceptor,
+    ): Interceptor = authInterceptor
 
     @Provides
     @Singleton

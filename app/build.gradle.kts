@@ -141,6 +141,8 @@ dependencies {
 
     //로깅
     implementation("com.jakewharton.timber:timber:5.0.1")
+
+    implementation("com.auth0:java-jwt:3.19.2")
 }
 configurations.all {
     exclude(group = "com.android.support")
