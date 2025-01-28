@@ -50,8 +50,16 @@ class SignupSpareFragment :
 
         // 다음 버튼 클릭
         binding.tvSignupSpareNext.setOnClickListener {
-            val selectedFreeTime = getSelectedFreeTime()
-            Log.d("SignupSpareFragment", "선택된 여유시간: $selectedFreeTime") // 로그 추가
+            val selectedFreeTimeText = getSelectedFreeTime()
+            Log.d("SignupSpareFragment", "선택된 여유시간: $selectedFreeTimeText") // 로그 추가
+
+
+            val selectedFreeTime = when (selectedFreeTimeText) { // 텍스트를 변환
+                "여유" -> "PLENTY"
+                "넉넉" -> "RELAXED"
+                "딱딱" -> "TIGHT"
+                else -> "" // 기본값 또는 오류 처리
+            }
 
             if (selectedFreeTime.isNotEmpty()) {
                 signupViewModel.setFreeTime(selectedFreeTime)

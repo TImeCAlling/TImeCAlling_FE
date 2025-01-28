@@ -3,19 +3,27 @@ package com.umc.timeCAlling.presentation.login
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupPhotoBinding
+import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
-class SignupPhotoFragment :
-    BaseFragment<FragmentSignupPhotoBinding>(R.layout.fragment_signup_photo) {
+class SignupPhotoFragment : BaseFragment<FragmentSignupPhotoBinding>(R.layout.fragment_signup_photo) {
 
+    private val viewModel: SignupViewModel by activityViewModels()
+    private var profileImageUri: Uri? = null
     private var isPhotoSelected = false
 
     override fun initView() {
@@ -23,7 +31,17 @@ class SignupPhotoFragment :
         updateNextButtonState()
     }
 
-    override fun initObserver() {}
+    override fun initObserver() {
+        viewModel.profileImage.observe(viewLifecycleOwner) { uri ->
+            Timber.d("Observed Profile Image URI: $uri")
+            uri?.let {
+                binding.ivSignupPhotoOval1.setImageURI(it)
+                binding.ivSignupPhotoFace.visibility = View.INVISIBLE
+                isPhotoSelected = true
+                updateNextButtonState()
+            }
+        }
+    }
 
     private fun setClickListener() {
         // 다음 버튼 클릭 시
@@ -33,47 +51,35 @@ class SignupPhotoFragment :
             }
         }
 
-        // 기본 이미지로 넘어가기
         binding.tvSignupPhotoDefault.setOnClickListener {
             navigateToSignupNameFragment()
         }
 
-        // 갤러리 열기 버튼
         binding.clSignupPhotoCamera.setOnClickListener {
-            openGallery()
+            openPhotoPicker()
         }
 
-        // 뒤로가기 버튼
         binding.ivSignupPhotoBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    private fun openGallery() {
-        // 갤러리를 여는 Intent 실행
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        galleryLauncher.launch(intent)
+    private fun openPhotoPicker() {
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = "image/*" // 모든 이미지 타입 선택
+        }
+        photoPickerLauncher.launch(intent) // 갤러리 열기
     }
 
-    private val galleryLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == androidx.fragment.app.FragmentActivity.RESULT_OK) {
-                val selectedImageUri: Uri? = result.data?.data
-                if (selectedImageUri != null) {
-                    updateProfileImage(selectedImageUri)
-                    isPhotoSelected = true
-                    updateNextButtonState()
-                } else {
-                    Toast.makeText(requireContext(), "이미지를 선택하지 않았습니다.", Toast.LENGTH_SHORT).show()
-                }
+    // PhotoPicker Launcher
+    private val photoPickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == AppCompatActivity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                profileImageUri = uri
+                binding.ivSignupPhotoOval1.setImageURI(uri) // 선택한 이미지 미리보기
+                viewModel.setProfileImage(uri) // ViewModel에 URI 저장
             }
         }
-
-    private fun updateProfileImage(imageUri: Uri) {
-        // CircleImageView에 URI로 이미지 설정
-        binding.ivSignupPhotoOval1.setImageURI(imageUri)
-        // 기본 얼굴 아이콘 숨기기
-        binding.ivSignupPhotoFace.visibility = android.view.View.INVISIBLE
     }
 
     private fun updateNextButtonState() {
