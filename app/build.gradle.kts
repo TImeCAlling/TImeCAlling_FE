@@ -18,6 +18,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["kakaoAppKey"] = "@string/kakao_app_key"
     }
 
     buildTypes {
@@ -121,6 +123,11 @@ dependencies {
 
     implementation ("de.hdodenhof:circleimageview:3.1.0") // CircularImageView 라이브러리
 
+    // 카카오 로그인 SDK
+    implementation ("com.kakao.sdk:v2-user:2.20.6")
+
+    //로깅
+    implementation("com.jakewharton.timber:timber:5.0.1")
 }
 configurations.all {
     exclude(group = "com.android.support")

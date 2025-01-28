@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/signupTab">
+    app:startDestination="@id/loginTab">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -27,8 +27,8 @@
             android:id="@+id/action_homeFragment_to_checkListFragment"
             app:destination="@id/checkListFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_signupFragment"
-            app:destination="@id/signupFragment"/>
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment"/>
     </fragment>
 
     <fragment
@@ -167,25 +167,25 @@
 
     <!-- Signup flow -->
     <navigation
-        android:id="@+id/signupTab"
-        app:startDestination="@id/signupFragment">
+        android:id="@+id/loginTab"
+        app:startDestination="@id/loginFragment">
         <action
-            android:id="@+id/action_signupFragment_to_homeFragment"
+            android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment"/>
 
         <fragment
-            android:id="@+id/signupFragment"
-            android:name="com.umc.timeCAlling.presentation.signup.SignupFragment"
-            android:label="SignupFragment"
-            tools:layout="@layout/fragment_signup">
+            android:id="@+id/loginFragment"
+            android:name="com.umc.timeCAlling.presentation.login.LoginFragment"
+            android:label="loginFragment"
+            tools:layout="@layout/fragment_login">
             <action
-                android:id="@+id/action_signupFragment_to_signupTermFragment"
+                android:id="@+id/action_loginFragment_to_signupTermFragment"
                 app:destination="@id/signupTermFragment"/>
         </fragment>
 
         <fragment
             android:id="@+id/signupTermFragment"
-            android:name="com.umc.timeCAlling.presentation.signup.SignupTermFragment"
+            android:name="com.umc.timeCAlling.presentation.login.SignupTermFragment"
             android:label="SignupTermFragment"
             tools:layout="@layout/fragment_signup_term">
             <action
@@ -195,7 +195,7 @@
 
         <fragment
             android:id="@+id/signupPhotoFragment"
-            android:name="com.umc.timeCAlling.presentation.signup.SignupPhotoFragment"
+            android:name="com.umc.timeCAlling.presentation.login.SignupPhotoFragment"
             android:label="SignupPhotoFragment"
             tools:layout="@layout/fragment_signup_photo">
             <action
@@ -205,7 +205,7 @@
 
         <fragment
             android:id="@+id/signupNameFragment"
-            android:name="com.umc.timeCAlling.presentation.signup.SignupNameFragment"
+            android:name="com.umc.timeCAlling.presentation.login.SignupNameFragment"
             android:label="SignupNameFragment"
             tools:layout="@layout/fragment_signup_name">
             <action
@@ -215,7 +215,7 @@
 
         <fragment
             android:id="@+id/signupTimeFragment"
-            android:name="com.umc.timeCAlling.presentation.signup.SignupTimeFragment"
+            android:name="com.umc.timeCAlling.presentation.login.SignupTimeFragment"
             android:label="SignupTimeFragment"
             tools:layout="@layout/fragment_signup_time">
             <action
@@ -225,7 +225,7 @@
 
         <fragment
             android:id="@+id/signupSpareFragment"
-            android:name="com.umc.timeCAlling.presentation.signup.SignupSpareFragment"
+            android:name="com.umc.timeCAlling.presentation.login.SignupSpareFragment"
             android:label="SignupSpareFragment"
             tools:layout="@layout/fragment_signup_spare">
             <action
@@ -235,7 +235,7 @@
 
         <fragment
             android:id="@+id/signupCompleteFragment"
-            android:name="com.umc.timeCAlling.presentation.signup.SignupCompleteFragment"
+            android:name="com.umc.timeCAlling.presentation.login.SignupCompleteFragment"
             android:label="SignupCompleteFragment"
             tools:layout="@layout/fragment_signup_complete">
             <action

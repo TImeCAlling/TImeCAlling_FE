@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.di
 
+import com.umc.timeCAlling.data.service.LoginService
 import com.umc.timeCAlling.data.service.ScheduleService
 import com.umc.timeCAlling.data.service.TestService
 import com.umc.timeCAlling.data.service.TmapService
@@ -34,5 +35,11 @@ object ServiceModule {
     @Singleton
     fun provideScheduleService(@Named("default")retrofit: Retrofit): ScheduleService{
         return retrofit.buildService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLoginService(@Named("login") retrofit: Retrofit): LoginService {
+        return retrofit.create(LoginService::class.java)
     }
 }

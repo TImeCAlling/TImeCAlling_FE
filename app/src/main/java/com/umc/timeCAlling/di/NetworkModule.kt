@@ -3,10 +3,13 @@ package com.umc.timeCAlling.di
 import com.google.gson.GsonBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TimeCAllingApplication
+import com.umc.timeCAlling.data.datasource.LoginDataSource
 import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.data.datasource.TmapDataSource
+import com.umc.timeCAlling.data.datasourceImpl.LoginDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.ScheduleDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.TmapDataSourceImpl
+import com.umc.timeCAlling.data.service.LoginService
 import com.umc.timeCAlling.data.service.ScheduleService
 import com.umc.timeCAlling.data.service.TmapService
 import com.umc.timeCAlling.util.TmapInterceptor
@@ -84,5 +87,26 @@ object NetworkModule {
             .addConverterFactory(gsonConverterFactory)
             .client(client)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("login")
+    fun providesLoginRetrofit(
+        client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(TimeCAllingApplication.getString(R.string.base_url))
+            .addConverterFactory(gsonConverterFactory)
+            .client(client)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("login")
+    fun providesLoginDataSource(@Named("login") loginService: LoginService): LoginDataSource {
+        return LoginDataSourceImpl(loginService)
     }
 }

@@ -25,6 +25,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
     private fun navigateToSignupFragment() {
         // NavController를 통해 signupFragment로 이동
         val navController = findNavController(R.id.nav_host_fragment)
-        navController.navigate(R.id.signupFragment)
+        navController.navigate(R.id.loginFragment)
     }
 }
