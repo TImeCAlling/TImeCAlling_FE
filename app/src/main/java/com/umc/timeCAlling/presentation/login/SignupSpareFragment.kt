@@ -1,16 +1,22 @@
 package com.umc.timeCAlling.presentation.login
 
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupSpareBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignupSpareFragment :
     BaseFragment<FragmentSignupSpareBinding>(R.layout.fragment_signup_spare) {
+
+    private val signupViewModel: SignupViewModel by activityViewModels()
 
     private val options by lazy {
         listOf(
@@ -44,9 +50,28 @@ class SignupSpareFragment :
 
         // 다음 버튼 클릭
         binding.tvSignupSpareNext.setOnClickListener {
-            navigateToSignupCompleteFragment() // 다음 화면으로 이동
-            /* signup API 호출 */
+            val selectedFreeTime = getSelectedFreeTime()
+            Log.d("SignupSpareFragment", "선택된 여유시간: $selectedFreeTime") // 로그 추가
+
+            if (selectedFreeTime.isNotEmpty()) {
+                signupViewModel.setFreeTime(selectedFreeTime)
+                signupViewModel.signup()
+
+                signupViewModel.signupResult.observe(viewLifecycleOwner) { result ->
+                    if (result != null) {
+                        navigateToSignupCompleteFragment()
+                    } else {
+                        Toast.makeText(requireContext(), "회원가입 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(requireContext(), "여유시간을 선택해주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
+
+    private fun getSelectedFreeTime(): String {
+        return options.firstOrNull { it.isSelected }?.text?.toString() ?: ""
     }
 
     private fun setDefaultSelectedOption() {
@@ -55,7 +80,9 @@ class SignupSpareFragment :
 
     private fun updateSelectedOption(selectedOption: View) {
         options.forEach { option ->
-            if (option == selectedOption) {
+            option.isSelected = (option == selectedOption) // 선택 상태 업데이트
+
+            if (option.isSelected) {
                 applySelectedStyle(option)
             } else {
                 applyUnselectedStyle(option)

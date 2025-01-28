@@ -31,6 +31,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         loginViewModel.loginResult.observe(viewLifecycleOwner, { loginResponse ->
             if (loginResponse != null) {
                 Log.d("LoginFragment", "로그인 성공: $loginResponse")
+                signupViewModel.setKakaoAccessToken(loginResponse.accessToken)
                 navigateToHomeFragment()
             } else {
                 Log.d("LoginFragment", "로그인 실패")

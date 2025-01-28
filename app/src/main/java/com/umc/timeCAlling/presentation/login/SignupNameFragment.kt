@@ -5,18 +5,23 @@ import android.graphics.Rect
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupNameBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.fragment_signup_name) {
+
+    private val signupViewModel: SignupViewModel by activityViewModels()
 
     private var isInputValid = false // 입력 상태를 추적
 
@@ -71,7 +76,15 @@ class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.frag
     private fun setClickListener() {
         binding.tvSignupNameNext.setOnClickListener {
             val inputText = binding.etSignupNameInput.text.toString().trim()
-            if (inputText.isEmpty()) showErrorState() else navigateToSignupTimeFragment()
+            if (inputText.isNotEmpty()) {
+                // ViewModel에 입력된 이름 저장
+                signupViewModel.setNickname(inputText)
+                Log.d("SignupNameFragment", "입력된 이름: $inputText")
+                navigateToSignupTimeFragment()
+            } else {
+                showErrorState()
+                Log.e("SignupNameFragment", "이름 저장 오류")
+            }
         }
 
         binding.clSignupNameDelete.setOnClickListener { clearInputField() }
