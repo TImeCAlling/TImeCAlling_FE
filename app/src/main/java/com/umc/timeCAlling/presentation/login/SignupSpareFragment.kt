@@ -45,6 +45,7 @@ class SignupSpareFragment :
         // 다음 버튼 클릭
         binding.tvSignupSpareNext.setOnClickListener {
             navigateToSignupCompleteFragment() // 다음 화면으로 이동
+            /* signup API 호출 */
         }
     }
 
