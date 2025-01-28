@@ -2,6 +2,7 @@ package com.umc.timeCAlling.presentation.login
 
 import android.util.Log
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -9,13 +10,15 @@ import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentLoginBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.login.adapter.LoginViewModel
+import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
-    private val viewModel: LoginViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
+    private val signupViewModel: SignupViewModel by activityViewModels()
 
     override fun initView() {
         Log.d("LoginFragment", "initView() 호출됨")
@@ -25,7 +28,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     override fun initObserver() {
         Log.d("LoginFragment", "initObserver() 호출됨")
-        viewModel.loginResult.observe(viewLifecycleOwner, { loginResponse ->
+        loginViewModel.loginResult.observe(viewLifecycleOwner, { loginResponse ->
             if (loginResponse != null) {
                 Log.d("LoginFragment", "로그인 성공: $loginResponse")
                 navigateToHomeFragment()
@@ -52,7 +55,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun loginWithKakao() {
         Log.d("LoginFragment", "loginWithKakao() 호출됨")
-        viewModel.loginWithKakao(requireContext())
+        loginViewModel.loginWithKakao(requireContext())
     }
 
     private fun bottomNavigationRemove() {
