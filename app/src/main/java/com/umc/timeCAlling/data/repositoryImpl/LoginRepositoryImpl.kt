@@ -2,6 +2,7 @@ package com.umc.timeCAlling.data.repositoryImpl
 
 import com.umc.timeCAlling.data.datasource.LoginDataSource
 import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
+import com.umc.timeCAlling.domain.model.request.login.KakaoSignupRequestModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoSignupResponseModel
 import com.umc.timeCAlling.domain.repository.LoginRepository
@@ -16,8 +17,8 @@ class LoginRepositoryImpl @Inject constructor(
             loginDataSource.kakaoLogin(requestModel.toKakaoLoginRequestDto()).result.toKakaoLoginResponseModel()
         }
 
-    override suspend fun kakaoSignup(): Result<KakaoSignupResponseModel> =
+    override suspend fun kakaoSignup(requestModel: KakaoSignupRequestModel): Result<KakaoSignupResponseModel> =
         runCatching {
-            loginDataSource.kakaoSignup().result.toKakaoSignupResponseModel()
+            loginDataSource.kakaoSignup(requestModel.toKakaoSignupRequestDto()).result.toKakaoSignupResponseModel()
         }
 }

@@ -1,6 +1,5 @@
 package com.umc.timeCAlling.data.dto.response.login
 
-import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoSignupResponseModel
 
 data class KakaoSignupResponseDto(

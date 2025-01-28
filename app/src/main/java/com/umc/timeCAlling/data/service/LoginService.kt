@@ -2,6 +2,7 @@ package com.umc.timeCAlling.data.service
 
 import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.login.KakaoLoginRequestDto
+import com.umc.timeCAlling.data.dto.request.login.KakaoSignupRequestDto
 import com.umc.timeCAlling.data.dto.response.login.KakaoLoginResponseDto
 import com.umc.timeCAlling.data.dto.response.login.KakaoSignupResponseDto
 import retrofit2.http.Body
@@ -14,5 +15,7 @@ interface LoginService {
     ): BaseResponse<KakaoLoginResponseDto>
 
     @POST("/api/users/kakao/signup")
-    suspend fun kakaoSignup(): BaseResponse<KakaoSignupResponseDto>
+    suspend fun kakaoSignup(
+        @Body request: KakaoSignupRequestDto
+    ): BaseResponse<KakaoSignupResponseDto>
 }

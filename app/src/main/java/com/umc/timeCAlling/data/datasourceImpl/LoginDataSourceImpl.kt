@@ -3,6 +3,7 @@ package com.umc.timeCAlling.data.datasourceImpl
 import com.umc.timeCAlling.data.datasource.LoginDataSource
 import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.login.KakaoLoginRequestDto
+import com.umc.timeCAlling.data.dto.request.login.KakaoSignupRequestDto
 import com.umc.timeCAlling.data.dto.response.login.KakaoLoginResponseDto
 import com.umc.timeCAlling.data.dto.response.login.KakaoSignupResponseDto
 import com.umc.timeCAlling.data.service.LoginService
@@ -14,6 +15,6 @@ class LoginDataSourceImpl @Inject constructor(
     override suspend fun kakaoLogin(requestDto: KakaoLoginRequestDto): BaseResponse<KakaoLoginResponseDto> =
         loginService.kakaoLogin(requestDto)
 
-    override suspend fun kakaoSignup(): BaseResponse<KakaoSignupResponseDto> =
-        loginService.kakaoSignup()
+    override suspend fun kakaoSignup(requestDto: KakaoSignupRequestDto): BaseResponse<KakaoSignupResponseDto> =
+        loginService.kakaoSignup(requestDto)
 }
