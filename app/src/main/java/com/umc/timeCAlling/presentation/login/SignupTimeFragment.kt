@@ -1,5 +1,7 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.login
 
+import android.util.Log
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -7,11 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupTimeBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
-import com.umc.timeCAlling.presentation.signup.adapter.SignupTimeAdapter
+import com.umc.timeCAlling.presentation.login.adapter.SignupTimeAdapter
+import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.fragment_signup_time) {
+
+    private val signupViewModel: SignupViewModel by activityViewModels()
 
     private val timeOptions = listOf(" ", " ", "15분", "30분", "45분", "60분", "90분+", " ", " ")
     private var previousCenterPosition: Int? = null
@@ -29,7 +34,7 @@ class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.frag
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val adapter = SignupTimeAdapter(timeOptions)
 
-        binding.rvOnboardingTimeRecyclerView.apply {
+        binding.rvSignupTimeRecyclerView.apply {
             this.layoutManager = layoutManager
             this.adapter = adapter
 
@@ -63,9 +68,24 @@ class SignupTimeFragment : BaseFragment<FragmentSignupTimeBinding>(R.layout.frag
         }
     }
 
+    private fun getSelectedTime(): Int {
+        // 선택된 값 가져오기 (예: "15분", "30분", "60분")
+        val selectedTime = previousCenterPosition?.let { timeOptions[it] } ?: "0"
+
+        // 앞 두 글자(숫자 부분)만 Int로 변환
+        return selectedTime.trim().take(2).toIntOrNull() ?: 0
+    }
+
     private fun setClickListener() {
         // 다음 버튼 클릭 리스너 설정
-        binding.tvOnboardingTimeNext.setOnClickListener {
+        binding.tvSignupTimeNext.setOnClickListener {
+            val selectedPrepTime = getSelectedTime()
+
+            // ViewModel에 준비 시간 저장
+            signupViewModel.setAvgPrepTime(selectedPrepTime)
+            Log.d("SignupTimeFragment", "평균 준비 시간: $selectedPrepTime")
+
+            // 다음 화면으로 이동
             navigateToSignupSpareFragment()
         }
     }

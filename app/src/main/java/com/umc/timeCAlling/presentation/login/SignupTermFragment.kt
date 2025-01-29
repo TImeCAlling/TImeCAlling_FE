@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.signup
+package com.umc.timeCAlling.presentation.login
 
 import android.view.View
 import androidx.navigation.fragment.findNavController
@@ -21,16 +21,16 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
 
     private fun setClickListener() {
         val termButtons = listOf(
-            binding.clOnboardingTermBtn1 to binding.ivOnboardingTermOval1,
-            binding.clOnboardingTermBtn2 to binding.ivOnboardingTermOval2,
-            binding.clOnboardingTermBtn3 to binding.ivOnboardingTermOval3,
-            binding.clOnboardingTermBtn4 to binding.ivOnboardingTermOval4,
-            binding.clOnboardingTermBtn5 to binding.ivOnboardingTermOval5
+            binding.clSignupTermBtn1 to binding.ivSignupTermOval1,
+            binding.clSignupTermBtn2 to binding.ivSignupTermOval2,
+            binding.clSignupTermBtn3 to binding.ivSignupTermOval3,
+            binding.clSignupTermBtn4 to binding.ivSignupTermOval4,
+            binding.clSignupTermBtn5 to binding.ivSignupTermOval5
         )
 
         // '모두 동의' 버튼
-        binding.clOnboardingTermBtnAll.setOnClickListener {
-            val isSelected = toggleButton(binding.ivOnboardingTermOvalAll)
+        binding.clSignupTermBtnAll.setOnClickListener {
+            val isSelected = toggleButton(binding.ivSignupTermOvalAll)
             termButtons.forEach { (_, oval) ->
                 setButtonBackground(oval, isSelected)
             }
@@ -42,9 +42,9 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
             container.setOnClickListener {
                 val isSelected = toggleButton(oval)
                 if (!isSelected) {
-                    setButtonBackground(binding.ivOnboardingTermOvalAll, false)
+                    setButtonBackground(binding.ivSignupTermOvalAll, false)
                 } else if (termButtons.all { (_, oval) -> oval.tag == true }) {
-                    setButtonBackground(binding.ivOnboardingTermOvalAll, true)
+                    setButtonBackground(binding.ivSignupTermOvalAll, true)
                 }
                 updateNextButtonState()
             }
@@ -54,12 +54,12 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
         setupArrowClickListeners()
 
         // 뒤로가기 버튼
-        binding.ivOnboardingTermBack.setOnClickListener {
+        binding.ivSignupTermBack.setOnClickListener {
             findNavController().popBackStack() // Navigation Back Stack을 통해 뒤로 이동
         }
 
         // 다음 버튼
-        binding.tvOnboardingTermNext.setOnClickListener {
+        binding.tvSignupTermNext.setOnClickListener {
             if (isNextButtonEnabled()) {
                 navigateToSignupPhotoFragment() // 다음 화면으로 이동
             }
@@ -81,13 +81,13 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
 
     private fun updateNextButtonState() {
         val allRequiredSelected = listOf(
-            binding.ivOnboardingTermOval1,
-            binding.ivOnboardingTermOval2,
-            binding.ivOnboardingTermOval3,
-            binding.ivOnboardingTermOval4
+            binding.ivSignupTermOval1,
+            binding.ivSignupTermOval2,
+            binding.ivSignupTermOval3,
+            binding.ivSignupTermOval4
         ).all { it.tag == true }
 
-        binding.tvOnboardingTermNext.apply {
+        binding.tvSignupTermNext.apply {
             isClickable = allRequiredSelected
             isEnabled = allRequiredSelected
             setBackgroundResource(
@@ -103,9 +103,9 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
 
     private fun setupArrowClickListeners() {
         val arrowConfigs = listOf(
-            Triple(binding.ivOnboardingTermArrowUp2, binding.ivOnboardingTermArrowDown2, binding.svOnboardingTermContent2),
-            Triple(binding.ivOnboardingTermArrowUp3, binding.ivOnboardingTermArrowDown3, binding.tvOnboardingTermContent3),
-            Triple(binding.ivOnboardingTermArrowUp4, binding.ivOnboardingTermArrowDown4, binding.tvOnboardingTermContent4)
+            Triple(binding.ivSignupTermArrowUp2, binding.ivSignupTermArrowDown2, binding.svSignupTermContent2),
+            Triple(binding.ivSignupTermArrowUp3, binding.ivSignupTermArrowDown3, binding.tvSignupTermContent3),
+            Triple(binding.ivSignupTermArrowUp4, binding.ivSignupTermArrowDown4, binding.tvSignupTermContent4)
         )
 
         arrowConfigs.forEach { (arrowUp, arrowDown, contentView) ->
@@ -128,12 +128,12 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
     }
 
     private fun setupTermsContent() {
-        binding.tvOnboardingTermContent2.text = loadTermsContent(R.raw.term_1)
+        binding.tvSignupTermContent2.text = loadTermsContent(R.raw.term_1)
         // 추가 약관 내용을 설정할 수 있습니다.
     }
 
     private fun isNextButtonEnabled(): Boolean {
-        return binding.tvOnboardingTermNext.isClickable
+        return binding.tvSignupTermNext.isClickable
     }
 
     private fun navigateToSignupPhotoFragment() {
