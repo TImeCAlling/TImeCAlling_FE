@@ -1,4 +1,4 @@
-package com.umc.timeCAlling.presentation.signup.adapter
+package com.umc.timeCAlling.presentation.login.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

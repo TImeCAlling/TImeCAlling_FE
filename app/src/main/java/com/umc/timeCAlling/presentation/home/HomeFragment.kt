@@ -189,21 +189,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
     }
 
-    //일정 추가 후 Home으로 돌아왔을 때 바텀표시되도록 코드 수정함 (루카스)
-    private fun bottomNavigationShow() {
-        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_bnv)
-        bottomNavigationView?.visibility = View.VISIBLE
-
-        val addScheduleButton = requireActivity().findViewById<View>(R.id.iv_main_add_schedule_btn)
-        addScheduleButton?.visibility = View.VISIBLE
-
-        val shadowImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_shadow)
-        shadowImageView?.visibility = View.VISIBLE
-
-        val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
-        ovalImageView?.visibility = View.VISIBLE
-    }
-
     private fun setProgressBar(size: Int, currentSize: Int) {
         val maxWidth = binding.viewHomeProgressBarBackground.width
         val progress = ((1-(currentSize.toFloat() / size.toFloat())) * maxWidth).toInt()
