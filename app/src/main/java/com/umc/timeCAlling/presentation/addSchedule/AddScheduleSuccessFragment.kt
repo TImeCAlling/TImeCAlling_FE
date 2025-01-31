@@ -54,6 +54,7 @@ class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding
 
     private fun moveToHomeFragment() {
         binding.tvAddScheduleSuccessNext.setOnClickListener {
+            viewModel.resetData()
             findNavController().navigate(R.id.action_addScheduleSuccessFragment_to_homeFragment)
         }
     }

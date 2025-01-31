@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.foundation.background
 import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -46,7 +47,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
 
         binding.viewBottomSheetBackground.isClickable = false
-
+        initSavedData()
         initCategoryList()
         initRepeatSwitch()
         bottomNavigationRemove()
@@ -78,6 +79,77 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         ovalImageView?.visibility = View.GONE
     }
 
+    private fun initSavedData(){
+
+        viewModel.freeTime.value?.let { freeTime ->
+            if(freeTime.isNotEmpty()) {
+                val spareTimeTextViews = listOf(
+                    binding.tvAddScheduleSecondSpareTime1,
+                    binding.tvAddScheduleSecondSpareTime2,
+                    binding.tvAddScheduleSecondSpareTime3
+                )
+                spareTimeTextViews.forEach { tv ->
+                    val freeTimeText = when (freeTime) {
+                        "TIGHT" -> "딱딱"
+                        "RELAXED" -> "여유"
+                        "PLENTY" -> "넉넉"
+                        else -> ""
+                    }
+                    if (tv.text.toString() == freeTimeText) {
+                        tv.background = ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.shape_rect_999_mint300_fill_mint_line_1
+                        )
+                        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.mint_main))
+                    } else {
+                        tv.background = ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.shape_rect_999_gray200_fill
+                        )
+                        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
+                    }
+                }
+            }
+        }
+        viewModel.isRepeat.value?.let { isRepeat ->
+            if (isRepeat != null) {
+                binding.menuAddScheduleRepeat.isChecked = isRepeat
+            }
+        }
+        viewModel.repeatDates.value?.let { repeatDates ->
+            if (repeatDates.isNotEmpty()) {
+                selectedDays.clear()
+                selectedDays.addAll(repeatDates.map { day ->
+                    when (day) {
+                        "MONDAY" -> "월"
+                        "TUESDAY" -> "화"
+                        "WEDNESDAY" -> "수"
+                        "THURSDAY" -> "목"
+                        "FRIDAY" -> "금"
+                        "SATURDAY" -> "토"
+                        "SUNDAY" -> "일"
+                        else -> day
+                    }
+                })
+                updateRepeatInfo()
+            }
+        }
+        viewModel.startDate.value?.let { startDate ->
+            if (startDate.isNotEmpty()) {
+                binding.tvAddScheduleRepeatStart.text = startDate
+            }
+        }
+        viewModel.endDate.value?.let { endDate ->
+            if (endDate.isNotEmpty()) {
+                binding.tvAddScheduleRepeatEnd.text = endDate
+            }
+        }
+        viewModel.categoryName.value?.let { categoryName ->
+            if (categoryName.isNotEmpty()) {
+                updateCategoryUI(getCategoryByName(categoryName))
+            }
+        }
+    }
     private fun initSpareTimeTextViews() {
         val spareTimeTextViews = listOf(
             binding.tvAddScheduleSecondSpareTime1,

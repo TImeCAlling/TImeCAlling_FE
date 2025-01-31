@@ -305,4 +305,23 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
             }
         }
     }
+
+    fun resetData() {
+        _scheduleName.value = ""
+        _scheduleMemo.value = ""
+        _scheduleDate.value = ""
+        _scheduleTime.value = ""
+        _searchLocation.value = emptyList()
+        _selectedLocationName.value = ""
+        _locationLongitude.value = ""
+        _locationLatitude.value = ""
+        _moveTime.value = 0
+        _freeTime.value = "TIGHT"
+        _repeatDates.value = mutableListOf()
+        _isRepeat.value = false
+        _startDate.value = ""
+        _endDate.value = ""
+        _categoryName.value = ""
+        _categoryColor.value = 0
+    }
 }
