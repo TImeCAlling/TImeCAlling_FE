@@ -1,9 +1,11 @@
 package com.umc.timeCAlling.data.network
 
 import android.content.SharedPreferences
+import android.util.Log
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
+import timber.log.Timber
 import java.io.IOException
 
 class TokenInterceptor(
@@ -15,15 +17,23 @@ class TokenInterceptor(
         val originalRequest = chain.request()
         val accessToken = sharedPreferences.getString("jwt", null) ?: return chain.proceed(originalRequest)
 
+        // 🔹 강제로 Access Token을 잘못된 값으로 설정 (테스트용)
+        val brokenAccessToken = "invalid_token"
+
         // 요청에 AccessToken 추가
         val authenticatedRequest = originalRequest.newBuilder()
             .header("Authorization", "Bearer $accessToken")
             .build()
 
+        // test
+        Log.d("TokenInterceptor", "🚀 API 요청 전: Access Token = $brokenAccessToken")
+
         val response = chain.proceed(authenticatedRequest)
 
         // 401 Unauthorized 발생 시 AccessToken 재발급
         if (response.code == 401) {
+            Log.w("TokenInterceptor", "401 Unauthorized 발생! 토큰 재발급 시도...")
+
             synchronized(this) { // 동기화 처리
                 val newAccessToken = refreshToken()
 
@@ -34,8 +44,9 @@ class TokenInterceptor(
                         .build()
 
                     response.close() // 기존 응답 닫기
-                    chain.proceed(newRequest) // 기존 요청 재시도
+                    chain.proceed(newRequest) // 새 Access Token으로 요청 재시도
                 } else {
+                    Log.e("TokenInterceptor", "토큰 재발급 실패! API 요청 실패")
                     response // 토큰 갱신 실패 시 기존 응답 반환
                 }
             }
@@ -49,6 +60,8 @@ class TokenInterceptor(
      */
     private fun refreshToken(): String? {
         val refreshToken = sharedPreferences.getString("refreshToken", null) ?: return null
+
+        Log.d("TokenInterceptor", "Refresh Token 사용하여 Access Token 재발급 요청...")
 
         val requestBody = RequestBody.create(
             "application/json".toMediaTypeOrNull(),
@@ -79,11 +92,16 @@ class TokenInterceptor(
                     apply()
                 }
 
+                Log.d("TokenInterceptor", "새 Access Token 저장 완료: $newAccessToken")
+                Log.d("TokenInterceptor", "새 Refresh Token 저장 완료: $newRefreshToken")
+
                 newAccessToken
             } else {
+                Log.e("TokenInterceptor", "토큰 재발급 실패! 서버 응답: ${response.code}")
                 null
             }
         } catch (e: IOException) {
+            Log.e("TokenInterceptor", "네트워크 오류로 인해 토큰 재발급 실패: ${e.message}")
             e.printStackTrace()
             null
         }
