@@ -279,4 +279,30 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
             }
         }
     }
+
+    fun editSchedule(){
+        val request = ScheduleRequestModel(
+            name = scheduleName.value ?: "",
+            body = scheduleMemo.value ?: "",
+            meetDate = scheduleDate.value ?: "",
+            meetTime = scheduleTime.value ?: "",
+            place = selectedLocationName.value ?: "",
+            longitude = locationLongitude.value ?: "",
+            latitude = locationLatitude.value ?: "",
+            moveTime = moveTime.value ?: 0,
+            freeTime = freeTime.value ?: "TIGHT",
+            repeatDays = repeatDates.value ?: emptyList(),
+            isRepeat =  isRepeat.value ?: false,
+            start = startDate.value ?: "",
+            end = endDate.value ?: "",
+            categories =  listOf(CategoriesRequestModel(categoryName.value ?: "", categoryColor.value ?: 0))
+        )
+        viewModelScope.launch {
+            scheduleRepository.editSchedule(request).onSuccess {
+                Log.d("editSchedule", "API 호출 성공: $it")
+            }.onFailure {
+                Log.e("editSchedule", "API 호출 실패: $it")
+            }
+        }
+    }
 }
