@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.compose.ui.semantics.text
@@ -26,12 +27,17 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private val viewModel: AddScheduleViewModel by activityViewModels() // ViewModel 초기화
     private lateinit var dateBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private var scheduleId : Int = -1
 
     override fun initObserver() {
 
     }
 
     override fun initView() {
+        scheduleId = arguments?.getInt("scheduleId") ?: -1
+
+        if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정 수정" } else { binding.tvAddScheduleTitle.text = "일정 추가" }
+
         initSavedData()
 
         binding.viewBottomSheetBackground.isClickable = false

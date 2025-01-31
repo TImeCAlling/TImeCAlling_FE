@@ -19,6 +19,7 @@ interface ScheduleService {
 
     @PATCH("/api/schedules/{scheduleId}")
     suspend fun editSchedule(
+        @Path("scheduleId") scheduleId: Int,
         @Body request: ScheduleRequestDto
     ):BaseResponse<ScheduleResponseDto>
 

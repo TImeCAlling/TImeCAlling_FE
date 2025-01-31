@@ -7,6 +7,6 @@ import com.umc.timeCAlling.data.dto.request.schedule.ScheduleResponseDto
 
 interface ScheduleDataSource {
     suspend fun createSchedule(requestDto:ScheduleRequestDto): BaseResponse<CreateScheduleResponseDto>
-    suspend fun editSchedule(requestDto:ScheduleRequestDto):BaseResponse<ScheduleResponseDto>
+    suspend fun editSchedule(scheduleId: Int,requestDto:ScheduleRequestDto):BaseResponse<ScheduleResponseDto>
     suspend fun deleteSchedule(scheduleId:Int):BaseResponse<ScheduleResponseDto>
 }

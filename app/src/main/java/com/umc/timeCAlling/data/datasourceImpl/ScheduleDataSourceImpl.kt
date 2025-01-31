@@ -12,6 +12,6 @@ class ScheduleDataSourceImpl @Inject constructor(
     private val scheduleService: ScheduleService
 ): ScheduleDataSource {
     override suspend fun createSchedule(requestDto: ScheduleRequestDto): BaseResponse<CreateScheduleResponseDto> = scheduleService.createSchedule(requestDto)
-    override suspend fun editSchedule(requestDto: ScheduleRequestDto): BaseResponse<ScheduleResponseDto> = scheduleService.editSchedule(requestDto)
+    override suspend fun editSchedule(scheduleId: Int,requestDto: ScheduleRequestDto): BaseResponse<ScheduleResponseDto> = scheduleService.editSchedule(scheduleId,requestDto)
     override suspend fun deleteSchedule(scheduleId: Int): BaseResponse<ScheduleResponseDto> = scheduleService.deleteSchedule(scheduleId)
 }

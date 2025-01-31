@@ -6,6 +6,6 @@ import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
 
 interface ScheduleRepository {
     suspend fun createSchedule(requestModel: ScheduleRequestModel): Result<CreateScheduleResponseModel>
-    suspend fun editSchedule(requestModel: ScheduleRequestModel): Result<ScheduleResponseModel>
+    suspend fun editSchedule(scheduleId: Int,requestModel: ScheduleRequestModel): Result<ScheduleResponseModel>
     suspend fun deleteSchedule(scheduleId:Int):Result<ScheduleResponseModel>
 }

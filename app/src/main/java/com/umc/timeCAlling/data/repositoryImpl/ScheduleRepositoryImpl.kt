@@ -13,8 +13,8 @@ class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun createSchedule(requestModel: ScheduleRequestModel): Result<CreateScheduleResponseModel> =
         runCatching { scheduleDataSource.createSchedule(requestModel.toScheduleRequestDto()).result.toCreateScheduleResponseModel() }
 
-    override suspend fun editSchedule(requestModel: ScheduleRequestModel): Result<ScheduleResponseModel> =
-        runCatching { scheduleDataSource.editSchedule(requestModel.toScheduleRequestDto()).result.toScheduleResponseModel() }
+    override suspend fun editSchedule(scheduleId: Int,requestModel: ScheduleRequestModel): Result<ScheduleResponseModel> =
+        runCatching { scheduleDataSource.editSchedule(scheduleId,requestModel.toScheduleRequestDto()).result.toScheduleResponseModel() }
 
     override suspend fun deleteSchedule(scheduleId: Int): Result<ScheduleResponseModel> =
         runCatching { scheduleDataSource.deleteSchedule(scheduleId).result.toScheduleResponseModel() }

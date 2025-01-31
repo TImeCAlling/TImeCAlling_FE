@@ -270,9 +270,9 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         }
     }
 
-    fun deleteSchedule(){
+    fun deleteSchedule(scheduleId: Int){
         viewModelScope.launch {
-            scheduleRepository.deleteSchedule(1).onSuccess { response ->
+            scheduleRepository.deleteSchedule(scheduleId).onSuccess { response ->
                 Log.d("deleteSchedule", "API 호출 성공: $response")
             }.onFailure {error->
                 Log.e("deleteSchedule", "API 호출 실패: $error")
@@ -280,7 +280,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         }
     }
 
-    fun editSchedule(){
+    fun editSchedule(scheduleId: Int){
         val request = ScheduleRequestModel(
             name = scheduleName.value ?: "",
             body = scheduleMemo.value ?: "",
@@ -298,7 +298,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
             categories =  listOf(CategoriesRequestModel(categoryName.value ?: "", categoryColor.value ?: 0))
         )
         viewModelScope.launch {
-            scheduleRepository.editSchedule(request).onSuccess {
+            scheduleRepository.editSchedule(scheduleId, request).onSuccess {
                 Log.d("editSchedule", "API 호출 성공: $it")
             }.onFailure {
                 Log.e("editSchedule", "API 호출 실패: $it")
