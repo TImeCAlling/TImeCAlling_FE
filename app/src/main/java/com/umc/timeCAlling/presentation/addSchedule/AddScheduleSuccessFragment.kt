@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
+import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -16,8 +17,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding>(R.layout.fragment_add_schedule_success) {
 
     private val viewModel: AddScheduleViewModel by activityViewModels()
+    private var scheduleId : Int = -1
 
     override fun initView() {
+
+        if (scheduleId != -1) { binding.tvAddScheduleSuccessText.text = "일정이 수정되었습니다." } else { binding.tvAddScheduleSuccessText.text = "일정이 추가되었습니다." }
 
         bottomNavigationRemove()
         moveToHomeFragment()
@@ -50,7 +54,6 @@ class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding
 
     private fun moveToHomeFragment() {
         binding.tvAddScheduleSuccessNext.setOnClickListener {
-            viewModel.deleteSchedule()
             findNavController().navigate(R.id.action_addScheduleSuccessFragment_to_homeFragment)
         }
     }

@@ -1,6 +1,7 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.content.res.ColorStateList
+import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -36,7 +37,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     override fun initView() {
         scheduleId = arguments?.getInt("scheduleId") ?: -1
 
-        if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정 수정" } else { binding.tvAddScheduleTitle.text = "일정 추가" }
+        if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정수정" } else { binding.tvAddScheduleTitle.text = "일정추가" }
 
         initSavedData()
 
@@ -304,7 +305,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     private fun moveToAddScheduleSecond() {
         binding.tvAddScheduleNext.setOnClickListener {
-            findNavController().navigate(R.id.action_addScheduleFragment_to_addScheduleSecondFragment)
+            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+            findNavController().navigate(R.id.action_addScheduleFragment_to_addScheduleSecondFragment, bundle)
         }
     }
 }

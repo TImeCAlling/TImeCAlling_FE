@@ -2,6 +2,7 @@ package com.umc.timeCAlling.presentation.addSchedule
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -36,8 +37,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private lateinit var categoryBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var isRepeatEnabled = false
     private var selectedDays = mutableListOf<String>()
+    private var scheduleId : Int = -1
 
     override fun initView() {
+        scheduleId = arguments?.getInt("scheduleId") ?: -1
+
+        if (scheduleId != -1) { binding.tvAddScheduleSecondTitle.text = "일정수정" } else { binding.tvAddScheduleSecondTitle.text = "일정추가" }
+
 
         binding.viewBottomSheetBackground.isClickable = false
 
@@ -351,8 +357,9 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
     private fun moveToAddScheduleSuccess() {
         binding.tvAddScheduleNext.setOnClickListener {
-            findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment)
-            viewModel.createSchedule()
+            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+            findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment, bundle)
+            if(scheduleId != 1){ viewModel.createSchedule() }else{ viewModel.editSchedule(scheduleId) }
         }
     }
 }
