@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
@@ -18,23 +19,36 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentMyprofileBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.mypage.adapter.MyprofileTimeAdapter
+import com.umc.timeCAlling.util.network.UiState
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragment_myprofile) {
 
+    private val viewModel: MyprofileViewModel by viewModels()
     private var isPhotoSelected = false
     private var isInputValid = false
     private var previousCenterPosition: Int? = null
 
-    private val timeOptions = listOf("  ", "  ", "15분", "30분", "45분", "60분", "90분+", "  ", "  ")
+    private val timeOptions = listOf(" ", " ", "15분", "30분", "45분", "60분", "90분+", " ", " ")
     private val spareOptions by lazy {
         listOf(
             binding.tvMyprofileSpareOption1,
@@ -48,14 +62,18 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     private lateinit var spareBottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun initView() {
-        setClickListener()
+        viewModel.getUser()
+        observeViewModel()
+
         initBottomSheets()
         initBottomSheetActions()
         initSpareBottomSheetActions()
         initEditName()
+
+        setClickListener()
         setupRecyclerView()
-        observeKeyboardAndClearFocus()
         setupTouchOutsideToClearFocus()
+
         hideViews(
             R.id.main_bnv,
             R.id.iv_main_add_schedule_btn,
@@ -69,6 +87,50 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
     }
 
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userInfo.collectLatest { state ->
+                    when (state) {
+                        is UiState.Loading -> {
+                            Log.d("MyprofileFragment", "Loading user data")
+                        }
+                        is UiState.Success -> {
+                            val user = state.data
+                            Log.d("MyprofileFragment", "UI 업데이트: $user")
+                            binding.tvMyprofileCurrentName.text = user.nickname
+                            binding.tvMyprofileNameEdit.text = user.nickname
+                            binding.tvMyprofileTimeEdit.text = user.avgPrepTime.toString()
+                            binding.tvMyprofileSpareEdit.text = when (user.freeTime) {
+                                "PLENTY" -> "여유"
+                                "RELAXED" -> "넉넉"
+                                "TIGHT" -> "딱딱"
+                                else -> ""
+                            }
+
+                            if (user.profileImage.isNullOrEmpty()) {
+                                binding.ivMyprofileOvalEdit.setImageResource(R.drawable.shape_rect_999_trans_fill)
+                                binding.ivMyprofileOvalEdit.visibility = View.VISIBLE
+                            } else {
+                                Glide.with(this@MyprofileFragment)
+                                    .load(user.profileImage)
+                                    .placeholder(R.drawable.shape_rect_999_trans_fill)
+                                    .error(R.drawable.shape_rect_999_trans_fill)
+                                    .into(binding.ivMyprofileOvalEdit)
+                                binding.ivMyprofileOvalEdit.visibility = View.INVISIBLE
+                            }
+                        }
+                        is UiState.Error -> {
+                            Toast.makeText(requireContext(), "사용자 정보 로드 실패.", Toast.LENGTH_SHORT).show()
+                            Log.e("MyprofileFragment", "사용자 정보 로드 실패")
+                        }
+                        UiState.Empty -> Log.d("MyprofileFragment", "사용자 정보 없음")
+                    }
+                }
+            }
+        }
+    }
+
     private fun setClickListener() {
         binding.clMyprofileCamera.setOnClickListener { openGallery() }
         binding.ivMyprofileBack.setOnClickListener { findNavController().popBackStack() }
@@ -77,6 +139,11 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         binding.ivMyprofileSpareArrow.setOnClickListener { toggleBottomSheetState(spareBottomSheetBehavior) }
         binding.clMyprofileNameDelete.setOnClickListener { clearInputField() }
         binding.tvMyprofileWithdraw.setOnClickListener { showWithdrawDialog() }
+
+        // 뒤로가기
+        binding.ivMyprofileBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun handleBackgroundVisibility(newState: Int) {
@@ -117,9 +184,10 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         }
 
         binding.tvMyprofileTimeSave.setOnClickListener {
-            val selectedTime = timeOptions.getOrNull(previousCenterPosition ?: -1)?.trim().orEmpty()
-            if (selectedTime.isNotEmpty()) {
-                binding.tvMyprofileTimeEdit.text = selectedTime
+            val numericTime = timeOptions.getOrNull(previousCenterPosition ?: -1)
+                ?.trim()?.takeWhile { it.isDigit() }.orEmpty()
+            if (numericTime.isNotEmpty()) {
+                binding.tvMyprofileTimeEdit.text = numericTime
                 timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             } else {
                 showToast("시간을 선택해주세요.")
@@ -152,7 +220,13 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     }
 
     private fun setDefaultSelectedSpareOption() {
-        updateSelectedSpareOption(binding.tvMyprofileSpareOption2)
+        val selectedOption = when (binding.tvMyprofileSpareEdit.text.toString()) {
+            "여유" -> binding.tvMyprofileSpareOption1
+            "넉넉" -> binding.tvMyprofileSpareOption2
+            "딱딱" -> binding.tvMyprofileSpareOption3
+            else -> binding.tvMyprofileSpareOption2 // 기본값 설정
+        }
+        updateSelectedSpareOption(selectedOption)
     }
 
     private fun updateSelectedSpareOption(selectedOption: View) {
@@ -257,18 +331,6 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         }
     }
 
-    private fun observeKeyboardAndClearFocus() {
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-            val rect = Rect()
-            binding.root.getWindowVisibleDisplayFrame(rect)
-            val screenHeight = binding.root.rootView.height
-            val keyboardHeight = screenHeight - rect.bottom
-            if (keyboardHeight == 0) {
-                binding.etMyprofileNameInput.clearFocus()
-            }
-        }
-    }
-
     private fun setupTouchOutsideToClearFocus() {
         binding.clMyprofileName.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) hideKeyboardIfNeeded()
@@ -303,7 +365,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         if (result.resultCode == androidx.fragment.app.FragmentActivity.RESULT_OK) {
             val selectedImageUri: Uri? = result.data?.data
             if (selectedImageUri != null) {
-                binding.ivMyprofileOval1.setImageURI(selectedImageUri)
+                binding.ivMyprofileOvalEdit.setImageURI(selectedImageUri)
                 binding.ivMyprofileFace.visibility = View.INVISIBLE
                 isPhotoSelected = true
             } else {
@@ -316,6 +378,16 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val adapter = MyprofileTimeAdapter(timeOptions)
 
+        val avgPrepTime = binding.tvMyprofileTimeEdit.text.toString().toIntOrNull() ?: 15
+        val initialPosition = when (avgPrepTime) {
+            15 -> 2
+            30 -> 3
+            45 -> 4
+            60 -> 5
+            90 -> 6
+            else -> 2 // 기본값 설정
+        }
+
         binding.rvMyprofileTimeRecyclerView.apply {
             this.layoutManager = layoutManager
             this.adapter = adapter
@@ -324,9 +396,9 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
             snapHelper.attachToRecyclerView(this)
 
             post {
-                val initialPosition = 2
                 adapter.updateItemColor(initialPosition, true)
                 previousCenterPosition = initialPosition
+                layoutManager.scrollToPosition(initialPosition)
             }
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -371,3 +443,4 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
+
