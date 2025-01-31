@@ -121,22 +121,23 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun handleLoginSuccess(accessToken: String,callback: (Boolean) -> Unit) {
+    fun handleLoginSuccess(accessToken: String, refreshToken: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             loginRepository.kakaoLogin(KakaoLoginRequestModel(accessToken)).onSuccess { response ->
-                Log.d("LoginViewModel", "카카오 로그인 성공: ${response.accessToken}")
-                    spf.edit().apply {
-                        putString("jwt", response.accessToken)
-                        putString("refreshToken", response.refreshToken)
-                        putBoolean("isLoggedIn", true)
-                        apply()
-                    }
-                callback(true) // 로그인 성공 시 콜백 함수 호출
-            }.onFailure { error ->
-                    Log.e("LoginViewModel", "서버 로그인 실패: ${error.message}")
-                callback(false) // 로그인 실패 시 콜백 함수 호출
-            }
+                Log.d("SignupViewModel", "카카오 로그인 성공: ${response.accessToken}")
 
+                spf.edit().apply {
+                    putString("jwt", response.accessToken)  // 새 AccessToken 저장
+                    putString("refreshToken", response.refreshToken)  // 새 RefreshToken 저장
+                    putBoolean("isLoggedIn", true)
+                    apply()
+                }
+
+                callback(true)
+            }.onFailure { error ->
+                Log.e("SignupViewModel", "서버 로그인 실패: ${error.message}")
+                callback(false)
+            }
         }
     }
 }

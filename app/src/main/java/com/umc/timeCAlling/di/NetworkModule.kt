@@ -1,5 +1,7 @@
 package com.umc.timeCAlling.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.GsonBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TimeCAllingApplication
@@ -9,6 +11,7 @@ import com.umc.timeCAlling.data.datasource.TmapDataSource
 import com.umc.timeCAlling.data.datasourceImpl.LoginDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.ScheduleDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.TmapDataSourceImpl
+import com.umc.timeCAlling.data.network.TokenInterceptor
 import com.umc.timeCAlling.data.service.LoginService
 import com.umc.timeCAlling.data.service.ScheduleService
 import com.umc.timeCAlling.data.service.TmapService
@@ -17,6 +20,7 @@ import com.umc.timeCAlling.util.TmapInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -50,13 +54,15 @@ object NetworkModule {
     @Provides
     @Singleton
     fun providesOkHttpClient(
-        authInterceptor: AuthInterceptor
+        authInterceptor: AuthInterceptor,
+        tokenInterceptor: TokenInterceptor
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder().apply {
             addInterceptor(authInterceptor)
+            addInterceptor(tokenInterceptor) // TokenInterceptor 추가
             addInterceptor(loggingInterceptor)
             addInterceptor(TmapInterceptor())
             connectTimeout(10, TimeUnit.SECONDS)
@@ -71,6 +77,12 @@ object NetworkModule {
     fun provideAuthInterceptor(
         authInterceptor: AuthInterceptor,
     ): Interceptor = authInterceptor
+
+    @Provides
+    @Singleton
+    fun provideTokenInterceptor(sharedPreferences: SharedPreferences): TokenInterceptor {
+        return TokenInterceptor(sharedPreferences, OkHttpClient())
+    }
 
     @Provides
     @Singleton
