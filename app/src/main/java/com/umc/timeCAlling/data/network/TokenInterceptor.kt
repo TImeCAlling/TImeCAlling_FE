@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.IOException
@@ -22,7 +23,7 @@ class TokenInterceptor(
 
         // 요청에 AccessToken 추가
         val authenticatedRequest = originalRequest.newBuilder()
-            .header("Authorization", "Bearer $accessToken")
+            .header("Authorization", "Bearer $brokenAccessToken") // 테스트 중
             .build()
 
         // test
@@ -62,22 +63,27 @@ class TokenInterceptor(
         val refreshToken = sharedPreferences.getString("refreshToken", null) ?: return null
 
         Log.d("TokenInterceptor", "Refresh Token 사용하여 Access Token 재발급 요청...")
+        Log.d("TokenInterceptor", "Refresh Token: $refreshToken")
 
-        val requestBody = RequestBody.create(
-            "application/json".toMediaTypeOrNull(),
-            JSONObject().apply {
-                put("accessToken", "")
-                put("refreshToken", refreshToken)
-            }.toString()
-        )
+        val requestBodyJson = JSONObject().apply {
+            put("accessToken", "")
+            put("refreshToken", refreshToken)
+        }.toString()
+
+        val requestBody = requestBodyJson.toRequestBody("application/json".toMediaTypeOrNull())
 
         val request = Request.Builder()
-            .url("https://your.api.url/api/users/token/refresh") // 실제 서버 URL 사용
+            .url("http://43.202.195.202:8080/swagger-ui/index.html#/user-controller/refreshToken") // 서버 URL
             .post(requestBody)
             .build()
 
         return try {
             val response = okHttpClient.newCall(request).execute()
+            Log.d("TokenInterceptor", "Refresh Token 요청 응답 코드: ${response.code}")
+
+            val responseBody = response.body?.string()
+            Log.d("TokenInterceptor", "Refresh Token 응답 본문: $responseBody")
+
             if (response.isSuccessful) {
                 val responseBody = response.body?.string()
                 val jsonResponse = JSONObject(responseBody ?: "{}")
@@ -98,6 +104,7 @@ class TokenInterceptor(
                 newAccessToken
             } else {
                 Log.e("TokenInterceptor", "토큰 재발급 실패! 서버 응답: ${response.code}")
+                Log.e("TokenInterceptor", "서버 응답 메시지: $responseBody")
                 null
             }
         } catch (e: IOException) {

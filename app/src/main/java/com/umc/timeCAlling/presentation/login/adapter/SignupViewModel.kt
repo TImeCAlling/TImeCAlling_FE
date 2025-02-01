@@ -124,7 +124,8 @@ class SignupViewModel @Inject constructor(
     fun handleLoginSuccess(accessToken: String, refreshToken: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             loginRepository.kakaoLogin(KakaoLoginRequestModel(accessToken)).onSuccess { response ->
-                Log.d("SignupViewModel", "카카오 로그인 성공: ${response.accessToken}")
+                Log.d("SignupViewModel", "카카오 로그인 성공: Access Token = ${response.accessToken}")
+                Log.d("SignupViewModel", "카카오 로그인 성공: Refresh Token = ${response.refreshToken}")
 
                 spf.edit().apply {
                     putString("jwt", response.accessToken)  // 새 AccessToken 저장
