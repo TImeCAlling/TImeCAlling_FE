@@ -3,11 +3,13 @@
 import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.data.datasource.TmapDataSource
 import com.umc.timeCAlling.data.repositoryImpl.LoginRepositoryImpl
+import com.umc.timeCAlling.data.repositoryImpl.MypageRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.ScheduleRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.TestRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.TmapRepositoryImpl
 import com.umc.timeCAlling.data.service.TestService
 import com.umc.timeCAlling.domain.repository.LoginRepository
+import com.umc.timeCAlling.domain.repository.MypageRepository
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
 import com.umc.timeCAlling.domain.repository.TestRepository
 import com.umc.timeCAlling.domain.repository.TmapRepository
@@ -43,4 +45,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun ProvidesLoginRepository(loginRepositoryImpl: LoginRepositoryImpl): LoginRepository = loginRepositoryImpl
+
+    @Provides
+    @Singleton
+    fun ProvidesMypageRepository(mypageRepositoryImpl: MypageRepositoryImpl): MypageRepository = mypageRepositoryImpl
+
 }

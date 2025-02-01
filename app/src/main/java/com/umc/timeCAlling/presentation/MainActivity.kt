@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.presentation
 
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment

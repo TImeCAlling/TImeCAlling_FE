@@ -8,4 +8,7 @@ interface ScheduleRepository {
     suspend fun createSchedule(requestModel: ScheduleRequestModel): Result<CreateScheduleResponseModel>
     suspend fun editSchedule(scheduleId: Int,requestModel: ScheduleRequestModel): Result<ScheduleResponseModel>
     suspend fun deleteSchedule(scheduleId:Int):Result<ScheduleResponseModel>
+    suspend fun getScheduleByDate(date: String) : Result<SchedulesResponseModel>
+    suspend fun getTodaySchedules() : Result<TodaySchedulesResponseModel>
+    suspend fun getSuccessRate() : Result<SuccessRateResponseModel>
 }

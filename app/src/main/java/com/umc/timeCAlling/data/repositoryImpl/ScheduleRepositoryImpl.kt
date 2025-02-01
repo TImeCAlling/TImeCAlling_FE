@@ -4,6 +4,13 @@ import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.SchedulesResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.TodaySchedulesResponseModel
+import com.umc.timeCAlling.domain.model.response.tmap.CarTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.PublicTransportationModel
+import com.umc.timeCAlling.domain.model.response.tmap.WalkTransportationModel
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
 import javax.inject.Inject
 
@@ -18,4 +25,13 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun deleteSchedule(scheduleId: Int): Result<ScheduleResponseModel> =
         runCatching { scheduleDataSource.deleteSchedule(scheduleId).result.toScheduleResponseModel() }
+   
+    override suspend fun getScheduleByDate(date: String): Result<SchedulesResponseModel> =
+        runCatching { scheduleDataSource.getScheduleByDate(date).result.toSchedulesResponseModel() }
+
+    override suspend fun getTodaySchedules(): Result<TodaySchedulesResponseModel> =
+        runCatching{ scheduleDataSource.getTodaySchedules().result.toTodaySchedulesResponseModel() }
+
+    override suspend fun getSuccessRate(): Result<SuccessRateResponseModel> =
+        runCatching{ scheduleDataSource.getSuccessRate().result.toSuccessRateResponseModel() }
 }

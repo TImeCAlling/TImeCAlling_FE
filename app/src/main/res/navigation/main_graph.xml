@@ -66,7 +66,11 @@
             android:id="@+id/myprofileFragment"
             android:name="com.umc.timeCAlling.presentation.mypage.MyprofileFragment"
             android:label="MyprofileFragment"
-            tools:layout="@layout/fragment_myprofile"/>
+            tools:layout="@layout/fragment_myprofile">
+            <action
+                android:id="@+id/action_myprofileFragment_to_loginFragment"
+                app:destination="@id/loginTab"/>
+        </fragment>
     </navigation>
 
     <navigation

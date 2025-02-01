@@ -9,4 +9,7 @@ interface ScheduleDataSource {
     suspend fun createSchedule(requestDto:ScheduleRequestDto): BaseResponse<CreateScheduleResponseDto>
     suspend fun editSchedule(scheduleId: Int,requestDto:ScheduleRequestDto):BaseResponse<ScheduleResponseDto>
     suspend fun deleteSchedule(scheduleId:Int):BaseResponse<ScheduleResponseDto>
+    suspend fun getScheduleByDate(date: String): BaseResponse<SchedulesResponseDto>
+    suspend fun getTodaySchedules(): BaseResponse<TodaySchedulesResponseDto>
+    suspend fun getSuccessRate(): BaseResponse<SuccessRateResponseDto>
 }
