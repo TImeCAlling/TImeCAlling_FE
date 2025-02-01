@@ -22,17 +22,14 @@ interface ScheduleService {
 
     @GET("/api/schedules/date")
     suspend fun getScheduleByDate(
-        @Header("Authorization") accessToken : String = "",
         @Query("date") date: String // ex. ?date=2025-01-20
     ) : BaseResponse<SchedulesResponseDto>
 
     @GET("/api/schedules/today")
     suspend fun getTodaySchedules(
-        @Header("Authorization") accessToken : String = ""
     ) : BaseResponse<TodaySchedulesResponseDto>
 
     @GET("/api/schedules/success-rate")
     suspend fun getSuccessRate(
-        @Header("Authorization") accessToken : String = ""
     ) : BaseResponse<SuccessRateResponseDto>
 }

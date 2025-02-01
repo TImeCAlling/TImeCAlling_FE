@@ -24,6 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.util.extension.viewLifeCycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -228,14 +229,20 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             DetailSchedule("컴퓨터 구조4", "매주 수요일 반복", "공부", false, "2:00", 2),
             DetailSchedule("컴퓨터 구조5", "매주 목요일 반복", "test", false, "4:00", 1)
         )
-        val adapter = DetailScheduleRVA(list)
+        val adapter = DetailScheduleRVA()
         binding.rvCalendarDetailSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = adapter
         }
-        scheduleViewModel.schedules.observe(viewLifecycleOwner) { schedules ->
-            //adapter.submitList(schedules)
-            Log.d("scheduleViewModel : ", schedules.toString())
+        scheduleViewModel.schedules.observe(viewLifecycleOwner) { scheduleList ->
+            if(scheduleList.isEmpty()) {
+                binding.layoutNoSchedule.visibility = View.VISIBLE
+                binding.rvCalendarDetailSchedule.visibility = View.GONE
+            } else {
+                binding.layoutNoSchedule.visibility = View.GONE
+                binding.rvCalendarDetailSchedule.visibility = View.VISIBLE
+                adapter.setScheduleList(scheduleList = scheduleList as ArrayList<ScheduleByDateResponseModel>)
+            }
         }
         adapter.itemClick = object : DetailScheduleRVA.ItemClick {
             override fun onClick(view: View, position: Int) {
