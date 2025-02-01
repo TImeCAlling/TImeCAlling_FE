@@ -34,6 +34,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentMyprofileBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import com.umc.timeCAlling.presentation.mypage.adapter.MyprofileTimeAdapter
 import com.umc.timeCAlling.util.network.UiState
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +44,9 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragment_myprofile) {
 
-    private val viewModel: MyprofileViewModel by viewModels()
+    private val myprofileViewModel: MyprofileViewModel by viewModels()
+    private val signupViewModel: SignupViewModel by viewModels()
+
     private var isPhotoSelected = false
     private var isInputValid = false
     private var previousCenterPosition: Int? = null
@@ -62,7 +65,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     private lateinit var spareBottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun initView() {
-        viewModel.getUser()
+        myprofileViewModel.getUser()
         observeViewModel()
 
         initBottomSheets()
@@ -90,7 +93,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userInfo.collectLatest { state ->
+                myprofileViewModel.userInfo.collectLatest { state ->
                     when (state) {
                         is UiState.Loading -> {
                             Log.d("MyprofileFragment", "Loading user data")
@@ -431,12 +434,37 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
         val btn = dialog.findViewById<TextView>(R.id.btn_dialog)
         btn.setOnClickListener {
-            /* 회원탈퇴 기능 구현 */
-            showToast("회원탈퇴 구현 해주세요!!")
             dialog.dismiss()
+            deleteUser()
         }
 
         dialog.show()
+    }
+
+    private fun deleteUser(){
+        myprofileViewModel.deleteUser()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myprofileViewModel.deleteState.collectLatest { state ->
+                    when (state) {
+                        is UiState.Success -> {
+                            Log.d("MyprofileFragment", "회원탈퇴 성공, 저장된 토큰 삭제 후 로그인 화면으로 이동")
+
+                            signupViewModel.clearAuthToken()
+
+                            findNavController().popBackStack(R.id.myprofileFragment, true)
+                            findNavController().navigate(R.id.loginFragment) // 로그인 화면으로 이동
+                        }
+                        is UiState.Error -> {
+                            Toast.makeText(requireContext(), "회원탈퇴 실패: ${state.error?.message}", Toast.LENGTH_SHORT).show()
+                            Log.e("MyprofileFragment", "회원탈퇴 실패")
+                        }
+                        else -> {} // 로딩 상태 처리 가능
+                    }
+                }
+            }
+        }
+
     }
 
     private fun showToast(message: String) {
