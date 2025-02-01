@@ -6,4 +6,6 @@ import java.io.Serializable
 data class CategoriesResponseModel(
     val category : String,
     val color : Int
-)
+) {
+    fun toCategoriesResponseDto() = CategoriesResponseDto(category, color)
+}

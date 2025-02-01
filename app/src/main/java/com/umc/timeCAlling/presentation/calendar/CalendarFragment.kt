@@ -14,6 +14,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +24,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.util.extension.viewLifeCycle
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -34,6 +38,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var selectedDate: LocalDate? = null
     private lateinit var navController: NavController
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
+    private val scheduleViewModel: ScheduleViewModel by viewModels()
 
     override fun initView() {
         initCalendar()
@@ -174,7 +179,10 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     }
 
     private fun initDatePicker() {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         selectedDate = LocalDate.now()
+        scheduleViewModel.getScheduleByDate(selectedDate!!.format(formatter))
+
         binding.layoutCalendarDatePick.removeAllViews()
 
         getNext7Days().forEachIndexed { index, date ->
@@ -187,6 +195,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
             itemView.setOnClickListener {
                 selectedDate = date
+                scheduleViewModel.getScheduleByDate(selectedDate!!.format(formatter))
                 updateSelectionUI(index)
             }
 
@@ -212,8 +221,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         }
     }
 
-
-
     private fun initDetailScheduleRV() {
         val list = arrayListOf(
             DetailSchedule("컴퓨터 구조", "매주 수요일 반복", "일상", true, "9:00", 5),
@@ -222,10 +229,20 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             DetailSchedule("컴퓨터 구조4", "매주 수요일 반복", "공부", false, "2:00", 2),
             DetailSchedule("컴퓨터 구조5", "매주 목요일 반복", "test", false, "4:00", 1)
         )
-        val adapter = DetailScheduleRVA(list)
+        val adapter = DetailScheduleRVA()
         binding.rvCalendarDetailSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = adapter
+        }
+        scheduleViewModel.schedules.observe(viewLifecycleOwner) { scheduleList ->
+            if(scheduleList.isEmpty()) {
+                binding.layoutNoSchedule.visibility = View.VISIBLE
+                binding.rvCalendarDetailSchedule.visibility = View.GONE
+            } else {
+                binding.layoutNoSchedule.visibility = View.GONE
+                binding.rvCalendarDetailSchedule.visibility = View.VISIBLE
+                adapter.setScheduleList(scheduleList = scheduleList as ArrayList<ScheduleByDateResponseModel>)
+            }
         }
         adapter.itemClick = object : DetailScheduleRVA.ItemClick {
             override fun onClick(view: View, position: Int) {

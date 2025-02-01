@@ -8,10 +8,16 @@ import androidx.core.view.marginEnd
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleDetailBinding
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 
-class DetailScheduleRVA(
-    private val detailSchedules: List<DetailSchedule>
-) : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
+class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
+
+    private var detailSchedules = ArrayList<ScheduleByDateResponseModel>()
+
+    fun setScheduleList(scheduleList: ArrayList<ScheduleByDateResponseModel>) {
+        this.detailSchedules = scheduleList
+        notifyDataSetChanged()
+    }
 
     interface ItemClick {
         fun onClick(view: View, position: Int)
@@ -41,11 +47,11 @@ class DetailScheduleRVA(
     }
 
     override fun onBindViewHolder(holder: DetailScheduleViewHolder, position: Int) {
-        holder.title.text = detailSchedules[position].title
-        holder.repeatInfo.text = detailSchedules[position].repeatInfo
-        holder.category.text = detailSchedules[position].category
-        holder.time.text = detailSchedules[position].time
-        holder.timeType.text = if(detailSchedules[position].isMorning) "오전" else "오후"
+        holder.title.text = detailSchedules[position].name
+        holder.repeatInfo.text = detailSchedules[position].repeatDays[0]
+        holder.category.text = detailSchedules[position].categories[0].category
+        holder.time.text = detailSchedules[position].meetTime
+        holder.timeType.text = "오전"         //나중에 구현
 
         if(position == 0) {
             holder.view.setBackgroundResource(R.drawable.shape_rect_999_mint_fill)
@@ -53,13 +59,13 @@ class DetailScheduleRVA(
             holder.time.setTextColor(holder.time.context.getColor(R.color.mint_600))
         }
 
-        holder.checkBtn.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "${detailSchedules[position].title} Clicked!", Toast.LENGTH_SHORT).show()
+        //----------------- 아래 부분은 api 연결 확인 후에 ----------//
+        /*holder.checkBtn.setOnClickListener {
             detailSchedules[position].isChecked = !detailSchedules[position].isChecked
             holder.checkBtn.setImageResource(if(detailSchedules[position].isChecked) R.drawable.ic_schedule_detail_check_mint else R.drawable.ic_schedule_detail_check)
-        }
+        }*/
 
-        //일정에 참여중인 인원이 3명 이상일 때
+        /*//일정에 참여중인 인원이 3명 이상일 때
         if(detailSchedules[position].memberCount >= 3) {
             holder.extraMembersCount.text = "+${detailSchedules[position].memberCount - 2}"
         }
@@ -69,7 +75,7 @@ class DetailScheduleRVA(
             holder.memberSecond.layoutParams = (holder.memberSecond.layoutParams as ViewGroup.MarginLayoutParams).apply {
                 marginEnd = 0
             }
-        }
+        }*/
 
         holder.itemView.setOnClickListener {
             itemClick?.onClick(it, position)
