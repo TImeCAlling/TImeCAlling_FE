@@ -73,7 +73,7 @@ class TokenInterceptor(
         val requestBody = requestBodyJson.toRequestBody("application/json".toMediaTypeOrNull())
 
         val request = Request.Builder()
-            .url("http://43.202.195.202:8080/swagger-ui/index.html#/user-controller/refreshToken") // 서버 URL
+            .url("https://timecalling.shop/user-controller/refreshToken") // 서버 URL
             .post(requestBody)
             .build()
 
