@@ -3,7 +3,6 @@ package com.umc.timeCAlling.presentation.mypage
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Rect
 import android.net.Uri
 import android.provider.MediaStore
 import android.text.Editable
@@ -21,7 +20,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -29,7 +27,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentMyprofileBinding
