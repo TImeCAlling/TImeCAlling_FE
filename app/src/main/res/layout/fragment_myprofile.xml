@@ -67,10 +67,10 @@
             android:visibility="visible">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_myprofile_oval_1"
+                android:id="@+id/iv_myprofile_oval_edit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/shape_rect_999_mint300_fill"
+                android:background="@color/mint_300"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -145,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="24dp"
-                android:text="김지각"
+                android:text=" "
                 android:fontFamily="@font/pretendard_semibold"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
@@ -193,7 +193,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="김지각"
+            android:text=" "
             android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/gray_500"
             style="@style/MaterialAlertDialog.Material3.Body.Text"
@@ -232,7 +232,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="15분"
+            android:text=" "
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/gray_500"
+            style="@style/MaterialAlertDialog.Material3.Body.Text"
+            app:layout_constraintEnd_toStartOf="@id/tv_myprofile_time_min"
+            app:layout_constraintTop_toTopOf="@id/tv_myprofile_time"/>
+
+        <TextView
+            android:id="@+id/tv_myprofile_time_min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="분"
             android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/gray_500"
             style="@style/MaterialAlertDialog.Material3.Body.Text"
@@ -271,7 +283,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="여유"
+            android:text=" "
             android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/gray_500"
             style="@style/MaterialAlertDialog.Material3.Body.Text"
@@ -674,15 +686,16 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_myprofile_time_title1"
-                    android:layout_marginTop="40dp"
-                    tools:listitem="@layout/item_signup_time"/>
+                    android:layout_marginHorizontal="40dp"
+                    tools:listitem="@layout/item_signup_time"
+                    android:layout_marginTop="40dp"/>
 
                 <!-- 양 끝 연하게 -->
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_signup_rv_1"
-                    android:alpha="0.7"
+                    android:alpha="0.8"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/rv_myprofile_time_recyclerView"/>
 
@@ -690,7 +703,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_signup_rv_2"
-                    android:alpha="0.7"
+                    android:alpha="0.8"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/rv_myprofile_time_recyclerView"/>
 

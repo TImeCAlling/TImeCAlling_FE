@@ -139,4 +139,15 @@ class SignupViewModel @Inject constructor(
 
         }
     }
+
+    fun clearAuthToken() {
+        spf.edit().apply {
+            remove("jwt") // 🔥 accessToken 삭제
+            remove("refreshToken") // 🔥 refreshToken 삭제
+            remove("isLoggedIn") // 🔥 로그인 상태 초기화
+            apply()
+        }
+        Log.d("SignupViewModel", "토큰 삭제 완료: accessToken 및 refreshToken 초기화됨")
+    }
+
 }
