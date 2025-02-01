@@ -1,8 +1,14 @@
 package com.umc.timeCAlling.data.service
 
 import com.umc.timeCAlling.data.dto.BaseResponse
-import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleRequestDto
+import com.umc.timeCAlling.data.dto.request.schedule.ScheduleRequestDto
 import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleResponseDto
+import com.umc.timeCAlling.data.dto.request.schedule.ScheduleResponseDto
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
 import com.umc.timeCAlling.data.dto.response.schedule.ScheduleByDateResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SchedulesResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SuccessRateResponseDto
@@ -15,12 +21,23 @@ import retrofit2.http.Query
 
 interface ScheduleService {
 
-    @POST("/schedule-controller/schedules")
+    @POST("/api/schedules")
     suspend fun createSchedule(
-            @Body request: CreateScheduleRequestDto
+        @Body request: ScheduleRequestDto
     ): BaseResponse<CreateScheduleResponseDto>
 
-    @GET("/api/schedules/date")
+    @PATCH("/api/schedules/{scheduleId}")
+    suspend fun editSchedule(
+        @Path("scheduleId") scheduleId: Int,
+        @Body request: ScheduleRequestDto
+    ):BaseResponse<ScheduleResponseDto>
+
+    @DELETE("/api/schedules/{scheduleId}")
+    suspend fun deleteSchedule(
+        @Path("scheduleId") scheduleId: Int
+    ):BaseResponse<ScheduleResponseDto>
+
+  @GET("/api/schedules/date")
     suspend fun getScheduleByDate(
         @Query("date") date: String // ex. ?date=2025-01-20
     ) : BaseResponse<SchedulesResponseDto>

@@ -136,7 +136,6 @@ class SignupViewModel @Inject constructor(
                     Log.e("LoginViewModel", "서버 로그인 실패: ${error.message}")
                 callback(false) // 로그인 실패 시 콜백 함수 호출
             }
-
         }
     }
 

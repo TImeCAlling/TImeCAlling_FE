@@ -2,9 +2,10 @@ package com.umc.timeCAlling.data.dto.request.schedule
 
 import com.umc.timeCAlling.data.dto.request.CategoriesRequestDto
 
-data class CreateScheduleRequestDto(
+data class ScheduleRequestDto(
     val name : String,
     val body : String,
+    val meetDate : String,
     val meetTime : String,
     val place : String,
     val longitude : String,

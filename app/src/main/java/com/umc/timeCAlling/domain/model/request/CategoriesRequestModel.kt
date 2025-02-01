@@ -5,9 +5,9 @@ import com.umc.timeCAlling.data.dto.response.CategoriesResponseDto
 import java.io.Serializable
 
 data class CategoriesRequestModel(
-    val category : String,
+    val categoryName : String,
     val color : Int
 ): Serializable {
     fun toCategoriesRequestDto() =
-        CategoriesRequestDto(category,color)
+        CategoriesRequestDto(categoryName,color)
 }

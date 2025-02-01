@@ -2,6 +2,7 @@ package com.umc.timeCAlling.presentation.calendar
 
 import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -14,6 +15,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -24,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
+import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.util.extension.viewLifeCycle
@@ -38,11 +42,13 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var selectedDate: LocalDate? = null
     private lateinit var navController: NavController
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
+    private val addScheduleViewModel : AddScheduleViewModel by activityViewModels()
+    private var scheduleId : Int = 0
     private val scheduleViewModel: ScheduleViewModel by viewModels()
 
     override fun initView() {
         initCalendar()
-        initDetailScheduleRV()
+        initDetailScheduleRVA()
         initBottomSheet()
         bottomNavigationShow()
 
@@ -140,6 +146,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         btnYes.setOnClickListener {
             dialog.dismiss()
             behavior.state = BottomSheetBehavior.STATE_HIDDEN
+            addScheduleViewModel.deleteSchedule(scheduleId)
             Toast.makeText(requireContext(), "삭제는 나중에..", Toast.LENGTH_SHORT).show()
         }
         btnNo.setOnClickListener {
@@ -221,7 +228,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         }
     }
 
-    private fun initDetailScheduleRV() {
+
+
+    private fun initDetailScheduleRVA() {
         val list = arrayListOf(
             DetailSchedule("컴퓨터 구조", "매주 수요일 반복", "일상", true, "9:00", 5),
             DetailSchedule("컴퓨터 구조2", "매주 수요일 반복", "공부", true, "11:00", 4),
@@ -303,6 +312,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                     popup.setOnMenuItemClickListener { menuItem ->
                         when (menuItem.itemId) {
                             R.id.popup_edit -> {
+                                val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+                                navController.navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
                                 Toast.makeText(requireContext(), "수정하기", Toast.LENGTH_SHORT).show()
                                 true
                             }

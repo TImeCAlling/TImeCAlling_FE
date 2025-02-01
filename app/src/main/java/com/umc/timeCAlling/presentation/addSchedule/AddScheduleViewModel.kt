@@ -11,10 +11,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.umc.timeCAlling.data.SearchResult
-import com.umc.timeCAlling.data.dto.request.CategoriesRequestDto
-import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleRequestDto
 import com.umc.timeCAlling.domain.model.request.CategoriesRequestModel
-import com.umc.timeCAlling.domain.model.request.schedule.CreateScheduleRequestModel
+import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.tmap.CarTransportationModel
 import com.umc.timeCAlling.domain.model.response.tmap.PublicTransportationModel
 import com.umc.timeCAlling.domain.model.response.tmap.WalkTransportationModel
@@ -93,10 +91,12 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     fun setFreeTime(time: String) {
         _freeTime.value = time
     }
-    private val _repeatDates = MutableLiveData<List<String>>(emptyList())
-    val repeatDates: LiveData<List<String>> = _repeatDates
+    private val _repeatDates = MutableLiveData<MutableList<String>>(mutableListOf()) // MutableList 사용
+    val repeatDates: LiveData<MutableList<String>> = _repeatDates // LiveData 타입 변경
+
     fun setRepeatDates(dates: List<String>) {
-        _repeatDates.value = dates
+        _repeatDates.value?.addAll(dates) // 기존 리스트에 추가
+        _repeatDates.value = _repeatDates.value // LiveData 값 업데이트
     }
 
     private val _isRepeat = MutableLiveData<Boolean>(false)
@@ -128,6 +128,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     fun setCategoryColor(color: Int) {
         _categoryColor.value = color
     }
+
     private val _recentSearches = MutableLiveData<List<String>>(emptyList())
     val recentSearches: LiveData<List<String>> = _recentSearches
 
@@ -244,15 +245,16 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     fun createSchedule(){
         viewModelScope.launch {
-            val request = CreateScheduleRequestModel(
+            val request = ScheduleRequestModel(
                 name = scheduleName.value ?: "",
                 body = scheduleMemo.value ?: "",
-                meetTime = "${scheduleDate.value ?: ""} ${scheduleTime.value ?: ""}", //일정 날짜 정보랑 시간 나눠줘야함
+                meetDate = scheduleDate.value ?: "",
+                meetTime = scheduleTime.value ?: "",
                 place = selectedLocationName.value ?: "",
                 longitude = locationLongitude.value ?: "",
                 latitude = locationLatitude.value ?: "",
                 moveTime = moveTime.value ?: 0,
-                freeTime = freeTime.value ?: "딱딱",
+                freeTime = freeTime.value ?: "TIGHT",
                 repeatDays = repeatDates.value ?: emptyList(),
                 isRepeat =  isRepeat.value ?: false,
                 start = startDate.value ?: "",
@@ -266,5 +268,60 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                  Log.e("createSchedule", "API 호출 실패: $error")
              }
         }
+    }
+
+    fun deleteSchedule(scheduleId: Int){
+        viewModelScope.launch {
+            scheduleRepository.deleteSchedule(scheduleId).onSuccess { response ->
+                Log.d("deleteSchedule", "API 호출 성공: $response")
+            }.onFailure {error->
+                Log.e("deleteSchedule", "API 호출 실패: $error")
+            }
+        }
+    }
+
+    fun editSchedule(scheduleId: Int){
+        val request = ScheduleRequestModel(
+            name = scheduleName.value ?: "",
+            body = scheduleMemo.value ?: "",
+            meetDate = scheduleDate.value ?: "",
+            meetTime = scheduleTime.value ?: "",
+            place = selectedLocationName.value ?: "",
+            longitude = locationLongitude.value ?: "",
+            latitude = locationLatitude.value ?: "",
+            moveTime = moveTime.value ?: 0,
+            freeTime = freeTime.value ?: "TIGHT",
+            repeatDays = repeatDates.value ?: emptyList(),
+            isRepeat =  isRepeat.value ?: false,
+            start = startDate.value ?: "",
+            end = endDate.value ?: "",
+            categories =  listOf(CategoriesRequestModel(categoryName.value ?: "", categoryColor.value ?: 0))
+        )
+        viewModelScope.launch {
+            scheduleRepository.editSchedule(scheduleId, request).onSuccess {
+                Log.d("editSchedule", "API 호출 성공: $it")
+            }.onFailure {
+                Log.e("editSchedule", "API 호출 실패: $it")
+            }
+        }
+    }
+
+    fun resetData() {
+        _scheduleName.value = ""
+        _scheduleMemo.value = ""
+        _scheduleDate.value = ""
+        _scheduleTime.value = ""
+        _searchLocation.value = emptyList()
+        _selectedLocationName.value = ""
+        _locationLongitude.value = ""
+        _locationLatitude.value = ""
+        _moveTime.value = 0
+        _freeTime.value = "TIGHT"
+        _repeatDates.value = mutableListOf()
+        _isRepeat.value = false
+        _startDate.value = ""
+        _endDate.value = ""
+        _categoryName.value = ""
+        _categoryColor.value = 0
     }
 }

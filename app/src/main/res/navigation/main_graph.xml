@@ -81,6 +81,10 @@
             android:name="com.umc.timeCAlling.presentation.addSchedule.AddScheduleFragment"
             android:label="AddScheduleFragment"
             tools:layout="@layout/fragment_add_schedule">
+            <argument
+                android:name="scheduleId"
+                android:defaultValue="-1"
+                app:argType="integer"/>
             <action
                 android:id="@+id/action_addScheduleFragment_to_locationSearchFragment"
                 app:destination="@id/locationSearchFragment"/>
@@ -117,6 +121,10 @@
             <action
                 android:id="@+id/action_addScheduleSecondFragment_to_categoryEditFragment"
                 app:destination="@id/categoryEditFragment"/>
+            <argument
+                android:name="scheduleId"
+                android:defaultValue="-1"
+                app:argType="integer"/>
         </fragment>
         <fragment
             android:id="@+id/categoryEditFragment"
@@ -135,6 +143,10 @@
             <action
                 android:id="@+id/action_addScheduleSuccessFragment_to_homeFragment"
                 app:destination="@id/homeFragment"/>
+            <argument
+                android:name="scheduleId"
+                android:defaultValue="-1"
+                app:argType="integer"/>
         </fragment>
     </navigation>
     <fragment

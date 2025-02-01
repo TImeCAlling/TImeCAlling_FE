@@ -69,6 +69,7 @@
                 android:src="@drawable/ic_circle_check_mint"/>
 
             <TextView
+                android:id="@+id/tv_add_schedule_success_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="일정을 추가되었습니다."

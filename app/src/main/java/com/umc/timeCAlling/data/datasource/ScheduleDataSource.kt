@@ -1,15 +1,14 @@
 package com.umc.timeCAlling.data.datasource
 
 import com.umc.timeCAlling.data.dto.BaseResponse
-import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleRequestDto
+import com.umc.timeCAlling.data.dto.request.schedule.ScheduleRequestDto
 import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleResponseDto
-import com.umc.timeCAlling.data.dto.response.schedule.ScheduleByDateResponseDto
-import com.umc.timeCAlling.data.dto.response.schedule.SchedulesResponseDto
-import com.umc.timeCAlling.data.dto.response.schedule.SuccessRateResponseDto
-import com.umc.timeCAlling.data.dto.response.schedule.TodaySchedulesResponseDto
+import com.umc.timeCAlling.data.dto.request.schedule.ScheduleResponseDto
 
 interface ScheduleDataSource {
-    suspend fun createSchedule(requestDto:CreateScheduleRequestDto): BaseResponse<CreateScheduleResponseDto>
+    suspend fun createSchedule(requestDto:ScheduleRequestDto): BaseResponse<CreateScheduleResponseDto>
+    suspend fun editSchedule(scheduleId: Int,requestDto:ScheduleRequestDto):BaseResponse<ScheduleResponseDto>
+    suspend fun deleteSchedule(scheduleId:Int):BaseResponse<ScheduleResponseDto>
     suspend fun getScheduleByDate(date: String): BaseResponse<SchedulesResponseDto>
     suspend fun getTodaySchedules(): BaseResponse<TodaySchedulesResponseDto>
     suspend fun getSuccessRate(): BaseResponse<SuccessRateResponseDto>
