@@ -17,7 +17,7 @@ class TokenInterceptor(
         val originalRequest = chain.request()
         val accessToken = sharedPreferences.getString("jwt", null) ?: return chain.proceed(originalRequest)
 
-        // 🔹 강제로 Access Token을 잘못된 값으로 설정 (테스트용)
+        // 강제로 Access Token을 잘못된 값으로 설정 (테스트용)
         val brokenAccessToken = "invalid_token"
 
         // 요청에 AccessToken 추가
@@ -26,7 +26,7 @@ class TokenInterceptor(
             .build()
 
         // test
-        Log.d("TokenInterceptor", "🚀 API 요청 전: Access Token = $brokenAccessToken")
+        Log.d("TokenInterceptor", "API 요청 전: Access Token = $brokenAccessToken")
 
         val response = chain.proceed(authenticatedRequest)
 
