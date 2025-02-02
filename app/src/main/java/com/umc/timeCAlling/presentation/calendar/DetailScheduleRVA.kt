@@ -45,7 +45,7 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
 
     override fun onBindViewHolder(holder: DetailScheduleViewHolder, position: Int) {
         holder.title.text = detailSchedules[position].name
-        holder.repeatInfo.text = detailSchedules[position].repeatDays[0]
+        holder.repeatInfo.text = fromEnToKo(detailSchedules[position].repeatDays?.get(0)) ?: ""
         holder.category.text = detailSchedules[position].categories[0].categoryName
         holder.time.text = detailSchedules[position].meetTime
         holder.timeType.text = "오전"         //나중에 구현
@@ -80,4 +80,18 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
     }
 
     override fun getItemCount(): Int = detailSchedules.size
+
+    private fun fromEnToKo(en: String?) : String{
+        var value=""
+        when(en) {
+            "SUNDAY" -> value = "일요일"
+            "MONDAY" -> value = "월요일"
+            "TUESDAY" -> value = "화요일"
+            "WEDNESDAY" -> value = "수요일"
+            "THURSDAY" -> value = "목요일"
+            "FRIDAY" -> value = "금요일"
+            "SATURDAY" -> value = "토요일"
+        }
+        return "매주 $value 반복"
+    }
 }

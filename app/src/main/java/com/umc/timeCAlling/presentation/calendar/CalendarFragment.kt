@@ -278,7 +278,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             binding.tvDetailTimeType.text = "오전"    //나중에 수정!!
             binding.tvDetailTime.text = schedule.meetTime
             binding.tvDetailCategory.text = schedule.categories[0].categoryName
-            binding.tvDetailRepeatInfo.text = schedule.repeatDays[0] + "마다 반복"
+            binding.tvDetailRepeatInfo.text = if(schedule.repeatDays == null) {"반복 안함"} else { schedule.repeatDays[0] }
 
             /*if (list[position].memberCount >= 4) {
                 binding.layoutDetailExtraMembers.visibility = View.VISIBLE

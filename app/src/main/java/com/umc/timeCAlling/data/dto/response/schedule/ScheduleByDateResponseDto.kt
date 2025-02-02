@@ -10,7 +10,7 @@ data class ScheduleByDateResponseDto (
     val isRepeat: Boolean,
     val meetTime: String,
     val name: String,
-    val repeatDays: List<String>,
+    val repeatDays: List<String>?,
     val scheduleId: Int
 ) {
     fun toScheduleByDateResponseModel() = ScheduleByDateResponseModel(categories.map{it.toCategoriesByDateResponseModel()}, checkListId, isWritten, isRepeat, meetTime, name, repeatDays, scheduleId)
