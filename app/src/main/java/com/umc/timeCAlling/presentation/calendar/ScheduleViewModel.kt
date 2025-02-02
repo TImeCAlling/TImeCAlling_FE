@@ -19,13 +19,24 @@ class ScheduleViewModel @Inject constructor(
     private val _schedules = MutableLiveData<List<ScheduleByDateResponseModel>>()
     val schedules: LiveData<List<ScheduleByDateResponseModel>> get() = _schedules
 
+    private val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun getScheduleByDate(date: String) {
         viewModelScope.launch {
+            _isLoading.value = true
             scheduleRepository.getScheduleByDate(date).onSuccess { response ->
-                _schedules.value = response.schedules
-                Log.d("test", response.toString())
+                if (response.schedules.isNotEmpty()) {
+                    _schedules.value = response.schedules
+                    Log.d("ScheduleViewModel", response.toString())
+                } else {
+                    _schedules.value = emptyList()
+                    Log.d("ScheduleViewModel", "HTTP 요청은 성공했지만, 데이터가 비어있습니다.")
+                }
             }.onFailure { error ->
-                Log.d("test", error.toString())
+                Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
+            }.also {
+                _isLoading.value = false // 로딩 종료
             }
         }
     }

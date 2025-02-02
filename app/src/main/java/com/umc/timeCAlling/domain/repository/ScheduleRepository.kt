@@ -3,6 +3,9 @@ package com.umc.timeCAlling.domain.repository
 import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.SchedulesResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.TodaySchedulesResponseModel
 
 interface ScheduleRepository {
     suspend fun createSchedule(requestModel: ScheduleRequestModel): Result<CreateScheduleResponseModel>

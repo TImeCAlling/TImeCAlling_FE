@@ -6,6 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.kakao.sdk.user.UserApiClient
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityMainBinding
 import com.umc.timeCAlling.presentation.base.BaseActivity
