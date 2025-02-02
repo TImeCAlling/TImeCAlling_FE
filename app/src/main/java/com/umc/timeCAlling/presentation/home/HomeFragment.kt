@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TopSheetBehavior
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
+import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
@@ -23,8 +25,10 @@ import org.threeten.bp.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
+
     private lateinit var navController: NavController
     private lateinit var behavior: TopSheetBehavior<View>
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun initView() {
         binding.layoutHomeTodayScheduleDetail.setOnClickListener{
@@ -143,6 +147,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun initTodayScheduleRV() {
+        viewModel.getTodaySchedules()
         val list2 = arrayListOf<TodaySchedule>(
             TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
             TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
@@ -162,10 +167,20 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
         )
         val listSize = list2.size
-        val adapter = TodayScheduleRVA(list2)
+        val adapter = TodayScheduleRVA()
         binding.rvHomeTodaySchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = adapter
+        }
+        viewModel.todaySchedules.observe(viewLifecycleOwner) { scheduleList ->
+            if(scheduleList.isEmpty()) {
+                binding.rvHomeTodaySchedule.visibility = View.GONE
+                binding.layoutHomeNoTodaySchedule.visibility = View.VISIBLE
+            } else {
+                binding.rvHomeTodaySchedule.visibility = View.VISIBLE
+                binding.layoutHomeNoTodaySchedule.visibility = View.GONE
+                adapter.setScheduleList(scheduleList = scheduleList as ArrayList<TodayScheduleResponseModel>)
+            }
         }
         if(list2.isEmpty()) {
             binding.rvHomeTodaySchedule.visibility = View.GONE
@@ -189,6 +204,11 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             width = if(progress <= 20) requireContext().toPx(20).toInt() else requireContext().toPx(progress).toInt()
         }
         binding.tvHomeProgress.text = "${((1 - (currentSize.toFloat() / size.toFloat())) * 100).toInt()}%"
+
+        viewModel.getSuccessRate()
+        viewModel.successRate.observe(viewLifecycleOwner) { response ->
+            binding.tvHomeProgress.text = "${response.successRate}%"
+        }
     }
 
     private fun bottomNavigationRemove() {

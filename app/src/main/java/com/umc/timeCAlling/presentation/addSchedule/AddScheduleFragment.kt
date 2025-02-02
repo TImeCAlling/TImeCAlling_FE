@@ -1,13 +1,16 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
 import android.content.res.ColorStateList
+import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.intl.Locale
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -19,6 +22,9 @@ import com.umc.timeCAlling.databinding.FragmentAddScheduleBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import kotlin.text.format
+import kotlin.text.substring
 
 @AndroidEntryPoint
 class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fragment_add_schedule) {
@@ -26,12 +32,17 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private val viewModel: AddScheduleViewModel by activityViewModels() // ViewModel 초기화
     private lateinit var dateBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private var scheduleId : Int = -1
 
     override fun initObserver() {
 
     }
 
     override fun initView() {
+        scheduleId = arguments?.getInt("scheduleId") ?: -1
+
+        if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정수정" } else { binding.tvAddScheduleTitle.text = "일정추가" }
+
         initSavedData()
 
         binding.viewBottomSheetBackground.isClickable = false
@@ -46,20 +57,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         binding.ivAddScheduleBack.setOnSingleClickListener {
             findNavController().popBackStack()
-        }
-        viewModel.searchLocation.observe(viewLifecycleOwner) { locations ->
-            binding.tvAddScheduleLocation.text = locations[0].name
-            binding.ivAddScheduleLocation.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_900))
-            binding.tvAddScheduleLocation.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
-        }
-        viewModel.moveTime.observe(viewLifecycleOwner) { moveTime ->
-            binding.tvAddScheduleHour.text = if (moveTime >= 60) (moveTime / 60).toString() else "0"
-            binding.tvAddScheduleMinute.text = (moveTime%60).toString()
-
-            if (moveTime != null) {
-                binding.tvAddScheduleTimeTaken.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray900_fill)
-                binding.tvAddScheduleTimeTaken.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            }
         }
     }
 
@@ -84,21 +81,28 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         // ViewModel에서 데이터를 가져와 UI에 설정
         binding.etAddScheduleName.setText(viewModel.scheduleName.value)
         binding.etAddScheduleMemo.setText(viewModel.scheduleMemo.value)
-        viewModel.scheduleDate.observe(viewLifecycleOwner) { scheduleDate ->
-            if (scheduleDate.isNullOrEmpty()) {
-                binding.tvAddScheduleDate.text = "날짜를 입력하세요"
-            } else {
-                binding.tvAddScheduleDate.text = scheduleDate
+        viewModel.scheduleDate.value?.let { date ->
+            if (date.isNotEmpty()) {
+                binding.tvAddScheduleDate.text = date
+                binding.ivAddScheduleDate.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_calendar_black))
+                binding.tvAddScheduleDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
+                binding.ivAddScheduleDateArrow.visibility = View.VISIBLE
             }
         }
-        viewModel.scheduleTime.observe(viewLifecycleOwner) { scheduleTime ->
-            if (scheduleTime.isNullOrEmpty()) {
-                binding.tvAddScheduleTime.text = "시간을 입력하세요"
-            } else {
-                binding.tvAddScheduleTime.text = scheduleTime
+        viewModel.scheduleTime.value?.let { time ->
+            if (time.isNotEmpty()) {
+                val hour = time.substring(0, 2).toInt()
+                val minute = time.substring(3, 5)
+                val amPm = if (hour >= 12) "오후" else "오전"
+                val displayHour = if (hour == 0) 12 else if (hour > 12) hour - 12 else hour
+                val selectedTime = String.format("%s %02d:%s", amPm, displayHour, minute)
+                binding.tvAddScheduleTime.text = selectedTime
+                binding.tvAddScheduleTime.text = time
+                binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_alarm_black))
+                binding.tvAddScheduleTime.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
+                binding.ivAddScheduleTimeArrow.visibility = View.VISIBLE
             }
         }
-        // 위치 정보 설정 (viewModel.searchLocation)
         viewModel.searchLocation.value?.let { locations ->
             if (locations.isNotEmpty()) {
                 binding.tvAddScheduleLocation.text = locations[0].name
@@ -106,8 +110,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 binding.tvAddScheduleLocation.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
             }
         }
-
-        // 이동 시간 설정 (viewModel.moveTime)
         viewModel.moveTime.value?.let { moveTime ->
             binding.tvAddScheduleHour.text = if (moveTime >= 60) (moveTime / 60).toString() else "0"
             binding.tvAddScheduleMinute.text = (moveTime % 60).toString()
@@ -142,8 +144,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         calendarView.setOnDateChangedListener { widget, date, selected ->
             if (selected) {
-                selectedDate = "${date.year}년 ${date.month + 1}월 ${date.day}일" // 선택한 날짜 형식 지정
-                formattedDate = "${date.year}-${date.month + 1}-${date.day}"
+                selectedDate = "${date.year}년 ${date.month}월 ${date.day}일" // 선택한 날짜 형식 지정
+                formattedDate = String.format("%d-%02d-%02d", date.year, date.month, date.day)
             }
         }
 
@@ -298,7 +300,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     private fun moveToAddScheduleSecond() {
         binding.tvAddScheduleNext.setOnClickListener {
-            findNavController().navigate(R.id.action_addScheduleFragment_to_addScheduleSecondFragment)
+            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+            findNavController().navigate(R.id.action_addScheduleFragment_to_addScheduleSecondFragment, bundle)
         }
     }
 }

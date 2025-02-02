@@ -6,17 +6,7 @@ import com.umc.timeCAlling.domain.model.response.CategoriesResponseModel
 import java.io.Serializable
 
 data class CreateScheduleResponseModel(
-    val name : String,
-    val body : String,
-    val meetTime : String,
-    val place : String,
-    val longitude : String,
-    val latitude : String,
-    val moveTime : Int,
-    val freeTime : String,
-    val repeatDays : List<String>,
-    val isRepeat : Boolean,
-    val start : String,
-    val end : String,
-    val categories : List<CategoriesResponseModel>
+    val scheduleId : Int,
+    val shareId : String?,
+    val createdAt : String
 )

@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.presentation.calendar
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,15 +9,17 @@ import androidx.core.view.marginEnd
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleDetailBinding
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 
-class DetailScheduleRVA(
-    private val detailSchedules: List<DetailSchedule>
-) : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
+class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
+    lateinit var onItemClick: ((ScheduleByDateResponseModel) -> Unit)
+    private var detailSchedules = ArrayList<ScheduleByDateResponseModel>()
 
-    interface ItemClick {
-        fun onClick(view: View, position: Int)
+    fun setScheduleList(scheduleList: ArrayList<ScheduleByDateResponseModel>) {
+        this.detailSchedules = ArrayList(scheduleList)
+        Log.d("DetailScheduleRVA", "setScheduleList 호출됨")
+        notifyDataSetChanged()
     }
-    var itemClick : ItemClick? = null
 
     inner class DetailScheduleViewHolder(private val binding: ItemTodayScheduleDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.tvDetailScheduleTitle
@@ -41,11 +44,11 @@ class DetailScheduleRVA(
     }
 
     override fun onBindViewHolder(holder: DetailScheduleViewHolder, position: Int) {
-        holder.title.text = detailSchedules[position].title
-        holder.repeatInfo.text = detailSchedules[position].repeatInfo
-        holder.category.text = detailSchedules[position].category
-        holder.time.text = detailSchedules[position].time
-        holder.timeType.text = if(detailSchedules[position].isMorning) "오전" else "오후"
+        holder.title.text = detailSchedules[position].name
+        holder.repeatInfo.text = fromEnToKo(detailSchedules[position].repeatDays?.get(0)) ?: ""
+        holder.category.text = detailSchedules[position].categories[0].categoryName
+        holder.time.text = detailSchedules[position].meetTime
+        holder.timeType.text = "오전"         //나중에 구현
 
         if(position == 0) {
             holder.view.setBackgroundResource(R.drawable.shape_rect_999_mint_fill)
@@ -53,13 +56,13 @@ class DetailScheduleRVA(
             holder.time.setTextColor(holder.time.context.getColor(R.color.mint_600))
         }
 
-        holder.checkBtn.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "${detailSchedules[position].title} Clicked!", Toast.LENGTH_SHORT).show()
+        //----------------- 아래 부분은 api 연결 확인 후에 ----------//
+        /*holder.checkBtn.setOnClickListener {
             detailSchedules[position].isChecked = !detailSchedules[position].isChecked
             holder.checkBtn.setImageResource(if(detailSchedules[position].isChecked) R.drawable.ic_schedule_detail_check_mint else R.drawable.ic_schedule_detail_check)
-        }
+        }*/
 
-        //일정에 참여중인 인원이 3명 이상일 때
+        /*//일정에 참여중인 인원이 3명 이상일 때
         if(detailSchedules[position].memberCount >= 3) {
             holder.extraMembersCount.text = "+${detailSchedules[position].memberCount - 2}"
         }
@@ -69,12 +72,26 @@ class DetailScheduleRVA(
             holder.memberSecond.layoutParams = (holder.memberSecond.layoutParams as ViewGroup.MarginLayoutParams).apply {
                 marginEnd = 0
             }
-        }
+        }*/
 
         holder.itemView.setOnClickListener {
-            itemClick?.onClick(it, position)
+            onItemClick.invoke(detailSchedules[position])
         }
     }
 
     override fun getItemCount(): Int = detailSchedules.size
+
+    private fun fromEnToKo(en: String?) : String{
+        var value=""
+        when(en) {
+            "SUNDAY" -> value = "일요일"
+            "MONDAY" -> value = "월요일"
+            "TUESDAY" -> value = "화요일"
+            "WEDNESDAY" -> value = "수요일"
+            "THURSDAY" -> value = "목요일"
+            "FRIDAY" -> value = "금요일"
+            "SATURDAY" -> value = "토요일"
+        }
+        return "매주 $value 반복"
+    }
 }

@@ -2,12 +2,14 @@ package com.umc.timeCAlling.presentation.addSchedule
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.foundation.background
 import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -36,11 +38,16 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private lateinit var categoryBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var isRepeatEnabled = false
     private var selectedDays = mutableListOf<String>()
+    private var scheduleId : Int = -1
 
     override fun initView() {
+        scheduleId = arguments?.getInt("scheduleId") ?: -1
+
+        if (scheduleId != -1) { binding.tvAddScheduleSecondTitle.text = "일정수정" } else { binding.tvAddScheduleSecondTitle.text = "일정추가" }
+
 
         binding.viewBottomSheetBackground.isClickable = false
-
+        initSavedData()
         initCategoryList()
         initRepeatSwitch()
         bottomNavigationRemove()
@@ -72,6 +79,77 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         ovalImageView?.visibility = View.GONE
     }
 
+    private fun initSavedData(){
+
+        viewModel.freeTime.value?.let { freeTime ->
+            if(freeTime.isNotEmpty()) {
+                val spareTimeTextViews = listOf(
+                    binding.tvAddScheduleSecondSpareTime1,
+                    binding.tvAddScheduleSecondSpareTime2,
+                    binding.tvAddScheduleSecondSpareTime3
+                )
+                spareTimeTextViews.forEach { tv ->
+                    val freeTimeText = when (freeTime) {
+                        "TIGHT" -> "딱딱"
+                        "RELAXED" -> "여유"
+                        "PLENTY" -> "넉넉"
+                        else -> ""
+                    }
+                    if (tv.text.toString() == freeTimeText) {
+                        tv.background = ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.shape_rect_999_mint300_fill_mint_line_1
+                        )
+                        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.mint_main))
+                    } else {
+                        tv.background = ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.shape_rect_999_gray200_fill
+                        )
+                        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
+                    }
+                }
+            }
+        }
+        viewModel.isRepeat.value?.let { isRepeat ->
+            if (isRepeat != null) {
+                binding.menuAddScheduleRepeat.isChecked = isRepeat
+            }
+        }
+        viewModel.repeatDates.value?.let { repeatDates ->
+            if (repeatDates.isNotEmpty()) {
+                selectedDays.clear()
+                selectedDays.addAll(repeatDates.map { day ->
+                    when (day) {
+                        "MONDAY" -> "월"
+                        "TUESDAY" -> "화"
+                        "WEDNESDAY" -> "수"
+                        "THURSDAY" -> "목"
+                        "FRIDAY" -> "금"
+                        "SATURDAY" -> "토"
+                        "SUNDAY" -> "일"
+                        else -> day
+                    }
+                })
+                updateRepeatInfo()
+            }
+        }
+        viewModel.startDate.value?.let { startDate ->
+            if (startDate.isNotEmpty()) {
+                binding.tvAddScheduleRepeatStart.text = startDate
+            }
+        }
+        viewModel.endDate.value?.let { endDate ->
+            if (endDate.isNotEmpty()) {
+                binding.tvAddScheduleRepeatEnd.text = endDate
+            }
+        }
+        viewModel.categoryName.value?.let { categoryName ->
+            if (categoryName.isNotEmpty()) {
+                updateCategoryUI(getCategoryByName(categoryName))
+            }
+        }
+    }
     private fun initSpareTimeTextViews() {
         val spareTimeTextViews = listOf(
             binding.tvAddScheduleSecondSpareTime1,
@@ -85,8 +163,14 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                     if (tv == clickedTextView) {
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_mint300_fill_mint_line_1)
                         tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.mint_main))
-                        viewModel.setFreeTime(tv.text.toString())
-                    } else {
+                        val freeTime = when (tv.text.toString()) { // 텍스트 변환
+                            "딱딱" -> "TIGHT"
+                            "여유" -> "RELAXED"
+                            "넉넉" -> "PLENTY"
+                            else -> ""
+                        }
+                        viewModel.setFreeTime(freeTime) // 변환된 값 전달
+                        } else {
                         tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray200_fill)
                         tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
                     }
@@ -126,6 +210,19 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         }
         binding.tvAddScheduleRepeat.text = repeatText
         viewModel.setIsRepeat(isRepeatEnabled)
+        val selectedDaysEnglish = selectedDays.map { day ->
+            when (day) {
+                "월" -> "MONDAY"
+                "화" -> "TUESDAY"
+                "수" -> "WEDNESDAY"
+                "목" -> "THURSDAY"
+                "금" -> "FRIDAY"
+                "토" -> "SATURDAY"
+                "일" -> "SUNDAY"
+                else -> day
+            }
+        }
+        viewModel.setRepeatDates(selectedDaysEnglish)
     }
 
     private fun initRepeatBottomSheet() {
@@ -229,14 +326,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             this@AddScheduleSecondFragment.selectedDays.addAll(selectedDaysSet)
             updateRepeatInfo()
             binding.menuAddScheduleRepeat.isChecked = true
-            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             startTextView.text = startDate?.date?.format(formatter) ?: ""
             endTextView.text = endDate?.date?.format(formatter) ?: ""
 
             binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-            viewModel.setRepeatDates(selectedDays)
             viewModel.setStartDate(startTextView.text.toString())
             viewModel.setEndDate(endTextView.text.toString())
         }
@@ -333,8 +429,9 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
     private fun moveToAddScheduleSuccess() {
         binding.tvAddScheduleNext.setOnClickListener {
-            findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment)
-            viewModel.createSchedule()
+            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+            findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment, bundle)
+            if(scheduleId != 1){ viewModel.createSchedule() }else{ viewModel.editSchedule(scheduleId) }
         }
     }
 }

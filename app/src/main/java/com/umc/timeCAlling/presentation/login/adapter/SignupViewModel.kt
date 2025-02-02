@@ -124,6 +124,7 @@ class SignupViewModel @Inject constructor(
     fun handleLoginSuccess(accessToken: String, refreshToken: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             loginRepository.kakaoLogin(KakaoLoginRequestModel(accessToken)).onSuccess { response ->
+                
                 Log.d("SignupViewModel", "카카오 로그인 성공: Access Token = ${response.accessToken}")
                 Log.d("SignupViewModel", "카카오 로그인 성공: Refresh Token = ${response.refreshToken}")
 
@@ -141,4 +142,15 @@ class SignupViewModel @Inject constructor(
             }
         }
     }
+
+    fun clearAuthToken() {
+        spf.edit().apply {
+            remove("jwt") // 🔥 accessToken 삭제
+            remove("refreshToken") // 🔥 refreshToken 삭제
+            remove("isLoggedIn") // 🔥 로그인 상태 초기화
+            apply()
+        }
+        Log.d("SignupViewModel", "토큰 삭제 완료: accessToken 및 refreshToken 초기화됨")
+    }
+
 }
