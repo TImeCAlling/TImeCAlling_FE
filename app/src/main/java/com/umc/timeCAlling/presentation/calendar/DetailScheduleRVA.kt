@@ -11,18 +11,13 @@ import com.umc.timeCAlling.databinding.ItemTodayScheduleDetailBinding
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 
 class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
-
+    lateinit var onItemClick: ((ScheduleByDateResponseModel) -> Unit)
     private var detailSchedules = ArrayList<ScheduleByDateResponseModel>()
 
     fun setScheduleList(scheduleList: ArrayList<ScheduleByDateResponseModel>) {
         this.detailSchedules = scheduleList
         notifyDataSetChanged()
     }
-
-    interface ItemClick {
-        fun onClick(view: View, position: Int)
-    }
-    var itemClick : ItemClick? = null
 
     inner class DetailScheduleViewHolder(private val binding: ItemTodayScheduleDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.tvDetailScheduleTitle
@@ -49,7 +44,7 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
     override fun onBindViewHolder(holder: DetailScheduleViewHolder, position: Int) {
         holder.title.text = detailSchedules[position].name
         holder.repeatInfo.text = detailSchedules[position].repeatDays[0]
-        holder.category.text = detailSchedules[position].categories[0].category
+        holder.category.text = detailSchedules[position].categories[0].categoryName
         holder.time.text = detailSchedules[position].meetTime
         holder.timeType.text = "오전"         //나중에 구현
 
@@ -78,7 +73,7 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
         }*/
 
         holder.itemView.setOnClickListener {
-            itemClick?.onClick(it, position)
+            onItemClick.invoke(detailSchedules[position])
         }
     }
 

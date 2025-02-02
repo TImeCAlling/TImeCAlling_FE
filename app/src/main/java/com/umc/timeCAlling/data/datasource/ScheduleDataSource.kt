@@ -4,6 +4,9 @@ import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleRequestDto
 import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleResponseDto
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.SchedulesResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.SuccessRateResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.TodaySchedulesResponseDto
 
 interface ScheduleDataSource {
     suspend fun createSchedule(requestDto:ScheduleRequestDto): BaseResponse<CreateScheduleResponseDto>

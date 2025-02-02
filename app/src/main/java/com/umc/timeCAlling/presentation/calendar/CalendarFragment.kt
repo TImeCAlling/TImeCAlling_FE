@@ -44,7 +44,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private val addScheduleViewModel : AddScheduleViewModel by activityViewModels()
     private var scheduleId : Int = 0
-    private val scheduleViewModel: ScheduleViewModel by viewModels()
+    private val scheduleViewModel: ScheduleViewModel by activityViewModels()
 
     override fun initView() {
         initCalendar()
@@ -231,13 +231,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
 
     private fun initDetailScheduleRVA() {
-        val list = arrayListOf(
-            DetailSchedule("컴퓨터 구조", "매주 수요일 반복", "일상", true, "9:00", 5),
-            DetailSchedule("컴퓨터 구조2", "매주 수요일 반복", "공부", true, "11:00", 4),
-            DetailSchedule("컴퓨터 구조3", "매주 수요일 반복", "일상", false, "1:00", 3),
-            DetailSchedule("컴퓨터 구조4", "매주 수요일 반복", "공부", false, "2:00", 2),
-            DetailSchedule("컴퓨터 구조5", "매주 목요일 반복", "test", false, "4:00", 1)
-        )
         val adapter = DetailScheduleRVA()
         binding.rvCalendarDetailSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -253,79 +246,79 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 adapter.setScheduleList(scheduleList = scheduleList as ArrayList<ScheduleByDateResponseModel>)
             }
         }
-        adapter.itemClick = object : DetailScheduleRVA.ItemClick {
-            override fun onClick(view: View, position: Int) {
-                bottomNavigationRemove() // 아이템 클릭 시 BottomNavigationView 숨기기
-                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
-                binding.tvDetailTitle.text = list[position].title
-                binding.tvDetailTimeType.text = if (list[position].isMorning) "오전" else "오후"
-                binding.tvDetailTime.text = list[position].time
-                binding.tvDetailCategory.text = list[position].category
-                binding.tvDetailRepeatInfo.text = list[position].repeatInfo
+        //이 부분은 나중에 상세일정조회 api와 연결 후 수정하겠습니다
+        adapter.onItemClick = { schedule ->
+            bottomNavigationRemove() // 아이템 클릭 시 BottomNavigationView 숨기기
+            behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
-                if (list[position].memberCount >= 4) {
-                    binding.layoutDetailExtraMembers.visibility = View.VISIBLE
-                    binding.tvDetailExtraMembers.text = "+${list[position].memberCount - 3}"
-                    val marginEndInDp = -12
-                    binding.cvDetailMemberThird.layoutParams = (binding.cvDetailMemberThird.layoutParams as MarginLayoutParams).apply {
-                        marginEnd = requireContext().toPx(marginEndInDp).toInt()
-                    }
-                } else {
-                    binding.layoutDetailExtraMembers.visibility = View.GONE
-                    binding.cvDetailMemberThird.layoutParams = (binding.cvDetailMemberThird.layoutParams as MarginLayoutParams).apply {
-                        marginEnd = 0
-                    }
+            binding.tvDetailTitle.text = schedule.name
+            binding.tvDetailTimeType.text = "오전"    //나중에 수정!!
+            binding.tvDetailTime.text = schedule.meetTime
+            binding.tvDetailCategory.text = schedule.categories[0].categoryName
+            binding.tvDetailRepeatInfo.text = schedule.repeatDays[0] + "마다 반복"
+
+            /*if (list[position].memberCount >= 4) {
+                binding.layoutDetailExtraMembers.visibility = View.VISIBLE
+                binding.tvDetailExtraMembers.text = "+${list[position].memberCount - 3}"
+                val marginEndInDp = -12
+                binding.cvDetailMemberThird.layoutParams = (binding.cvDetailMemberThird.layoutParams as MarginLayoutParams).apply {
+                    marginEnd = requireContext().toPx(marginEndInDp).toInt()
                 }
+            } else {
+                binding.layoutDetailExtraMembers.visibility = View.GONE
+                binding.cvDetailMemberThird.layoutParams = (binding.cvDetailMemberThird.layoutParams as MarginLayoutParams).apply {
+                    marginEnd = 0
+                }
+            }*/
 
-                binding.ivDetailMore.setOnClickListener {
-                    val theme = ContextThemeWrapper(requireContext(), R.style.PopupMenuItemStyle)
-                    val popup = PopupMenu(
-                        requireContext(),
-                        it,
-                        Gravity.CENTER,
-                        0,
-                        R.style.CustomPopupMenuStyle
-                    )
-                    popup.menuInflater.inflate(R.menu.popup_menu_item, popup.menu)
+            binding.ivDetailMore.setOnClickListener {
+                val theme = ContextThemeWrapper(requireContext(), R.style.PopupMenuItemStyle)
+                val popup = PopupMenu(
+                    requireContext(),
+                    it,
+                    Gravity.CENTER,
+                    0,
+                    R.style.CustomPopupMenuStyle
+                )
+                popup.menuInflater.inflate(R.menu.popup_menu_item, popup.menu)
 
-                    try {
-                        val fields = popup.javaClass.declaredFields
-                        for (field in fields) {
-                            if (field.name == "mPopup") {
-                                field.isAccessible = true
-                                val menuPopupHelper = field.get(popup)
-                                val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
-                                val setForceIconsMethod =
-                                    classPopupHelper.getMethod(
-                                        "setForceShowIcon",
-                                        Boolean::class.javaPrimitiveType
-                                    )
-                                setForceIconsMethod.invoke(menuPopupHelper, true)
-                                break
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                    popup.setOnMenuItemClickListener { menuItem ->
-                        when (menuItem.itemId) {
-                            R.id.popup_edit -> {
-                                val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
-                                navController.navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
-                                Toast.makeText(requireContext(), "수정하기", Toast.LENGTH_SHORT).show()
-                                true
-                            }
-                            R.id.popup_delete -> {
-                                showDialogBox(list[position].title)
-                                true
-                            }
-                            else -> false
+                try {
+                    val fields = popup.javaClass.declaredFields
+                    for (field in fields) {
+                        if (field.name == "mPopup") {
+                            field.isAccessible = true
+                            val menuPopupHelper = field.get(popup)
+                            val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
+                            val setForceIconsMethod =
+                                classPopupHelper.getMethod(
+                                    "setForceShowIcon",
+                                    Boolean::class.javaPrimitiveType
+                                )
+                            setForceIconsMethod.invoke(menuPopupHelper, true)
+                            break
                         }
                     }
-                    popup.show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
+
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.popup_edit -> {
+                            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+                            navController.navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
+                            Toast.makeText(requireContext(), "수정하기", Toast.LENGTH_SHORT).show()
+                            true
+                        }
+                        R.id.popup_delete -> {
+                            showDialogBox(schedule.name)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                popup.show()
             }
         }
     }

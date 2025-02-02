@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TopSheetBehavior
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
+import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
@@ -166,13 +167,20 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
         )
         val listSize = list2.size
-        val adapter = TodayScheduleRVA(list2)
+        val adapter = TodayScheduleRVA()
         binding.rvHomeTodaySchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = adapter
         }
-        viewModel.todaySchedules.observe(viewLifecycleOwner) { schedules ->
-            Log.d("test", schedules.toString())
+        viewModel.todaySchedules.observe(viewLifecycleOwner) { scheduleList ->
+            if(scheduleList.isEmpty()) {
+                binding.rvHomeTodaySchedule.visibility = View.GONE
+                binding.layoutHomeNoTodaySchedule.visibility = View.VISIBLE
+            } else {
+                binding.rvHomeTodaySchedule.visibility = View.VISIBLE
+                binding.layoutHomeNoTodaySchedule.visibility = View.GONE
+                adapter.setScheduleList(scheduleList = scheduleList as ArrayList<TodayScheduleResponseModel>)
+            }
         }
         if(list2.isEmpty()) {
             binding.rvHomeTodaySchedule.visibility = View.GONE

@@ -15,6 +15,7 @@ import com.umc.timeCAlling.databinding.FragmentLoginBinding
 import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
+import com.umc.timeCAlling.presentation.mypage.MyprofileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,6 +25,7 @@ import kotlin.math.sign
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
     private val viewModel: SignupViewModel by activityViewModels()
+    private val profileViewModel : MyprofileViewModel by activityViewModels()   //문제 해결되면 삭제!
 
     override fun initView() {
         Timber.d("LoginFragment", "initView() 호출됨")
@@ -126,7 +128,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 Timber.d("LoginFragment", "카카오 계정 로그인 성공: accessToken = ${token.accessToken}")
                 viewModel.handleLoginSuccess(token.accessToken) { isSuccess -> // 콜백 함수 추가
                     if (isSuccess) {
-                        navigateToHomeFragment() // 로그인 성공 시 Home 화면으로 이동
+                        navigateToHomeFragment() // 로그인 성공 시 Home 화면으로 이동001
                     } else {
                         navigateToSignupTermFragment() // 로그인 실패 시 회원가입 화면으로 이동
                     }

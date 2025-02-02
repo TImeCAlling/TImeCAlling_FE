@@ -4,7 +4,7 @@ import com.umc.timeCAlling.data.dto.response.CategoriesResponseDto
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 
 data class ScheduleByDateResponseDto (
-    val categories: List<CategoriesResponseDto>,
+    val categories: List<CategoriesByDateResponseDto>,
     val checkListId: Int,
     val isWritten: Boolean,
     val isRepeat: Boolean,
@@ -13,5 +13,5 @@ data class ScheduleByDateResponseDto (
     val repeatDays: List<String>,
     val scheduleId: Int
 ) {
-    fun toScheduleByDateResponseModel() = ScheduleByDateResponseModel(categories.map{it.toCategoriesResponseModel()}, checkListId, isWritten, isRepeat, meetTime, name, repeatDays, scheduleId)
+    fun toScheduleByDateResponseModel() = ScheduleByDateResponseModel(categories.map{it.toCategoriesByDateResponseModel()}, checkListId, isWritten, isRepeat, meetTime, name, repeatDays, scheduleId)
 }

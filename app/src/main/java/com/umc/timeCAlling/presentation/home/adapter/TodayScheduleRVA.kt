@@ -7,11 +7,17 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleBinding
+import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.presentation.home.TodaySchedule
 
 class TodayScheduleRVA(
-    private val items: List<TodaySchedule>
 ) : RecyclerView.Adapter<TodayScheduleRVA.ViewHolder>() {
+
+    private var items = ArrayList<TodayScheduleResponseModel>()
+    fun setScheduleList(scheduleList: ArrayList<TodayScheduleResponseModel>) {
+        this.items = scheduleList
+        notifyDataSetChanged()
+    }
 
     interface ItemClick {
         fun onClick(view: View, position: Int)
@@ -37,11 +43,11 @@ class TodayScheduleRVA(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.title.text = items[position].title
-        holder.description.text = items[position].description
-        holder.time.text = items[position].time
-        holder.timeLeft.text = items[position].timeLeft
-        holder.timeType.text = if(items[position].isMorning) "오전" else "오후"
+        holder.title.text = items[position].name
+        holder.description.text = items[position].body
+        holder.time.text = items[position].meetTime
+        holder.timeLeft.text = ""
+        holder.timeType.text = ""
 
         //제일 가까운 일정 ( 첫번째 인덱스 )는 민트색
         if(position == 0) {
@@ -57,7 +63,7 @@ class TodayScheduleRVA(
             itemClick?.onClick(it, position)
         }
         holder.more.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "${items[position].title} Clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(holder.itemView.context, "${items[position].name} Clicked", Toast.LENGTH_SHORT).show()
         }
     }
 
