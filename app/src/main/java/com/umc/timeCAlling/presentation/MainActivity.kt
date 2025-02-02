@@ -20,7 +20,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     override fun initView() {
         initNavigator()
         initClickListener() // 클릭 이벤트 초기화
-
     }
 
     override fun initObserver() {

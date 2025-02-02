@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.presentation.calendar
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,8 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
     private var detailSchedules = ArrayList<ScheduleByDateResponseModel>()
 
     fun setScheduleList(scheduleList: ArrayList<ScheduleByDateResponseModel>) {
-        this.detailSchedules = scheduleList
+        this.detailSchedules = ArrayList(scheduleList)
+        Log.d("DetailScheduleRVA", "setScheduleList 호출됨")
         notifyDataSetChanged()
     }
 

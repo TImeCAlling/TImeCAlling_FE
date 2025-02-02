@@ -16,8 +16,6 @@ import android.widget.Toast
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -35,6 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
+import timber.log.Timber
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -45,10 +44,13 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private val addScheduleViewModel : AddScheduleViewModel by activityViewModels()
     private var scheduleId : Int = 0
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
+    private val adapter : DetailScheduleRVA by lazy {
+        DetailScheduleRVA()
+    }
 
     override fun initView() {
-        initCalendar()
         initDetailScheduleRVA()
+        initCalendar()
         initBottomSheet()
         bottomNavigationShow()
 
@@ -59,7 +61,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     }
 
     override fun initObserver() {
-        // 필요한 옵저버 설정
+
     }
 
     private fun initBottomSheet() {
@@ -76,16 +78,19 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                         dismissBottomSheet()
                         bottomNavigationShow()
                     }
+
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.layoutBottomSheet.setBackgroundResource(R.drawable.shape_bottom_sheet_expanded)
-                        binding.viewCalendarHandle.visibility = View.INVISIBLE
+                        binding.viewCalendarHandle.visibility = View.GONE
                         binding.ivDetailClose.setImageResource(R.drawable.ic_arrow_left_detail)
+                        binding.layoutDetailTopBar.layoutParams = (binding.layoutDetailTopBar.layoutParams as MarginLayoutParams).apply {
+                            topMargin = requireContext().toPx(18).toInt()
+                        }
                         behavior.isDraggable = false
                     }
                     else -> binding.viewBottomSheetBackground.visibility = View.VISIBLE
                 }
             }
-
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 Log.d("slideOffset", slideOffset.toString())
             }
@@ -163,6 +168,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         binding.ivDetailClose.setImageResource(R.drawable.ic_delete_black)
         behavior.isDraggable = true
         binding.layoutScrollView.scrollTo(0, 0)
+        binding.layoutDetailTopBar.layoutParams = (binding.layoutDetailTopBar.layoutParams as MarginLayoutParams).apply {
+            topMargin = 0
+        }
     }
 
     private fun initCalendar() {
@@ -174,6 +182,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         // 날짜 선택 탭
         initDatePicker()
         updateSelectionUI(0)
+
+        val formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        selectedDate = LocalDate.now()
+        Log.d("CalendarFragment", "getScheduleByDate 호출!!")
+        scheduleViewModel.getScheduleByDate(selectedDate!!.format(formatter2))
     }
 
     private fun getNext7Days(): List<LocalDate> {
@@ -187,9 +200,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
     private fun initDatePicker() {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        selectedDate = LocalDate.now()
-        scheduleViewModel.getScheduleByDate(selectedDate!!.format(formatter))
-
         binding.layoutCalendarDatePick.removeAllViews()
 
         getNext7Days().forEachIndexed { index, date ->
@@ -231,19 +241,31 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
 
     private fun initDetailScheduleRVA() {
-        val adapter = DetailScheduleRVA()
         binding.rvCalendarDetailSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            this.adapter = adapter
+            this.adapter = this@CalendarFragment.adapter
         }
+
         scheduleViewModel.schedules.observe(viewLifecycleOwner) { scheduleList ->
             if(scheduleList.isEmpty()) {
                 binding.layoutNoSchedule.visibility = View.VISIBLE
                 binding.rvCalendarDetailSchedule.visibility = View.GONE
+                Log.e("CalendarFragment", "일정 없음")
             } else {
                 binding.layoutNoSchedule.visibility = View.GONE
                 binding.rvCalendarDetailSchedule.visibility = View.VISIBLE
                 adapter.setScheduleList(scheduleList = scheduleList as ArrayList<ScheduleByDateResponseModel>)
+                Log.d("CalendarFragment", "오늘 일정에 추가됐음!!!")
+            }
+        }
+
+        scheduleViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                // 로딩 중 UI 표시 (예: 프로그레스바 보이기)
+                binding.progressbarCalendar.visibility = View.VISIBLE
+            } else {
+                // 로딩 완료 UI 표시 (예: 프로그레스바 숨기기)
+                binding.progressbarCalendar.visibility = View.GONE
             }
         }
 

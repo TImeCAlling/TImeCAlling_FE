@@ -258,6 +258,17 @@
                         android:textColor="@color/gray_600" />
                 </LinearLayout>
 
+                <ProgressBar
+                    android:id="@+id/progressbar_calendar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_schedule_top_section"
+                    />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_calendar_detail_schedule"
                     android:layout_width="match_parent"
