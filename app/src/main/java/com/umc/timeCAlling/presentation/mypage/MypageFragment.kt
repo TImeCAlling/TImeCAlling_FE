@@ -37,6 +37,7 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
             layoutMypageTerms.setOnClickListener {
                 //이용약관
             }
+            ivMypageBack.setOnClickListener { findNavController().navigate(R.id.action_global_homeFragment) }
         }
     }
 
