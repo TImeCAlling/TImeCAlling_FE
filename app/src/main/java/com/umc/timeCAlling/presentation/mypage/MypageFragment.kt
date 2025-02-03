@@ -21,8 +21,22 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
     }
 
     private fun setClickListener() {
-        binding.clMypageSetting.setOnClickListener {
-            navigateToMyprofileFragment() // 내 프로필
+        binding.apply {
+            clMypageSetting.setOnClickListener {
+                navigateToMyprofileFragment() // 내 프로필
+            }
+            layoutMypageAlarmlist.setOnClickListener {
+                //알람리스트
+            }
+            layoutMypageCategory.setOnClickListener {
+                //카테고리
+            }
+            layoutMypageSoundInfo.setOnClickListener {
+                //음성정보
+            }
+            layoutMypageTerms.setOnClickListener {
+                //이용약관
+            }
         }
     }
 
