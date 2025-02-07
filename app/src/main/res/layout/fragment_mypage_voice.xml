@@ -67,7 +67,7 @@
             android:layout_marginTop="54dp"/>
 
         <TextView
-            android:id="@+id/tv_myprofile_name_edit"
+            android:id="@+id/tv_myprofile_gender_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
@@ -80,7 +80,7 @@
             android:layout_marginEnd="60dp"/>
 
         <ImageView
-            android:id="@+id/iv_myprofile_name_arrow"
+            android:id="@+id/iv_myprofile_gender_arrow"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@drawable/ic_arrow_right"
@@ -106,7 +106,7 @@
             android:layout_marginTop="41dp"/>
 
         <TextView
-            android:id="@+id/tv_myprofile_time_min"
+            android:id="@+id/tv_myprofile_language_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
@@ -119,7 +119,7 @@
             android:layout_marginEnd="60dp"/>
 
         <ImageView
-            android:id="@+id/iv_myprofile_time_arrow"
+            android:id="@+id/iv_myprofile_language_arrow"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@drawable/ic_arrow_right"
@@ -143,30 +143,6 @@
             app:layout_constraintTop_toBottomOf="@id/tv_myprofile_language"
             android:layout_marginStart="20dp"
             android:layout_marginTop="41dp"/>
-
-        <TextView
-            android:id="@+id/tv_myprofile_spare_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text=" "
-            android:fontFamily="@font/pretendard_semibold"
-            android:textColor="@color/gray_500"
-            style="@style/MaterialAlertDialog.Material3.Body.Text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_myprofile_volume"
-            android:layout_marginEnd="60dp"/>
-
-        <ImageView
-            android:id="@+id/iv_myprofile_spare_arrow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/ic_arrow_right"
-            android:backgroundTint="@color/gray_500"
-            app:layout_constraintTop_toTopOf="@id/tv_myprofile_volume"
-            app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_volume"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="20dp"/>
 
         <!-- 볼륨 bar -->
         <View
@@ -278,17 +254,6 @@
             app:layout_constraintTop_toBottomOf="@id/view_signup_name_volume_bar"
             android:layout_marginStart="20dp"
             android:layout_marginTop="25.5dp"/>
-
-        <ImageView
-            android:id="@+id/iv_myprofile_logout_arrow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/ic_arrow_right"
-            android:backgroundTint="@color/gray_500"
-            app:layout_constraintTop_toTopOf="@id/tv_myprofile_speed"
-            app:layout_constraintBottom_toBottomOf="@id/tv_myprofile_speed"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="20dp"/>
 
         <!-- 속도 bar -->
         <View
@@ -608,7 +573,7 @@
                     android:id="@+id/cl_mypageVoice_bottom_sheet_language_close"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintDienglishsionRatio="1:1"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintWidth_percent="0.068"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_mypageVoice_language_title"
@@ -625,7 +590,7 @@
                         android:background="@drawable/ic_delete"
                         android:backgroundTint="@color/gray_700"
                         app:layout_constraintWidth_percent="0.45"
-                        app:layout_constraintDienglishsionRatio="1:1"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -675,7 +640,7 @@
                     android:id="@+id/cl_mypageVoice_language_btn_korean"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintDienglishsionRatio="1:1"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintWidth_percent="0.068"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_mypageVoice_language_korean"
@@ -687,7 +652,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:background="@drawable/shape_rect_999_mint300_fill_mint_line_1"
-                        app:layout_constraintDienglishsionRatio="1:1"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintWidth_percent="1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -697,7 +662,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:background="@drawable/ic_check_mint"
-                        app:layout_constraintDienglishsionRatio="1:1"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintWidth_percent="0.7"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -724,7 +689,7 @@
                     android:id="@+id/cl_mypageVoice_language_btn_english"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintDienglishsionRatio="1:1"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintWidth_percent="0.068"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_mypageVoice_language_english"
@@ -736,7 +701,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:background="@drawable/shape_rect_999_gray300_fill"
-                        app:layout_constraintDienglishsionRatio="1:1"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintWidth_percent="1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -746,7 +711,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:background="@drawable/ic_check_white"
-                        app:layout_constraintDienglishsionRatio="1:1"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintWidth_percent="0.7"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
