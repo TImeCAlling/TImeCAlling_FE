@@ -2,64 +2,100 @@ package com.umc.timeCAlling.util
 
 import android.content.SharedPreferences
 import android.util.Log
-import com.auth0.jwt.JWT
+import com.auth0.android.jwt.JWT
 import com.umc.timeCAlling.data.datasource.LoginDataSource
+import com.umc.timeCAlling.data.dto.request.login.TokenRefreshRequestDto
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
-import okhttp3.RequestBody
 import okhttp3.Response
-import retrofit2.Retrofit
-import timber.log.Timber
-import java.util.Date
 import javax.inject.Inject
-import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class AuthInterceptor @Inject constructor(
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val loginDataSource: LoginDataSource
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val accessToken = sharedPreferences.getString("jwt", "") ?: ""
+        var accessToken = sharedPreferences.getString("jwt", "") ?: ""
+        val refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
 
-        Log.d(",", "AuthInterceptor - Access Token: $accessToken") // 액세스 토큰 로그 출력
+        Log.d("AuthInterceptor", "Current Access Token: $accessToken")
 
+        // JWT 디코딩 후 만료 여부 확인
+        if (isAccessTokenExpired(accessToken)) {
+            Log.d("AuthInterceptor","Access Token이 만료되었습니다. Refresh Token을 사용하여 새 토큰을 요청합니다.")
+
+            if (refreshToken.isNotEmpty()) {
+                val newAccessToken = runBlocking { refreshAccessToken(refreshToken) }
+                if (newAccessToken != null) {
+                    accessToken = newAccessToken
+                    Log.d("AuthInterceptor","새로운 Access Token 발급 완료: $accessToken")
+                } else {
+                    Log.e("AuthInterceptor","토큰 갱신 실패")
+                }
+            }
+        }
+
+        // 요청에 최신 Access Token 추가
         val request = chain.request().newBuilder()
             .addHeader("Authorization", "Bearer $accessToken")
             .build()
 
-        Log.d("", "AuthInterceptor - Request Headers: ${request.headers}") // 요청 헤더 로그 출력
-
         var response = chain.proceed(request)
 
-        if (response.code == 401) {
-            val kakaoUserId = sharedPreferences.getString("kakaoUserId", null)
-            val refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
-
-            if (kakaoUserId.isNullOrEmpty()) {
-                Timber.e("Kakao User ID가 없습니다. 리프레시 요청을 수행하지 않습니다.")
-                return response
-            }
-            /*if (isRefreshTokenExpired(refreshToken)) {
-                Timber.e("리프레시 토큰이 만료되었습니다.")
-                return response
-            }*/
-
-            //   val refreshRequest = RefreshAuthUserRequestDto(kakaoUserId, refreshToken)
-            //   val newAccessToken = runBlocking { refreshAccessToken(refreshRequest) }
-
-            /*if (newAccessToken != null) {
-                Timber.d("기존 액세스 토큰: $accessToken")
-                Timber.d("새로운 액세스 토큰: $newAccessToken")
+        // 401 응답이 온 경우 > Refresh Token 사용하여 Access Token 갱신
+        if (response.code == 401 && refreshToken.isNotEmpty()) {
+            val newAccessToken = runBlocking { refreshAccessToken(refreshToken) }
+            if (newAccessToken != null) {
+                Log.d("AuthInterceptor","401 오류 발생 → 새로운 Access Token 발급 완료: $newAccessToken")
 
                 sharedPreferences.edit().putString("jwt", newAccessToken).apply()
 
+                // 새로운 Access Token으로 다시 요청
                 val newRequest = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer $newAccessToken")
                     .build()
                 response = chain.proceed(newRequest)
             } else {
-                Timber.e("리프레시 토큰 요청 실패")
-            }*/
+                Log.e("AuthInterceptor","401 오류 발생 → Refresh Token도 만료됨. 로그아웃 필요")
+            }
         }
+
         return response
+    }
+
+    // JWT Access Token 만료되었는지 확인
+    private fun isAccessTokenExpired(token: String?): Boolean {
+        if (token.isNullOrEmpty()) return true
+
+        return try {
+            val jwt = JWT(token)
+            jwt.isExpired(10) // 10초 여유 두고 체크
+        } catch (e: Exception) {
+            Log.e("AuthInterceptor","JWT 파싱 실패: ${e.message}")
+            true // JWT 파싱 실패 시 만료된 것으로 간주
+        }
+    }
+
+    // Refresh Token을 이용하여 새로운 Access Token 요청
+    private suspend fun refreshAccessToken(refreshToken: String): String? {
+        val requestDto = TokenRefreshRequestDto("", refreshToken)
+        return try {
+            val response = loginDataSource.tokenRefresh(requestDto)
+
+            if (response.isSuccess && response.result != null) {
+                val newAccessToken = response.result.accessToken
+                sharedPreferences.edit().putString("jwt", newAccessToken).apply()
+                Log.d("AuthInterceptor","새로운 Access Token 발급 완료: $newAccessToken")
+                newAccessToken
+            } else {
+                Log.e("AuthInterceptor","토큰 갱신 실패: 서버 응답 실패 (${response.message})")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("AuthInterceptor","Access Token 갱신 실패: ${e.message}")
+            null
+        }
     }
 }
