@@ -2,6 +2,7 @@ package com.umc.timeCAlling.presentation.mypage
 
 import android.view.View
 import android.widget.SeekBar
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentMypageVoiceBinding
@@ -36,6 +37,7 @@ class MypageVoiceFragment: BaseFragment<FragmentMypageVoiceBinding>(R.layout.fra
     }
 
     private fun setClickListener() {
+        binding.ivMyprofileBack.setOnClickListener { findNavController().popBackStack() }
         binding.ivMyprofileGenderArrow.setOnClickListener { toggleBottomSheetState(genderBottomSheetBehavior) }
         binding.ivMyprofileLanguageArrow.setOnClickListener { toggleBottomSheetState(languageBottomSheetBehavior) }
     }
