@@ -144,101 +144,19 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="41dp"/>
 
-        <!-- 볼륨 bar -->
-        <View
-            android:id="@+id/view_signup_name_volume_bar"
+        <SeekBar
+            android:id="@+id/seekbar_myprofile_volume"
             android:layout_width="match_parent"
-            android:layout_height="16dp"
-            android:background="@drawable/shape_rect_999_gray300_fill"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_myprofile_volume"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="19dp"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/view_signup_name_volume_bar"
-            app:layout_constraintEnd_toEndOf="@id/view_signup_name_volume_bar"
-            app:layout_constraintTop_toTopOf="@id/view_signup_name_volume_bar"
-            app:layout_constraintBottom_toBottomOf="@id/view_signup_name_volume_bar">
-
-            <View
-                android:id="@+id/view_signup_name_volume_standard_0"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="invisible"/>
-
-            <View
-                android:id="@+id/view_signup_name_volume_standard_1"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toEndOf="@id/view_signup_name_volume_standard_0"
-                app:layout_constraintEnd_toStartOf="@id/view_signup_name_volume_standard_2"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/view_signup_name_volume_standard_2"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toEndOf="@id/view_signup_name_volume_standard_1"
-                app:layout_constraintEnd_toStartOf="@id/view_signup_name_volume_standard_3"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/view_signup_name_volume_standard_3"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toEndOf="@id/view_signup_name_volume_standard_2"
-                app:layout_constraintEnd_toStartOf="@id/view_signup_name_volume_standard_4"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/view_signup_name_volume_standard_4"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toEndOf="@id/view_signup_name_volume_standard_3"
-                app:layout_constraintEnd_toStartOf="@id/view_signup_name_volume_standard_5"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/view_signup_name_volume_standard_5"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="invisible"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/view_signup_name_volume_bar_mint"
-            android:layout_width="0dp"
-            android:layout_height="16dp"
-            android:background="@drawable/shape_rect_999_mint_fill"
-            app:layout_constraintWidth_percent="0.59"
+            android:progressDrawable="@drawable/custom_seekbar_progress"
+            android:thumb="@drawable/shape_rect_999_white_fill_mint_shadow"
+            android:splitTrack="false"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="19dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_myprofile_volume"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="19dp"/>
-
-        <View
-            android:id="@+id/view_signup_name_volume_bar_circle"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/shape_rect_999_white_fill_mint_shadow"
-            app:layout_constraintTop_toTopOf="@id/view_signup_name_volume_bar_mint"
-            app:layout_constraintBottom_toBottomOf="@id/view_signup_name_volume_bar_mint"
-            app:layout_constraintEnd_toEndOf="@id/view_signup_name_volume_bar_mint"
-            android:layout_marginEnd="-8dp"
-            android:visibility="visible"/>
+            android:maxHeight="16dp"
+            android:minHeight="16dp"/>
 
         <!-- 속도 -->
         <TextView
@@ -251,105 +169,23 @@
             android:textColor="@color/gray_900"
             style="@style/MaterialAlertDialog.Material3.Body.Text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_signup_name_volume_bar"
+            app:layout_constraintTop_toBottomOf="@id/seekbar_myprofile_volume"
             android:layout_marginStart="20dp"
             android:layout_marginTop="25.5dp"/>
 
-        <!-- 속도 bar -->
-        <View
-            android:id="@+id/view_signup_name_speed_bar"
+        <SeekBar
+            android:id="@+id/seekbar_myprofile_speed"
             android:layout_width="match_parent"
-            android:layout_height="16dp"
-            android:background="@drawable/shape_rect_999_gray300_fill"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_myprofile_speed"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="19dp"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/view_signup_name_speed_bar"
-            app:layout_constraintEnd_toEndOf="@id/view_signup_name_speed_bar"
-            app:layout_constraintTop_toTopOf="@id/view_signup_name_speed_bar"
-            app:layout_constraintBottom_toBottomOf="@id/view_signup_name_speed_bar">
-
-            <View
-                android:id="@+id/view_signup_name_speed_standard_0"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="invisible"/>
-
-            <View
-                android:id="@+id/view_signup_name_speed_standard_1"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toEndOf="@id/view_signup_name_speed_standard_0"
-                app:layout_constraintEnd_toStartOf="@id/view_signup_name_speed_standard_2"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/view_signup_name_speed_standard_2"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toEndOf="@id/view_signup_name_speed_standard_1"
-                app:layout_constraintEnd_toStartOf="@id/view_signup_name_speed_standard_3"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/view_signup_name_speed_standard_3"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toEndOf="@id/view_signup_name_speed_standard_2"
-                app:layout_constraintEnd_toStartOf="@id/view_signup_name_speed_standard_4"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/view_signup_name_speed_standard_4"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintStart_toEndOf="@id/view_signup_name_speed_standard_3"
-                app:layout_constraintEnd_toStartOf="@id/view_signup_name_speed_standard_5"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/view_signup_name_speed_standard_5"
-                android:layout_width="6dp"
-                android:layout_height="11dp"
-                android:background="@drawable/shape_rect_999_gray400_fill"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="invisible"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/view_signup_name_speed_bar_mint"
-            android:layout_width="0dp"
-            android:layout_height="16dp"
-            android:background="@drawable/shape_rect_999_mint_fill"
-            app:layout_constraintWidth_percent="0.39"
+            android:progressDrawable="@drawable/custom_seekbar_progress"
+            android:thumb="@drawable/shape_rect_999_white_fill_mint_shadow"
+            android:splitTrack="false"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="19dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_myprofile_speed"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="19dp"/>
-
-        <View
-            android:id="@+id/view_signup_name_speed_bar_circle"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/shape_rect_999_white_fill_mint_shadow"
-            app:layout_constraintTop_toTopOf="@id/view_signup_name_speed_bar_mint"
-            app:layout_constraintBottom_toBottomOf="@id/view_signup_name_speed_bar_mint"
-            app:layout_constraintEnd_toEndOf="@id/view_signup_name_speed_bar_mint"
-            android:layout_marginEnd="-8dp"
-            android:visibility="visible"/>
+            android:maxHeight="16dp"
+            android:minHeight="16dp"/>
 
         <!-- bottomSheet background -->
         <View

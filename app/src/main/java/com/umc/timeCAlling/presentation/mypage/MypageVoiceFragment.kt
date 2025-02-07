@@ -1,6 +1,7 @@
 package com.umc.timeCAlling.presentation.mypage
 
 import android.view.View
+import android.widget.SeekBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentMypageVoiceBinding
@@ -24,6 +25,7 @@ class MypageVoiceFragment: BaseFragment<FragmentMypageVoiceBinding>(R.layout.fra
         setClickListener()
         initBottomSheets()
         initBottomSheetActions()
+        initVolumeSeekBar()
 
         hideViews(
             R.id.main_bnv,
@@ -137,6 +139,51 @@ class MypageVoiceFragment: BaseFragment<FragmentMypageVoiceBinding>(R.layout.fra
         binding.ivMypageVoiceLanguageOvalEnglish.setBackgroundResource(if (isKorean) unselectedOval else selectedOval)
         binding.ivMypageVoiceLanguageCheckEnglish.setBackgroundResource(if (isKorean) unselectedCheck else selectedCheck)
     }
+
+    private fun initVolumeSeekBar() {
+        binding.seekbarMyprofileVolume.max = 5 // 0~5 단계
+        binding.seekbarMyprofileVolume.progress = 0 // 초기값 설정
+
+        binding.seekbarMyprofileSpeed.max = 5 // 0~5 단계
+        binding.seekbarMyprofileSpeed.progress = 0 // 초기값 설정
+
+        binding.seekbarMyprofileVolume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val closestStep = progress
+                    seekBar?.progress = closestStep // 가장 가까운 단계로 이동
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                seekBar?.let {
+                    val closestStep = it.progress // 멈췄을 때 단계 유지
+                    it.progress = closestStep
+                }
+            }
+        })
+
+        binding.seekbarMyprofileSpeed.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val closestStep = progress
+                    seekBar?.progress = closestStep // 가장 가까운 단계로 이동
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                seekBar?.let {
+                    val closestStep = it.progress // 멈췄을 때 단계 유지
+                    it.progress = closestStep
+                }
+            }
+        })
+    }
+
 
 
 }
