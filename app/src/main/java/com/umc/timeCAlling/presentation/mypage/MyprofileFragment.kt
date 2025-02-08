@@ -22,6 +22,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -150,6 +151,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         binding.ivMyprofileNameArrow.setOnClickListener { toggleBottomSheetState(nameBottomSheetBehavior) }
         binding.ivMyprofileTimeArrow.setOnClickListener { toggleBottomSheetState(timeBottomSheetBehavior) }
         binding.ivMyprofileSpareArrow.setOnClickListener { toggleBottomSheetState(spareBottomSheetBehavior) }
+        binding.ivMyprofileLogoutArrow.setOnClickListener { showLogoutDialog() }
         binding.clMyprofileNameDelete.setOnClickListener { clearInputField() }
         binding.tvMyprofileWithdraw.setOnClickListener { showWithdrawDialog() }
 
@@ -462,6 +464,42 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         btn.setOnClickListener {
             dialog.dismiss()
             deleteUser()
+        }
+
+        dialog.show()
+    }
+
+    private fun showLogoutDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.layout_logout_account_dialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.8).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+
+        val logoutBtn = dialog.findViewById<TextView>(R.id.btn_dialog_logout)
+        logoutBtn.setOnClickListener {
+            dialog.dismiss()
+            signupViewModel.logout()
+            signupViewModel.isLoggedOut.observe(viewLifecycleOwner) { isLoggedOut ->
+                if (isLoggedOut) {
+                    findNavController().navigate(
+                        R.id.action_myprofileFragment_to_loginFragment,
+                        null,
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.myprofileFragment, true) // myprofileFragment 포함 이전 모든 프래그먼트 제거
+                            .build()
+                    )
+                }
+            }
+        }
+
+        val cancelBtn = dialog.findViewById<TextView>(R.id.btn_dialog_cancel)
+        cancelBtn.setOnClickListener {
+            dialog.dismiss()
         }
 
         dialog.show()
