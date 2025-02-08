@@ -3,8 +3,10 @@ package com.umc.timeCAlling.data.service
 import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.login.KakaoLoginRequestDto
 import com.umc.timeCAlling.data.dto.request.login.KakaoSignupRequestDto
+import com.umc.timeCAlling.data.dto.request.login.TokenRefreshRequestDto
 import com.umc.timeCAlling.data.dto.response.login.KakaoLoginResponseDto
 import com.umc.timeCAlling.data.dto.response.login.KakaoSignupResponseDto
+import com.umc.timeCAlling.data.dto.response.login.TokenRefreshResponseDto
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.Multipart
@@ -23,4 +25,9 @@ interface LoginService {
         @Part profileImage: MultipartBody.Part,
         @Part ("request") request: KakaoSignupRequestDto
     ): BaseResponse<KakaoSignupResponseDto>
+
+    @POST("/api/users/token/refresh")
+    suspend fun tokenRefresh(
+        @Body request: TokenRefreshRequestDto
+    ): BaseResponse<TokenRefreshResponseDto>
 }
