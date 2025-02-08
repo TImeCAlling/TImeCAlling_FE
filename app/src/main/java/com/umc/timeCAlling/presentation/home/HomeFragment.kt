@@ -31,6 +31,12 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val viewModel: HomeViewModel by viewModels()
 
     override fun initView() {
+        arguments?.let {
+            val scheduleId = it.getInt("scheduleId", -1)
+                Toast.makeText(requireContext(), "scheduleId: $scheduleId", Toast.LENGTH_LONG).show()
+                Log.d("HomeFragment", "scheduleId: $scheduleId")
+                arguments?.remove("scheduleId")
+        }
         binding.layoutHomeTodayScheduleDetail.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_calendarFragment)
         }

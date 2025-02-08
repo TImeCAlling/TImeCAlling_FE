@@ -2,7 +2,7 @@ package com.umc.timeCAlling.util
 
 import android.content.SharedPreferences
 import android.util.Log
-import com.auth0.android.jwt.JWT
+import com.auth0.jwt.JWT
 import com.umc.timeCAlling.data.datasource.LoginDataSource
 import com.umc.timeCAlling.data.dto.request.login.TokenRefreshRequestDto
 import kotlinx.coroutines.runBlocking
@@ -34,6 +34,8 @@ class AuthInterceptor @Inject constructor(
                 } else {
                     Log.e("AuthInterceptor","토큰 갱신 실패")
                 }
+            }else{
+                Log.e("AuthInterceptor","Refresh Token이 없습니다.")
             }
         }
 
@@ -68,14 +70,9 @@ class AuthInterceptor @Inject constructor(
     // JWT Access Token 만료되었는지 확인
     private fun isAccessTokenExpired(token: String?): Boolean {
         if (token.isNullOrEmpty()) return true
-
-        return try {
-            val jwt = JWT(token)
-            jwt.isExpired(10) // 10초 여유 두고 체크
-        } catch (e: Exception) {
-            Log.e("AuthInterceptor","JWT 파싱 실패: ${e.message}")
-            true // JWT 파싱 실패 시 만료된 것으로 간주
-        }
+        val jwt = JWT.decode(token)
+        val expiresAt = jwt.expiresAt
+        return expiresAt == null || expiresAt.before(java.util.Date())
     }
 
     // Refresh Token을 이용하여 새로운 Access Token 요청

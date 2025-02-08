@@ -37,8 +37,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun setClickListener() {
         binding.ivLoginKakaoLogin.setOnClickListener {
-            profileViewModel.deleteUser()
-            viewModel.clearAuthToken()
             loginWithKakao(requireContext())
         }
 

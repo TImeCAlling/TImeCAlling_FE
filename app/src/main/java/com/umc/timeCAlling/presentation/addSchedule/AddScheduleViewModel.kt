@@ -147,6 +147,9 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _publicResult = MutableLiveData<PublicTransportationModel>()
     val publicResult: LiveData<PublicTransportationModel> = _publicResult
 
+    private val _scheduleId = MutableLiveData<Int>()
+    val scheduleId: LiveData<Int> = _scheduleId
+
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
     }
@@ -264,6 +267,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
             Log.d("","${request}")
              scheduleRepository.createSchedule(request).onSuccess { response ->
                  Log.d("createSchedule", "API 호출 성공: $response")
+                 _scheduleId.value = response.scheduleId
+
              }.onFailure {error->
                  Log.e("createSchedule", "API 호출 실패: $error")
              }
