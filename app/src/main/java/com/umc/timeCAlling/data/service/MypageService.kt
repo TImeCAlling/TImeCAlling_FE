@@ -19,7 +19,7 @@ interface MypageService {
     @Multipart
     @PUT("/api/users")
     suspend fun updateUser(
-        @Part profileImage: MultipartBody.Part,
+        @Part profileImage: MultipartBody.Part?,
         @Part("request") request: UpdateUserRequestDto
     ): BaseResponse<UpdateUserResponseDto>
 

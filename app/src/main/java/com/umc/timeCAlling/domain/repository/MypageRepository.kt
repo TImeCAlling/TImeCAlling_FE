@@ -12,6 +12,6 @@ import okhttp3.MultipartBody
 
 interface MypageRepository {
     suspend fun getUser(): Result<GetUserResponseModel>
-    suspend fun updateUser(proflieImage:MultipartBody.Part, requestModel: UpdateUserRequestModel): Result<UpdateUserResponseModel>
+    suspend fun updateUser(proflieImage:MultipartBody.Part?, requestModel: UpdateUserRequestModel): Result<UpdateUserResponseModel>
     suspend fun deleteUser(): Result<DeleteUserResponseModel>
 }

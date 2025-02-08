@@ -18,7 +18,7 @@ class MypageRepositoryImpl @Inject constructor(
             mypageDataSource.getUser().result.toGetUserResponseModel()
         }
 
-    override suspend fun updateUser(profileImage: MultipartBody.Part, requestModel: UpdateUserRequestModel): Result<UpdateUserResponseModel> =
+    override suspend fun updateUser(profileImage: MultipartBody.Part?, requestModel: UpdateUserRequestModel): Result<UpdateUserResponseModel> =
         runCatching {
             mypageDataSource.updateUser(profileImage, requestModel.toUpdateUserRequestDto()).result.toUpdateUserResponseModel()
         }

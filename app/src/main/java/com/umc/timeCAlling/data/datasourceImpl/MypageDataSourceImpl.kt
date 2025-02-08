@@ -16,7 +16,7 @@ class MypageDataSourceImpl @Inject constructor(
     override suspend fun getUser(): BaseResponse<GetUserResponseDto> =
         mypageService.getUser()
 
-    override suspend fun updateUser(profileImage: MultipartBody.Part, requestDto: UpdateUserRequestDto): BaseResponse<UpdateUserResponseDto> =
+    override suspend fun updateUser(profileImage: MultipartBody.Part?, requestDto: UpdateUserRequestDto): BaseResponse<UpdateUserResponseDto> =
         mypageService.updateUser(profileImage, requestDto)
 
     override suspend fun deleteUser(): BaseResponse<DeleteUserResponseDto> =

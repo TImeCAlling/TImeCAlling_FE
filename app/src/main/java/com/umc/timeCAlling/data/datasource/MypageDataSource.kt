@@ -9,6 +9,6 @@ import okhttp3.MultipartBody
 
 interface MypageDataSource {
     suspend fun getUser(): BaseResponse<GetUserResponseDto>
-    suspend fun updateUser(profileImage:MultipartBody.Part, requestDto:UpdateUserRequestDto): BaseResponse<UpdateUserResponseDto>
+    suspend fun updateUser(profileImage:MultipartBody.Part?, requestDto:UpdateUserRequestDto): BaseResponse<UpdateUserResponseDto>
     suspend fun deleteUser(): BaseResponse<DeleteUserResponseDto>
 }
