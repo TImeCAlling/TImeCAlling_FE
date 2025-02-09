@@ -14,6 +14,7 @@ import androidx.compose.ui.semantics.text
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -42,6 +43,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var behavior: TopSheetBehavior<View>
     private val viewModel: HomeViewModel by activityViewModels()
     private val scheduleViewModel : AddScheduleViewModel by activityViewModels()
+    private var dialog: androidx.appcompat.app.AlertDialog? = null
 
     override fun initView() {
         arguments?.let {
@@ -68,9 +70,15 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 layoutParams?.dimAmount = 0.8f
                 dialog.window?.attributes = layoutParams
 
-                // 변수에 값 설정
-                dialogBinding.nickname = scheduleViewModel.sharedScheduleNickname.toString()
-                dialogBinding.scheduleName = scheduleViewModel.sharedScheduleName.toString()
+                scheduleViewModel.sharedScheduleNickname.observe(viewLifecycleOwner, Observer { nickname ->
+                    scheduleViewModel.sharedScheduleName.observe(viewLifecycleOwner, Observer { scheduleName ->
+                        if (nickname != null && scheduleName != null) {
+                            dialogBinding.nickname = nickname
+                            dialogBinding.scheduleName = scheduleName
+                            dialog?.show()
+                        }
+                    })
+                })
 
                 dialogBinding.tvDialogSuccess.setOnSingleClickListener {
                     val bundle = Bundle().apply {
@@ -156,10 +164,10 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun initLastScheduleRV() {
         var list = arrayListOf<LastSchedule>(
-            LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
-            LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00"),
-            LastSchedule("컴퓨터 구조", "일정 설명", true, "9:00"),
-            LastSchedule("컴퓨터 구조2", "일정 설명", true, "10:00")
+            LastSchedule("UMC 2차 과제 제출", "시연 영상", true, "11:59"),
+            LastSchedule("수학 학원 알바", "책 챙겨가기", true, "19:00"),
+            LastSchedule("신선전 포스터 제작", "A0 사이즈로 제작", true, "20:00"),
+            LastSchedule("UMC 8th 회장단 회의", "노션 회의록 참고", true, "21:00")
         )
         val listSize = list.size
         setProgressBar(listSize, listSize)
