@@ -33,6 +33,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private lateinit var dateBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var scheduleId : Int = -1
+    val mode = viewModel.getMode()
 
     override fun initObserver() {
 
@@ -43,6 +44,10 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정수정" } else { binding.tvAddScheduleTitle.text = "일정추가" }
 
+        if(mode == "shared") {
+            viewModel.sharedSchedule(scheduleId)
+            binding.tvAddScheduleTitle.text = "공유일정추가"
+        }
         initSavedData()
 
         binding.viewBottomSheetBackground.isClickable = false
@@ -299,9 +304,23 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     }
 
     private fun moveToAddScheduleSecond() {
-        binding.tvAddScheduleNext.setOnClickListener {
-            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
-            findNavController().navigate(R.id.action_addScheduleFragment_to_addScheduleSecondFragment, bundle)
-        }
+        if(binding.etAddScheduleName.text.isNotEmpty()&& binding.etAddScheduleMemo.text.isNotEmpty()&& binding.tvAddScheduleDate.text.isNotEmpty()&& binding.tvAddScheduleTime.text.isNotEmpty()&& binding.tvAddScheduleLocation.text.isNotEmpty()&& binding.tvAddScheduleMinute.text.isNotEmpty()) {
+            binding.tvAddScheduleNext.isEnabled = true
+            binding.tvAddScheduleNext.backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
+            binding.tvAddScheduleNext.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            binding.tvAddScheduleNext.setOnClickListener {
+                val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+                findNavController().navigate(
+                    R.id.action_addScheduleFragment_to_addScheduleSecondFragment,
+                    bundle
+                )
+            }
+        }else{ binding.tvAddScheduleNext.isEnabled = false }
     }
 }

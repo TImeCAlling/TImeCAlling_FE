@@ -20,6 +20,10 @@ class AuthInterceptor @Inject constructor(
         var accessToken = sharedPreferences.getString("jwt", "") ?: ""
         val refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
 
+/*        accessToken = "스웨거에서 재발급 받은거"
+        sharedPreferences.edit().apply{
+            putString("jwt", accessToken)
+        }*/
         Log.d("AuthInterceptor", "Current Access Token: $accessToken")
 
         // JWT 디코딩 후 만료 여부 확인

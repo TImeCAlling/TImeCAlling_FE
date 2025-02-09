@@ -31,7 +31,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val tmapRepository: TmapRepository,
     private val scheduleRepository: ScheduleRepository
     ) : ViewModel() {
-    private var mode: String = ""
+    private var mode: String = "normal"
 
     private val _categoryNeedsRefresh = MutableStateFlow<String>("대중교통")
     val categoryNeedsRefresh: StateFlow<String> get() = _categoryNeedsRefresh
@@ -158,16 +158,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     val selectedCategory=MutableLiveData<String>()
 
 
-    fun setMode(m: String) {
-        mode = m
-    }
-
-    fun getMode(): String {
-        return mode
-    }
-    fun isSharedMode(): Boolean {
-        return mode == "shared"
-    }
+    fun setMode(m: String) { mode = m }
+    fun getMode(): String { return mode }
 
     fun addRecentSearch(search: String) {
         val updatedSearches = _recentSearches.value?.toMutableList()?.also {
