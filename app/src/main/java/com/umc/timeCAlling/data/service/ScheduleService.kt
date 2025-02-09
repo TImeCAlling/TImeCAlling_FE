@@ -11,6 +11,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import com.umc.timeCAlling.data.dto.response.schedule.ScheduleByDateResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SchedulesResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.SharedScheduleResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SuccessRateResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.TodaySchedulesResponseDto
 import retrofit2.http.GET
@@ -46,4 +47,9 @@ interface ScheduleService {
     @GET("/api/schedules/success-rate")
     suspend fun getSuccessRate(
     ) : BaseResponse<SuccessRateResponseDto>
+
+    @GET("/api/schedules/share/{scheduleId}")
+    suspend fun getSharedSchedule(
+        @Path("scheduleId") scheduleId: Int
+    ) : BaseResponse<SharedScheduleResponseDto>
 }

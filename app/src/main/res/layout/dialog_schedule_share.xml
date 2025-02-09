@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="nickname"
+            type="String" />
+        <variable
+            name="scheduleName"
+            type="String" />
+    </data>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,8 +25,7 @@
                 android:id="@+id/tv_dialog_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="'이름' 님께서 공유하신&#10;'일정 이름' 일정이&#10;추가되었습니다."
-                android:paddingHorizontal="60dp"
+                android:text="@{@string/dialog_title(nickname, scheduleName)}"                android:paddingHorizontal="60dp"
                 android:gravity="center"
                 style="@style/TextAppearance.TimeCAlling.Head1"
                 android:layout_centerHorizontal="true"

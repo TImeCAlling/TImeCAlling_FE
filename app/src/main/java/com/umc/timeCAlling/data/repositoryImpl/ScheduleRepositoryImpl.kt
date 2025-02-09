@@ -6,6 +6,7 @@ import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponse
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SchedulesResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.SharedScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodaySchedulesResponseModel
 import com.umc.timeCAlling.domain.model.response.tmap.CarTransportationModel
@@ -34,4 +35,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun getSuccessRate(): Result<SuccessRateResponseModel> =
         runCatching{ scheduleDataSource.getSuccessRate().result.toSuccessRateResponseModel() }
+
+    override suspend fun getSharedSchedule(scheduleId: Int): Result<SharedScheduleResponseModel> =
+        runCatching{ scheduleDataSource.getSharedSchedule(scheduleId).result.toSharedScheduleResponseModel() }
 }

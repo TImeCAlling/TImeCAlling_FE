@@ -31,6 +31,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val tmapRepository: TmapRepository,
     private val scheduleRepository: ScheduleRepository
     ) : ViewModel() {
+    private var mode: String = ""
 
     private val _categoryNeedsRefresh = MutableStateFlow<String>("대중교통")
     val categoryNeedsRefresh: StateFlow<String> get() = _categoryNeedsRefresh
@@ -155,6 +156,18 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     }
 
     val selectedCategory=MutableLiveData<String>()
+
+
+    fun setMode(m: String) {
+        mode = m
+    }
+
+    fun getMode(): String {
+        return mode
+    }
+    fun isSharedMode(): Boolean {
+        return mode == "shared"
+    }
 
     fun addRecentSearch(search: String) {
         val updatedSearches = _recentSearches.value?.toMutableList()?.also {
@@ -311,6 +324,23 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         }
     }
 
+    private val _sharedScheduleName = MutableLiveData<String>()
+    val sharedScheduleName: LiveData<String> = _sharedScheduleName
+
+    private val _sharedScheduleNickname = MutableLiveData<String>()
+    val sharedScheduleNickname: LiveData<String> = _sharedScheduleNickname
+
+    fun sharedSchedule(scheduleId: Int){
+        viewModelScope.launch {
+            scheduleRepository.getSharedSchedule(scheduleId).onSuccess {
+                Log.d("sharedSchedule", "API 호출 성공: $it")
+                _sharedScheduleName.value = it.name
+                _sharedScheduleNickname.value = it.nickname
+            }.onFailure {
+                Log.e("sharedSchedule", "API 호출 실패: $it")
+            }
+        }
+    }
     fun resetData() {
         _scheduleName.value = ""
         _scheduleMemo.value = ""

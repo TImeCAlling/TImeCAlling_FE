@@ -1,20 +1,32 @@
 package com.umc.timeCAlling.presentation.home
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.material3.AlertDialog
+import androidx.compose.ui.semantics.dismiss
+import androidx.compose.ui.semantics.text
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TopSheetBehavior
+import com.umc.timeCAlling.databinding.DialogScheduleShareBinding
+import com.umc.timeCAlling.databinding.DialogWakeupShareBinding
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
 import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
+import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
@@ -28,14 +40,47 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private lateinit var navController: NavController
     private lateinit var behavior: TopSheetBehavior<View>
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
+    private val scheduleViewModel : AddScheduleViewModel by activityViewModels()
 
     override fun initView() {
         arguments?.let {
             val scheduleId = it.getInt("scheduleId", -1)
-                Toast.makeText(requireContext(), "scheduleId: $scheduleId", Toast.LENGTH_LONG).show()
-                Log.d("HomeFragment", "scheduleId: $scheduleId")
-                arguments?.remove("scheduleId")
+            if (scheduleId != -1) {
+                scheduleViewModel.sharedSchedule(scheduleId)
+
+                val dialogBinding: DialogScheduleShareBinding = DataBindingUtil.inflate(
+                    LayoutInflater.from(requireContext()),
+                    R.layout.dialog_schedule_share,
+                    null,
+                    false
+                )
+
+                val dialog = MaterialAlertDialogBuilder(requireContext())
+                    .setView(dialogBinding.root)
+                    .setCancelable(false)
+                    .create()
+
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.show()
+
+                val layoutParams = dialog.window?.attributes
+                layoutParams?.dimAmount = 0.8f
+                dialog.window?.attributes = layoutParams
+
+                // 변수에 값 설정
+                dialogBinding.nickname = scheduleViewModel.sharedScheduleNickname.toString()
+                dialogBinding.scheduleName = scheduleViewModel.sharedScheduleName.toString()
+
+                dialogBinding.tvDialogSuccess.setOnSingleClickListener {
+                    val bundle = Bundle().apply {
+                        putInt("scheduleId", scheduleId)
+                    }
+                    scheduleViewModel.setMode("shared")
+                    findNavController().navigate(R.id.action_homeFragment_to_addScheduleTab, bundle)
+                    dialog.dismiss()
+                }
+            }
         }
         binding.layoutHomeTodayScheduleDetail.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_calendarFragment)
