@@ -3,15 +3,15 @@
     android:layout_width="156dp"
     android:layout_height="108dp"
     android:layout_marginEnd="16dp"
-    android:layout_marginVertical="1dp"
     app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_rect_16_gray180_fill">
+        android:background="@drawable/shape_rect_16_gray200_fill_gray300_line_1">
         <ImageView
             android:id="@+id/img_last_schedule"
             android:layout_width="wrap_content"

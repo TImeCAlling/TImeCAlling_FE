@@ -61,6 +61,12 @@
             <action
                 android:id="@+id/action_mypageFragment_to_myprofileFragment"
                 app:destination="@id/myprofileFragment"/>
+            <action
+                android:id="@+id/action_mypageFragment_to_alarmlistFragment"
+                app:destination="@id/alarmlistFragment"/>
+            <action
+                android:id="@+id/action_mypageFragment_to_categoryEditFragment"
+                app:destination="@id/categoryEditFragment"/>
         </fragment>
         <fragment
             android:id="@+id/myprofileFragment"
@@ -71,6 +77,35 @@
                 android:id="@+id/action_myprofileFragment_to_loginFragment"
                 app:destination="@id/loginTab"/>
         </fragment>
+        <fragment
+            android:id="@+id/alarmlistFragment"
+            android:name="com.umc.timeCAlling.presentation.mypage.alarmlist.AlarmlistFragment"
+            android:label="AlarmlistFragment"
+            tools:layout="@layout/fragment_alarmlist">
+            <action
+                android:id="@+id/action_alarmlistFragment_to_mypageFragment"
+                app:destination="@id/mypageFragment"/>
+            <action
+                android:id="@+id/action_alarmlistFragment_to_addAlarmFragment"
+                app:destination="@id/addAlarmFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/categoryEditFragment"
+            android:name="com.umc.timeCAlling.presentation.addSchedule.CategoryEditFragment"
+            android:label="CategoryEditFragment"
+            tools:layout="@layout/fragment_category_edit">
+        </fragment>
+        <fragment
+            android:id="@+id/addAlarmFragment"
+            android:name="com.umc.timeCAlling.presentation.mypage.alarmlist.AddAlarmFragment"
+            android:label="AddAlarmFragment"
+            tools:layout="@layout/fragment_add_alarm">
+            <action
+                android:id="@+id/action_addAlarmFragment_to_alarmlistFragment"
+                app:destination="@id/alarmlistFragment"/>
+        </fragment>
+
+
     </navigation>
 
     <navigation
