@@ -18,11 +18,13 @@ class AuthInterceptor @Inject constructor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var accessToken = sharedPreferences.getString("jwt", "") ?: ""
-        val refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
+        var refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
 
-/*        accessToken = "스웨거에서 재발급 받은거"
+/*        accessToken = "스웨거에서 받은 accessToken"
+        refreshToken = "스웨거에서 받은 refreshToken"
         sharedPreferences.edit().apply{
             putString("jwt", accessToken)
+            putString("refreshToken", refreshToken)
         }*/
         Log.d("AuthInterceptor", "Current Access Token: $accessToken")
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
@@ -47,7 +48,7 @@ class CategoryRVA(
         val category = categories[position]
 
         holder.tvCategoryName.text = category.name
-        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color)
+        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, category.color))
 
         holder.itemView.setOnClickListener {
             viewModel.selectedCategory.value = category.name // ViewModel에 선택된 카테고리 업데이트

@@ -38,26 +38,26 @@ class CategoryEditRVA(
         val colorViews: Array<View> = arrayOf(
             itemView.findViewById(R.id.view_category_orange),
             itemView.findViewById(R.id.view_category_yellow),
-            itemView.findViewById(R.id.view_category_green),
             itemView.findViewById(R.id.view_category_mint),
             itemView.findViewById(R.id.view_category_skyblue),
+            itemView.findViewById(R.id.view_category_blue),
+            itemView.findViewById(R.id.view_category_green),
             itemView.findViewById(R.id.view_category_pink),
             itemView.findViewById(R.id.view_category_mauve),
             itemView.findViewById(R.id.view_category_purple),
-            itemView.findViewById(R.id.view_category_blue),
             itemView.findViewById(R.id.view_category_gray)
         )
         val colorResources: Array<Int> = arrayOf(
-            R.color.category_orange,
-            R.color.category_yellow,
-            R.color.category_green,
-            R.color.mint_main,
-            R.color.category_skyblue,
-            R.color.category_pink,
-            R.color.category_mauve,
-            R.color.category_purple,
-            R.color.category_blue,
-            R.color.gray_600
+            CategoryManager.getColor(0),
+            CategoryManager.getColor(1),
+            CategoryManager.getColor(2),
+            CategoryManager.getColor(3),
+            CategoryManager.getColor(4),
+            CategoryManager.getColor(5),
+            CategoryManager.getColor(6),
+            CategoryManager.getColor(7),
+            CategoryManager.getColor(8),
+            CategoryManager.getColor(9)
         )
     }
 
@@ -78,9 +78,7 @@ class CategoryEditRVA(
         val colorViews = holder.colorViews
         val colorResources = holder.colorResources
 
-        ivCategoryLogo.setColorFilter(category.color) // ContextCompat.getColor() 제거
-        ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color) // ContextCompat.getColor() 제거
-
+        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, category.color))
 
         etCategoryName.setText(category.name)
         etCategoryName.isEnabled = false

@@ -45,7 +45,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
         if (scheduleId != -1) { binding.tvAddScheduleSecondTitle.text = "일정수정" } else { binding.tvAddScheduleSecondTitle.text = "일정추가" }
 
-
+        binding.tvAddScheduleNext.isEnabled = false
         binding.viewBottomSheetBackground.isClickable = false
         initSavedData()
         initCategoryList()
@@ -53,7 +53,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         bottomNavigationRemove()
         initRepeatBottomSheet()
         initCategoryBottomSheet()
-        moveToAddScheduleSuccess()
         initSpareTimeTextViews()
 
         binding.ivAddScheduleSecondBack.setOnSingleClickListener {
@@ -407,12 +406,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             binding.tvAddScheduleCategory.text = "없음"
             binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
         } else {
-            binding.ivAddScheduleCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color)
-            binding.ivAddScheduleCategoryList.backgroundTintList = ColorStateList.valueOf(category.color)
+            moveToAddScheduleSuccess()
+            binding.ivAddScheduleCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), category.color))
+            binding.ivAddScheduleCategoryList.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), category.color))
             binding.tvAddScheduleCategory.text = category.name
-            binding.tvAddScheduleCategory.setTextColor(category.color)
+            binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), category.color))
             viewModel.setCategoryName(category.name)
-            viewModel.setCategoryColor(category.color)
+            viewModel.setCategoryColor(ContextCompat.getColor(requireContext(), category.color))
         }
     }
 
@@ -428,10 +428,19 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     }
 
     private fun moveToAddScheduleSuccess() {
-        binding.tvAddScheduleNext.setOnClickListener {
-            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
-            findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment, bundle)
-            if(scheduleId != 1){ viewModel.createSchedule() }else{ viewModel.editSchedule(scheduleId) }
-        }
+            binding.tvAddScheduleNext.isEnabled = true
+            binding.tvAddScheduleNext.backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
+            binding.tvAddScheduleNext.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            binding.tvAddScheduleNext.setOnClickListener {
+                val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+                findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment, bundle)
+                if(scheduleId != 1){ viewModel.createSchedule() }else{ viewModel.editSchedule(scheduleId) }
+            }
     }
 }

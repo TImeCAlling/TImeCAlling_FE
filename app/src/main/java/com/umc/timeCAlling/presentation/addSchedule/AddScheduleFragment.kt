@@ -33,7 +33,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private lateinit var dateBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var scheduleId : Int = -1
-    val mode = viewModel.getMode()
 
     override fun initObserver() {
 
@@ -44,10 +43,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정수정" } else { binding.tvAddScheduleTitle.text = "일정추가" }
 
-        if(mode == "shared") {
-            viewModel.sharedSchedule(scheduleId)
-            binding.tvAddScheduleTitle.text = "공유일정추가"
-        }
         initSavedData()
 
         binding.viewBottomSheetBackground.isClickable = false
