@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 
     <application
         android:name=".TimeCAllingApplication"
@@ -19,6 +20,11 @@
         android:theme="@style/Theme.TimeCAlling"
         android:usesCleartextTraffic="true"
         tools:targetApi="35">
+
+        <receiver android:name=".presentation.alarm.AlarmReceiver"
+            android:exported="false"/>
+        <activity android:name=".presentation.alarm.AlarmActivity"
+            android:exported="true"/>
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
