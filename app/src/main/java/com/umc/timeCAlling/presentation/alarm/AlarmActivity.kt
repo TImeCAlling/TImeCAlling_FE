@@ -4,6 +4,7 @@ import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -34,14 +35,35 @@ class AlarmActivity : AppCompatActivity() {
 
         // Intent에서 알람 이름과 날짜 가져오기
         val alarmName = intent.getStringExtra("alarmName") ?: "Unknown Alarm"
-        val alarmDateTime = intent.getStringExtra("alarmDateTime") ?: "Unknown Date and Time"
+        val year = intent.getIntExtra("year", 0)
+        val month = intent.getIntExtra("month", 0)
+        val dayOfMonth = intent.getIntExtra("dayOfMonth", 0)
+        val hourOfDay = intent.getIntExtra("hourOfDay", 0)
+        val minute = intent.getIntExtra("minute", 0)
+        val scheduleId = intent.getIntExtra("scheduleId", -1)
+        val isRepeating = intent.getBooleanExtra("isRepeating", false)
+        val startDate = intent.getStringExtra("startDate") ?: ""
+        val endDate = intent.getStringExtra("endDate") ?: ""
+        val repeatDays = intent.getStringArrayExtra("repeatDays") ?: emptyArray()
 
+        // 로그 출력: AlarmActivity에서 받은 Intent 데이터
+        Log.d("AlarmActivity", "Received Intent Data:")
+        Log.d("AlarmActivity", "  alarmName: $alarmName")
+        Log.d("AlarmActivity", "  year: $year")
+        Log.d("AlarmActivity", "  month: $month")
+        Log.d("AlarmActivity", "  dayOfMonth: $dayOfMonth")
+        Log.d("AlarmActivity", "  hourOfDay: $hourOfDay")
+        Log.d("AlarmActivity", "  minute: $minute")
+        Log.d("AlarmActivity", "  scheduleId: $scheduleId")
+        Log.d("AlarmActivity", "  isRepeating: $isRepeating")
+        Log.d("AlarmActivity", "  startDate: $startDate")
+        Log.d("AlarmActivity", "  endDate: $endDate")
+        Log.d("AlarmActivity", "  repeatDays: ${repeatDays.joinToString()}")
         // TextView에 알람 이름과 날짜 설정
         alarmNameTextView.text = alarmName
-        alarmDateTextView.text = alarmDateTime
-
+        alarmDateTextView.text = String.format("%04d-%02d-%02d %02d:%02d", year, month + 1, dayOfMonth, hourOfDay, minute)
         // TextView에 추가 텍스트 설정
-        alarmTitleTextView.text = "'홍길동' 님의 알람" // 예시 텍스트
+        alarmTitleTextView.text = "'${alarmName}' 님의 알람" // 예시 텍스트
         alarmContentTextView.text = "김콜링님이 빨리 일어나라고 했어" // 예시 텍스트
         alarmContent2TextView.text = "준비 끝났지?" // 예시 텍스트
 
