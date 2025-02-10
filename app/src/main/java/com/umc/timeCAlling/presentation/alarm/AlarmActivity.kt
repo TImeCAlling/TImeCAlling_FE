@@ -1,5 +1,8 @@
 package com.umc.timeCAlling.presentation.alarm
 
+import android.media.Ringtone
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,7 +16,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AlarmActivity : AppCompatActivity() {
+    private var ringtone: Ringtone? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        playAlarmSound()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm)
 
@@ -44,4 +51,32 @@ class AlarmActivity : AppCompatActivity() {
             System.exit(0)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Activity가 종료될 때 알람음 중지
+        stopAlarmSound()
+    }
+
+    private fun stopAlarmSound() {
+        // 알람음 중지
+        ringtone?.stop()
+        ringtone = null
+    }
+
+    private fun playAlarmSound() {
+        try {
+            // 기본 알람음 URI 가져오기
+            val alarmUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+
+            // Ringtone 객체 생성
+            ringtone = RingtoneManager.getRingtone(this, alarmUri)
+
+            // 알람음 재생
+            ringtone?.play()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }
