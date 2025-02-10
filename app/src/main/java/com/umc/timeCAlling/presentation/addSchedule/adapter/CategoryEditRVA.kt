@@ -78,7 +78,7 @@ class CategoryEditRVA(
         val colorViews = holder.colorViews
         val colorResources = holder.colorResources
 
-        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, category.color))
+        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context,  CategoryManager.getColor(category.color)))
 
         etCategoryName.setText(category.name)
         etCategoryName.isEnabled = false

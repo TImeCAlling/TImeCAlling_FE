@@ -45,7 +45,8 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
         if (scheduleId != -1) { binding.tvAddScheduleSecondTitle.text = "일정수정" } else { binding.tvAddScheduleSecondTitle.text = "일정추가" }
 
-        binding.tvAddScheduleNext.isEnabled = false
+        binding.tvAddScheduleNext.isEnabled = true
+        moveToAddScheduleSuccess()
         binding.viewBottomSheetBackground.isClickable = false
         initSavedData()
         initCategoryList()
@@ -60,8 +61,10 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         }
     }
 
-    override fun initObserver() {
-
+    override fun initObserver() {/*
+        viewModel.selectedCategory.observe(viewLifecycleOwner, Observer { categoryName ->
+            updateCategoryUI(getCategoryByName(categoryName))
+        })*/
     }
 
     private fun bottomNavigationRemove() {
@@ -377,9 +380,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         })
 
         binding.tvAddScheduleCategorySave.setOnClickListener {
-            viewModel.selectedCategory.observe(viewLifecycleOwner, Observer { categoryName ->
-                updateCategoryUI(getCategoryByName(categoryName))
-            })
             categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
@@ -407,8 +407,8 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
         } else {
             moveToAddScheduleSuccess()
-            binding.ivAddScheduleCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), category.color))
-            binding.ivAddScheduleCategoryList.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), category.color))
+            binding.ivAddScheduleCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(),  CategoryManager.getColor(category.color)))
+            binding.ivAddScheduleCategoryList.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), CategoryManager.getColor(category.color)))
             binding.tvAddScheduleCategory.text = category.name
             binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), category.color))
             viewModel.setCategoryName(category.name)

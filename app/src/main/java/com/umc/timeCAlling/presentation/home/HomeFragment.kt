@@ -71,7 +71,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 dialog.window?.attributes = layoutParams
 
                 scheduleViewModel.sharedScheduleNickname.observe(viewLifecycleOwner, Observer { nickname ->
-                    scheduleViewModel.sharedScheduleName.observe(viewLifecycleOwner, Observer { scheduleName ->
+                    scheduleViewModel.scheduleName.observe(viewLifecycleOwner, Observer { scheduleName ->
                         if (nickname != null && scheduleName != null) {
                             dialogBinding.nickname = nickname
                             dialogBinding.scheduleName = scheduleName

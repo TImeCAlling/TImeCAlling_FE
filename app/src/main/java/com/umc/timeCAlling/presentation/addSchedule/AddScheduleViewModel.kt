@@ -41,6 +41,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     //일정 생성 값
     private val _scheduleName = MutableLiveData<String>()
     val scheduleName : LiveData<String> = _scheduleName
+
     fun setScheduleName(name: String) {
         _scheduleName.value = name
     }
@@ -154,9 +155,6 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
     }
-
-    val selectedCategory=MutableLiveData<String>()
-
 
     fun setMode(m: String) { mode = m }
     fun getMode(): String { return mode }
@@ -316,18 +314,26 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         }
     }
 
-    private val _sharedScheduleName = MutableLiveData<String>()
-    val sharedScheduleName: LiveData<String> = _sharedScheduleName
-
     private val _sharedScheduleNickname = MutableLiveData<String>()
     val sharedScheduleNickname: LiveData<String> = _sharedScheduleNickname
+
 
     fun sharedSchedule(scheduleId: Int){
         viewModelScope.launch {
             scheduleRepository.getSharedSchedule(scheduleId).onSuccess {
+                setRepeatDates(it.repeatDays)
                 Log.d("sharedSchedule", "API 호출 성공: $it")
-                _sharedScheduleName.value = it.name
+                _scheduleName.value = it.name
                 _sharedScheduleNickname.value = it.nickname
+                _scheduleDate.value = it.meetDate
+                _scheduleTime.value = it.meetTime
+                _selectedLocationName.value = it.place
+                _locationLongitude.value = it.longitude
+                _locationLatitude.value = it.latitude
+                _repeatDates.value = repeatDates.value
+                _isRepeat.value = it.isRepeat
+                _startDate.value = it.start
+                _endDate.value = it.end
             }.onFailure {
                 Log.e("sharedSchedule", "API 호출 실패: $it")
             }

@@ -20,14 +20,15 @@ class AuthInterceptor @Inject constructor(
         var accessToken = sharedPreferences.getString("jwt", "") ?: ""
         var refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
 
-/*        accessToken = "스웨거에서 받은 accessToken"
-        refreshToken = "스웨거에서 받은 refreshToken"
+       /* accessToken = "스웨거에서 받은 accessToken"
+        //refreshToken = "스웨거에서 받은 refreshToken"
         sharedPreferences.edit().apply{
             putString("jwt", accessToken)
-            putString("refreshToken", refreshToken)
+            //putString("refreshToken", refreshToken)
         }*/
-        Log.d("AuthInterceptor", "Current Access Token: $accessToken")
 
+        Log.d("AuthInterceptor", "Current Access Token: $accessToken")
+        Log.d("AuthInterceptor", "Current Refresh Token: $refreshToken")
         // JWT 디코딩 후 만료 여부 확인
         if (isAccessTokenExpired(accessToken)) {
             Log.d("AuthInterceptor","Access Token이 만료되었습니다. Refresh Token을 사용하여 새 토큰을 요청합니다.")

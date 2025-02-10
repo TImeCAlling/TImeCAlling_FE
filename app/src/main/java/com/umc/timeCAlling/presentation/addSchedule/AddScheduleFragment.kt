@@ -33,23 +33,54 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private lateinit var dateBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var scheduleId : Int = -1
+    private var mode : String = ""
 
     override fun initObserver() {
 
     }
 
     override fun initView() {
+        mode = viewModel.getMode()
         scheduleId = arguments?.getInt("scheduleId") ?: -1
 
         if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정수정" } else { binding.tvAddScheduleTitle.text = "일정추가" }
 
-        initSavedData()
+        if (mode == "shared") {
+            binding.tvAddScheduleTitle.text = "일정추가"
+            binding.etAddScheduleName.setText(viewModel.scheduleName.value)
+            binding.etAddScheduleName.isEnabled = false
+            binding.viewAddScheduleName.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_400))
+            binding.tvAddScheduleTitleCount.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_400))
+            // 날짜 표시 형식 변경
+            viewModel.scheduleDate.value?.let { date ->
+                val year = date.substring(0, 4)
+                val month = date.substring(5, 7)
+                val day = date.substring(8, 10)
+                binding.tvAddScheduleDate.text = String.format("%s년 %s월 %s일", year, month, day)
+            }
+            binding.layoutAddScheduleDate.setBackgroundResource(R.drawable.shape_rect_10_gray300_fill_gray400_line_1)
+            // 시간 표시 형식 변경
+            viewModel.scheduleTime.value?.let { time ->
+                val hour = time.substring(0, 2).toInt()
+                val minute = time.substring(3, 5)
+                val amPm = if (hour >= 12) "오후" else "오전"
+                val displayHour = if (hour == 0) 12 else if (hour > 12) hour - 12 else hour
+                val selectedTime = String.format("%s %02d:%s", amPm, displayHour, minute)
+                binding.tvAddScheduleTime.text = selectedTime
+            }
 
+            binding.layoutAddScheduleTime.setBackgroundResource(R.drawable.shape_rect_10_gray300_fill_gray400_line_1)
+            binding.tvAddScheduleLocation.text = viewModel.selectedLocationName.value
+            binding.bottomSheetTime.visibility = View.GONE
+            binding.bottomSheetDate.visibility = View.GONE
+        }else{
+            initDateBottomSheet()
+            initTimeBottomSheet()
+            initSavedData()
+        }
         binding.viewBottomSheetBackground.isClickable = false
 
         bottomNavigationRemove()
-        initDateBottomSheet()
-        initTimeBottomSheet()
         initScheduleName()
         initScheduleMemo()
         moveToLocationSearch()

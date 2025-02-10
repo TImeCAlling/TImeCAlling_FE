@@ -48,10 +48,10 @@ class CategoryRVA(
         val category = categories[position]
 
         holder.tvCategoryName.text = category.name
-        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, category.color))
+        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context,  CategoryManager.getColor(category.color)))
 
         holder.itemView.setOnClickListener {
-            viewModel.selectedCategory.value = category.name // ViewModel에 선택된 카테고리 업데이트
+            viewModel.setCategoryName(category.name)
             notifyDataSetChanged() // RecyclerView 업데이트
         }
 
@@ -66,7 +66,7 @@ class CategoryRVA(
 
         holder.itemView.setOnClickListener {
             selectedCategoryPosition = holder.adapterPosition
-            viewModel.selectedCategory.value = category.name // ViewModel에 선택된 카테고리 업데이트
+            viewModel.setCategoryName(category.name)
             notifyDataSetChanged() // RecyclerView 업데이트
         }
     }
