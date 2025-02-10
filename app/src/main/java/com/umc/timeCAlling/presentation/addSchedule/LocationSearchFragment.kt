@@ -55,7 +55,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
 
     override fun initView() {
         mode = viewModel.getMode()
-
+        viewModel.setLocation(true)
         if(mode == "shared"){
             val locationName = viewModel.selectedLocationName.value ?: ""
             val longitude = viewModel.locationLongitude.value

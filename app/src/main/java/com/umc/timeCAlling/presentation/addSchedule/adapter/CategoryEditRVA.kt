@@ -47,18 +47,6 @@ class CategoryEditRVA(
             itemView.findViewById(R.id.view_category_purple),
             itemView.findViewById(R.id.view_category_gray)
         )
-        val colorResources: Array<Int> = arrayOf(
-            CategoryManager.getColor(0),
-            CategoryManager.getColor(1),
-            CategoryManager.getColor(2),
-            CategoryManager.getColor(3),
-            CategoryManager.getColor(4),
-            CategoryManager.getColor(5),
-            CategoryManager.getColor(6),
-            CategoryManager.getColor(7),
-            CategoryManager.getColor(8),
-            CategoryManager.getColor(9)
-        )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryEditViewHolder {
@@ -76,7 +64,6 @@ class CategoryEditRVA(
         val ivCategoryLogo = holder.ivCategoryLogo
         val layoutCategoryColor = holder.layoutCategoryColor
         val colorViews = holder.colorViews
-        val colorResources = holder.colorResources
 
         holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context,  CategoryManager.getColor(category.color)))
 
@@ -90,7 +77,7 @@ class CategoryEditRVA(
                     modifiedCategories[position] = updatedCategory
                     CategoryManager.updateCategory(position, updatedCategory, context)
                     ivCategoryLogo.setColorFilter(category.color) // ContextCompat.getColor() 제거
-                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color) // ContextCompat.getColor() 제거
+                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context,CategoryManager.getColor(category.color)))
                     notifyItemChanged(position)
                     layoutCategoryColor.visibility = View.GONE
                     etCategoryName.isEnabled = false
@@ -100,14 +87,12 @@ class CategoryEditRVA(
         }
 
         colorViews.forEachIndexed { index, view ->
-            val colorResource = colorResources[index]
             view.setOnClickListener {
                 if (etCategoryName.isEnabled) {
-                    val updatedCategory = Category(etCategoryName.text.toString(), colorResource)
+                    val updatedCategory = Category(etCategoryName.text.toString(), index)
                     modifiedCategories[position] = updatedCategory
                     CategoryManager.updateCategory(position, updatedCategory, context)
-                    ivCategoryLogo.setColorFilter(colorResource) // ContextCompat.getColor() 제거
-                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(colorResource) // ContextCompat.getColor() 제거
+                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, CategoryManager.getColor(index)))
                     notifyItemChanged(position)
                     layoutCategoryColor.visibility = View.GONE
                 }
@@ -125,10 +110,10 @@ class CategoryEditRVA(
                             true
                         }
                         R.id.category_delete -> {
-                            val deletedCategory = modifiedCategories.removeAt(position)
                             CategoryManager.deleteCategory(position, context)
+                            modifiedCategories.removeAt(position)
                             notifyItemRemoved(position)
-                            notifyItemRangeChanged(position, itemCount)
+                            notifyItemRangeChanged(position, modifiedCategories.size-position)
                             true
                         }
                         else -> false

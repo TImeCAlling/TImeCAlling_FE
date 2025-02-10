@@ -2,6 +2,7 @@ package com.umc.timeCAlling.presentation.addSchedule.adapter
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,11 +51,6 @@ class CategoryRVA(
         holder.tvCategoryName.text = category.name
         holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context,  CategoryManager.getColor(category.color)))
 
-        holder.itemView.setOnClickListener {
-            viewModel.setCategoryName(category.name)
-            notifyDataSetChanged() // RecyclerView 업데이트
-        }
-
         // Update UI for selected category
         if (selectedCategoryPosition == position) {
             holder.ivCategorySelect.setImageResource(R.drawable.ic_circle_check_mint)
@@ -67,6 +63,8 @@ class CategoryRVA(
         holder.itemView.setOnClickListener {
             selectedCategoryPosition = holder.adapterPosition
             viewModel.setCategoryName(category.name)
+            viewModel.setCategoryColor(category.color)
+            Log.d("CategoryRVA", "Selected category: ${category.name},${category.color}")
             notifyDataSetChanged() // RecyclerView 업데이트
         }
     }

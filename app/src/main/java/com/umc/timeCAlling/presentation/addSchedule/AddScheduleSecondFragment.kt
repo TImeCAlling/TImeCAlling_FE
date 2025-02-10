@@ -9,12 +9,10 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.compose.foundation.background
 import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -39,8 +37,57 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private var isRepeatEnabled = false
     private var selectedDays = mutableListOf<String>()
     private var scheduleId : Int = -1
+    private var mode : String = ""
 
     override fun initView() {
+        mode = viewModel.getMode()
+        scheduleId = arguments?.getInt("scheduleId") ?: -2
+        Log.d("AddScheduleSecondFragment", "scheduleId: $scheduleId")
+
+        initSavedData()
+
+        if(mode == "shared"){
+            binding.tvAddScheduleSecondTitle.text = "일정추가"
+            binding.layoutAddScheduleRepeat.setBackgroundResource(R.drawable.shape_rect_10_gray300_fill_gray400_line_1)
+            binding.tvAddScheduleRepeat.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
+            binding.ivAddScheduleRepeat.isEnabled = false
+            viewModel.repeatDates.value?.let { repeatDates ->
+                if (repeatDates.isNotEmpty()) {
+                    val koreanDays = repeatDates.map { day ->
+                        when (day) {
+                            "MONDAY" -> "월요일"
+                            "TUESDAY" -> "화요일"
+                            "WEDNESDAY" -> "수요일"
+                            "THURSDAY" -> "목요일"
+                            "FRIDAY" -> "금요일"
+                            "SATURDAY" -> "토요일"
+                            "SUNDAY" -> "일요일"
+                            else -> day
+                        }
+                    }
+                    binding.tvAddScheduleRepeat.text = "${koreanDays.joinToString(", ")} 마다"
+                    binding.menuAddScheduleRepeat.isChecked = true
+                }
+            }
+            viewModel.startDate.value?.let { startDate ->
+                binding.tvAddScheduleRepeatStart.text = startDate
+            }
+            viewModel.endDate.value?.let { endDate ->
+                binding.tvAddScheduleRepeatEnd.text = endDate
+            }
+            viewModel.isRepeat.value?.let { isRepeat ->
+                isRepeatEnabled = isRepeat
+                binding.menuAddScheduleRepeat.isChecked = isRepeat
+                viewModel.setIsRepeat(isRepeat)
+                Log.d("AddScheduleSecondFragment", "isRepeat: $isRepeat")
+            }
+            binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
+            binding.bottomSheetRepeat.visibility = View.GONE
+            repeatBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetRepeat)
+        }else{
+            initRepeatBottomSheet()
+            initRepeatSwitch()
+        }
         scheduleId = arguments?.getInt("scheduleId") ?: -1
 
         if (scheduleId != -1) { binding.tvAddScheduleSecondTitle.text = "일정수정" } else { binding.tvAddScheduleSecondTitle.text = "일정추가" }
@@ -48,11 +95,8 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         binding.tvAddScheduleNext.isEnabled = true
         moveToAddScheduleSuccess()
         binding.viewBottomSheetBackground.isClickable = false
-        initSavedData()
         initCategoryList()
-        initRepeatSwitch()
         bottomNavigationRemove()
-        initRepeatBottomSheet()
         initCategoryBottomSheet()
         initSpareTimeTextViews()
 
@@ -184,6 +228,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private fun initRepeatSwitch() {
         binding.menuAddScheduleRepeat.setOnCheckedChangeListener { _, isChecked ->
             isRepeatEnabled = isChecked
+            viewModel.setIsRepeat(isRepeatEnabled)
             updateRepeatInfo()
         }
     }
@@ -211,7 +256,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             "없음"
         }
         binding.tvAddScheduleRepeat.text = repeatText
-        viewModel.setIsRepeat(isRepeatEnabled)
         val selectedDaysEnglish = selectedDays.map { day ->
             when (day) {
                 "월" -> "MONDAY"
@@ -381,6 +425,9 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
         binding.tvAddScheduleCategorySave.setOnClickListener {
             categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            viewModel.categoryName.value?.let {
+                updateCategoryUI(getCategoryByName(it))
+            }
         }
     }
 
@@ -407,12 +454,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
         } else {
             moveToAddScheduleSuccess()
-            binding.ivAddScheduleCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(),  CategoryManager.getColor(category.color)))
-            binding.ivAddScheduleCategoryList.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), CategoryManager.getColor(category.color)))
+            val categoryColor = CategoryManager.getColor(category.color) // 수정된 부분
+            binding.ivAddScheduleCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), categoryColor)) // 수정된 부분
+            binding.ivAddScheduleCategoryList.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), categoryColor)) // 수정된 부분
             binding.tvAddScheduleCategory.text = category.name
-            binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), category.color))
+            binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), categoryColor)) // 수정된 부분
             viewModel.setCategoryName(category.name)
-            viewModel.setCategoryColor(ContextCompat.getColor(requireContext(), category.color))
+            viewModel.setCategoryColor(ContextCompat.getColor(requireContext(), categoryColor)) // 수정된 부분
         }
     }
 
@@ -438,9 +486,14 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 )
             )
             binding.tvAddScheduleNext.setOnClickListener {
+                scheduleId = arguments?.getInt("scheduleId") ?: -1
                 val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
                 findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment, bundle)
-                if(scheduleId != 1){ viewModel.createSchedule() }else{ viewModel.editSchedule(scheduleId) }
+                if(mode == "shared"){
+                    viewModel.createSharedSchedule(scheduleId)
+                }else{
+                    if(scheduleId != 1){ viewModel.createSchedule() }else{ viewModel.editSchedule(scheduleId) }
+                }
             }
     }
 }

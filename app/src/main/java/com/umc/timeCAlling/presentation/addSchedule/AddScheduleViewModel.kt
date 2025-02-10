@@ -101,7 +101,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         _repeatDates.value = _repeatDates.value // LiveData 값 업데이트
     }
 
-    private val _isRepeat = MutableLiveData<Boolean>(false)
+    private val _isRepeat = MutableLiveData<Boolean>()
     val isRepeat: LiveData<Boolean> = _isRepeat
     fun setIsRepeat(isRepeat: Boolean) {
         _isRepeat.value = isRepeat
@@ -151,7 +151,9 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     private val _scheduleId = MutableLiveData<Int>()
     val scheduleId: LiveData<Int> = _scheduleId
-
+    fun setScheduleId(id: Int) {
+        _scheduleId.value = id
+    }
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
     }
@@ -159,6 +161,9 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     fun setMode(m: String) { mode = m }
     fun getMode(): String { return mode }
 
+    private var location: Boolean = false
+    fun setLocation(l : Boolean) { location = l }
+    fun getLocation(): Boolean { return location }
     fun addRecentSearch(search: String) {
         val updatedSearches = _recentSearches.value?.toMutableList()?.also {
             it.remove(search) // 중복된 검색어 제거
@@ -270,7 +275,6 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
             Log.d("","${request}")
              scheduleRepository.createSchedule(request).onSuccess { response ->
                  Log.d("createSchedule", "API 호출 성공: $response")
-                 _scheduleId.value = response.scheduleId
 
              }.onFailure {error->
                  Log.e("createSchedule", "API 호출 실패: $error")
@@ -334,8 +338,37 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                 _isRepeat.value = it.isRepeat
                 _startDate.value = it.start
                 _endDate.value = it.end
+                Log.d("sharedSchedule isRepeat", "${it.isRepeat}")
             }.onFailure {
                 Log.e("sharedSchedule", "API 호출 실패: $it")
+            }
+        }
+    }
+
+    fun createSharedSchedule(scheduleId: Int){
+        viewModelScope.launch {
+            val request = ScheduleRequestModel(
+                name = scheduleName.value ?: "",
+                body = scheduleMemo.value ?: "",
+                meetDate = scheduleDate.value ?: "",
+                meetTime = scheduleTime.value ?: "",
+                place = selectedLocationName.value ?: "",
+                longitude = locationLongitude.value ?: "",
+                latitude = locationLatitude.value ?: "",
+                moveTime = moveTime.value ?: 0,
+                freeTime = freeTime.value ?: "TIGHT",
+                repeatDays = repeatDates.value ?: emptyList(),
+                isRepeat =  isRepeat.value ?: false,
+                start = startDate.value ?: "",
+                end = endDate.value ?: "",
+                categories =  listOf(CategoriesRequestModel(categoryName.value ?: "", categoryColor.value ?: 0))
+            )
+            Log.d("","${request}")
+            scheduleRepository.postSharedSchedule(scheduleId, request).onSuccess { response ->
+                Log.d("createSchedule", "API 호출 성공: $response")
+
+            }.onFailure {error->
+                Log.e("createSchedule", "API 호출 실패: $error")
             }
         }
     }

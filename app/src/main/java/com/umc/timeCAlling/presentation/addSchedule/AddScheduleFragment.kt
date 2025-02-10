@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -34,6 +35,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var scheduleId : Int = -1
     private var mode : String = ""
+    private var location : Boolean = false
 
     override fun initObserver() {
 
@@ -41,7 +43,12 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     override fun initView() {
         mode = viewModel.getMode()
+        location = viewModel.getLocation()
         scheduleId = arguments?.getInt("scheduleId") ?: -1
+        if(location==false){
+            viewModel.setScheduleId(scheduleId)
+        }
+        Log.d("AddScheduleFragment", "scheduleId: $scheduleId")
 
         if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정수정" } else { binding.tvAddScheduleTitle.text = "일정추가" }
 
@@ -362,6 +369,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 )
             )
             binding.tvAddScheduleNext.setOnClickListener {
+                scheduleId = viewModel.scheduleId.value ?: -1
                 val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
                 findNavController().navigate(
                     R.id.action_addScheduleFragment_to_addScheduleSecondFragment,

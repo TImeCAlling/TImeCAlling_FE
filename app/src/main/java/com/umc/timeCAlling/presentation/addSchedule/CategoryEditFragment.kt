@@ -67,7 +67,7 @@ class CategoryEditFragment: BaseFragment<FragmentCategoryEditBinding>(R.layout.f
         CategoryManager.loadCategories(requireContext())
 
         binding.ivCategoryPlus.setOnClickListener {
-            val newCategory = Category("새로운 카테고리", R.color.gray_600)
+            val newCategory = Category("새로운 카테고리", 9)
             val lastPosition = categoryEditRVA.itemCount
             CategoryManager.addCategory(newCategory, requireContext())
             categoryEditRVA.updateCategories(CategoryManager.getCategories().toMutableList())
