@@ -460,7 +460,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             binding.tvAddScheduleCategory.text = category.name
             binding.tvAddScheduleCategory.setTextColor(ContextCompat.getColor(requireContext(), categoryColor)) // 수정된 부분
             viewModel.setCategoryName(category.name)
-            viewModel.setCategoryColor(ContextCompat.getColor(requireContext(), categoryColor)) // 수정된 부분
+            viewModel.setCategoryColor(category.color) // 수정된 부분
         }
     }
 
@@ -494,6 +494,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 }else{
                     if(scheduleId != 1){ viewModel.createSchedule() }else{ viewModel.editSchedule(scheduleId) }
                 }
+                viewModel.setMode("")
             }
     }
 }

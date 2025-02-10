@@ -96,6 +96,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         binding.ivAddScheduleBack.setOnSingleClickListener {
             findNavController().popBackStack()
+            viewModel.setMode("")
         }
     }
 

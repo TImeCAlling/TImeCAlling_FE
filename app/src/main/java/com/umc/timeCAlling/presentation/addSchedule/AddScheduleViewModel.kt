@@ -275,7 +275,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
             Log.d("","${request}")
              scheduleRepository.createSchedule(request).onSuccess { response ->
                  Log.d("createSchedule", "API 호출 성공: $response")
-
+                setScheduleId(response.scheduleId)
              }.onFailure {error->
                  Log.e("createSchedule", "API 호출 실패: $error")
              }
