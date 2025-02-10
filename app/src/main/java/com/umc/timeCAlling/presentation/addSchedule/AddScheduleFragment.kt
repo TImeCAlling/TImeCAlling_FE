@@ -45,6 +45,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정수정" } else { binding.tvAddScheduleTitle.text = "일정추가" }
 
+        initSavedData()
+
         if (mode == "shared") {
             binding.tvAddScheduleTitle.text = "일정추가"
             binding.etAddScheduleName.setText(viewModel.scheduleName.value)
@@ -76,7 +78,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         }else{
             initDateBottomSheet()
             initTimeBottomSheet()
-            initSavedData()
         }
         binding.viewBottomSheetBackground.isClickable = false
 
@@ -330,6 +331,26 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     }
 
     private fun moveToAddScheduleSecond() {
+        if(mode == "shared"){
+            if(binding.etAddScheduleMemo.text.isNotEmpty()&&binding.tvAddScheduleMinute.text.isNotEmpty()){
+                binding.tvAddScheduleNext.isEnabled = true
+                binding.tvAddScheduleNext.backgroundTintList =
+                    ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
+                binding.tvAddScheduleNext.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+                binding.tvAddScheduleNext.setOnClickListener {
+                    val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+                    findNavController().navigate(
+                        R.id.action_addScheduleFragment_to_addScheduleSecondFragment,
+                        bundle
+                    )
+                }
+            }
+        }
         if(binding.etAddScheduleName.text.isNotEmpty()&& binding.etAddScheduleMemo.text.isNotEmpty()&& binding.tvAddScheduleDate.text.isNotEmpty()&& binding.tvAddScheduleTime.text.isNotEmpty()&& binding.tvAddScheduleLocation.text.isNotEmpty()&& binding.tvAddScheduleMinute.text.isNotEmpty()) {
             binding.tvAddScheduleNext.isEnabled = true
             binding.tvAddScheduleNext.backgroundTintList =
