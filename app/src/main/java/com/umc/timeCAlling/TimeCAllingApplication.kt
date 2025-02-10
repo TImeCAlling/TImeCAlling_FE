@@ -20,11 +20,25 @@ class TimeCAllingApplication : Application(), DefaultLifecycleObserver {
         context = applicationContext
         networkConnectionChecker = NetworkConnectionChecker(context)
 
+        // SharedPreferences에서 Access Token, Refresh Token 불러오기
+        loadAuthToken()
+
+        // 카카오 SDK 초기화
         val kakaoAppKey = getString(R.string.kakao_app_key)
-        KakaoSdk.init(context,kakaoAppKey)
+        KakaoSdk.init(context, kakaoAppKey)
+
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+    }
+
+    private fun loadAuthToken() {
+        val spf = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        val accessToken = spf.getString("jwt", null)
+        val refreshToken = spf.getString("refreshToken", null)
+
+        Timber.d("앱 실행 시 Access Token: $accessToken")
+        Timber.d("앱 실행 시 Refresh Token: $refreshToken")
     }
 
     override fun onStop(owner: LifecycleOwner) {

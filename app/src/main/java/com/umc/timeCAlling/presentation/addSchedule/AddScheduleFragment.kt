@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -33,23 +34,61 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private lateinit var dateBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var timeBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var scheduleId : Int = -1
+    private var mode : String = ""
+    private var location : Boolean = false
 
     override fun initObserver() {
 
     }
 
     override fun initView() {
+        mode = viewModel.getMode()
+        location = viewModel.getLocation()
         scheduleId = arguments?.getInt("scheduleId") ?: -1
+        if(location==false){
+            viewModel.setScheduleId(scheduleId)
+        }
+        Log.d("AddScheduleFragment", "scheduleId: $scheduleId")
 
         if (scheduleId != -1) { binding.tvAddScheduleTitle.text = "일정수정" } else { binding.tvAddScheduleTitle.text = "일정추가" }
 
         initSavedData()
 
+        if (mode == "shared") {
+            binding.tvAddScheduleTitle.text = "일정추가"
+            binding.etAddScheduleName.setText(viewModel.scheduleName.value)
+            binding.etAddScheduleName.isEnabled = false
+            binding.viewAddScheduleName.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_400))
+            binding.tvAddScheduleTitleCount.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_400))
+            // 날짜 표시 형식 변경
+            viewModel.scheduleDate.value?.let { date ->
+                val year = date.substring(0, 4)
+                val month = date.substring(5, 7)
+                val day = date.substring(8, 10)
+                binding.tvAddScheduleDate.text = String.format("%s년 %s월 %s일", year, month, day)
+            }
+            binding.layoutAddScheduleDate.setBackgroundResource(R.drawable.shape_rect_10_gray300_fill_gray400_line_1)
+            // 시간 표시 형식 변경
+            viewModel.scheduleTime.value?.let { time ->
+                val hour = time.substring(0, 2).toInt()
+                val minute = time.substring(3, 5)
+                val amPm = if (hour >= 12) "오후" else "오전"
+                val displayHour = if (hour == 0) 12 else if (hour > 12) hour - 12 else hour
+                val selectedTime = String.format("%s %02d:%s", amPm, displayHour, minute)
+                binding.tvAddScheduleTime.text = selectedTime
+            }
+
+            binding.layoutAddScheduleTime.setBackgroundResource(R.drawable.shape_rect_10_gray300_fill_gray400_line_1)
+            binding.tvAddScheduleLocation.text = viewModel.selectedLocationName.value
+            binding.bottomSheetTime.visibility = View.GONE
+            binding.bottomSheetDate.visibility = View.GONE
+        }else{
+            initDateBottomSheet()
+            initTimeBottomSheet()
+        }
         binding.viewBottomSheetBackground.isClickable = false
 
         bottomNavigationRemove()
-        initDateBottomSheet()
-        initTimeBottomSheet()
         initScheduleName()
         initScheduleMemo()
         moveToLocationSearch()
@@ -57,6 +96,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         binding.ivAddScheduleBack.setOnSingleClickListener {
             findNavController().popBackStack()
+            viewModel.setMode("")
         }
     }
 
@@ -299,9 +339,44 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     }
 
     private fun moveToAddScheduleSecond() {
-        binding.tvAddScheduleNext.setOnClickListener {
-            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
-            findNavController().navigate(R.id.action_addScheduleFragment_to_addScheduleSecondFragment, bundle)
+        if(mode == "shared"){
+            if(binding.etAddScheduleMemo.text.isNotEmpty()&&binding.tvAddScheduleMinute.text.isNotEmpty()){
+                binding.tvAddScheduleNext.isEnabled = true
+                binding.tvAddScheduleNext.backgroundTintList =
+                    ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
+                binding.tvAddScheduleNext.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+                binding.tvAddScheduleNext.setOnClickListener {
+                    val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+                    findNavController().navigate(
+                        R.id.action_addScheduleFragment_to_addScheduleSecondFragment,
+                        bundle
+                    )
+                }
+            }
         }
+        if(binding.etAddScheduleName.text.isNotEmpty()&& binding.etAddScheduleMemo.text.isNotEmpty()&& binding.tvAddScheduleDate.text.isNotEmpty()&& binding.tvAddScheduleTime.text.isNotEmpty()&& binding.tvAddScheduleLocation.text.isNotEmpty()&& binding.tvAddScheduleMinute.text.isNotEmpty()) {
+            binding.tvAddScheduleNext.isEnabled = true
+            binding.tvAddScheduleNext.backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
+            binding.tvAddScheduleNext.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            binding.tvAddScheduleNext.setOnClickListener {
+                scheduleId = viewModel.scheduleId.value ?: -1
+                val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+                findNavController().navigate(
+                    R.id.action_addScheduleFragment_to_addScheduleSecondFragment,
+                    bundle
+                )
+            }
+        }else{ binding.tvAddScheduleNext.isEnabled = false }
     }
 }

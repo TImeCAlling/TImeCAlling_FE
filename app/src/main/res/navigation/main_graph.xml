@@ -67,6 +67,8 @@
             <action
                 android:id="@+id/action_mypageFragment_to_categoryEditFragment"
                 app:destination="@id/categoryEditFragment"/>
+                android:id="@+id/action_mypageFragment_to_mypageVoiceFragment"
+                app:destination="@id/mypageVoiceFragment"/>
         </fragment>
         <fragment
             android:id="@+id/myprofileFragment"
@@ -104,8 +106,10 @@
                 android:id="@+id/action_addAlarmFragment_to_alarmlistFragment"
                 app:destination="@id/alarmlistFragment"/>
         </fragment>
-
-
+            android:id="@+id/mypageVoiceFragment"
+            android:name="com.umc.timeCAlling.presentation.mypage.MypageVoiceFragment"
+            android:label="MypageVoiceFragment"
+            tools:layout="@layout/fragment_mypage_voice"/>
     </navigation>
 
     <navigation

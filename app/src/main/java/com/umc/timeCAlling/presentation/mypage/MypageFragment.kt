@@ -34,7 +34,7 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
                 findNavController().navigate(R.id.action_mypageFragment_to_categoryEditFragment)
             }
             layoutMypageSoundInfo.setOnClickListener {
-                //음성정보
+                navigateToMypageVoiceFragment()
             }
             layoutMypageTerms.setOnClickListener {
                 //이용약관
@@ -59,5 +59,9 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
 
     private fun navigateToMyprofileFragment() {
         findNavController().navigate(R.id.action_mypageFragment_to_myprofileFragment)
+    }
+
+    private fun navigateToMypageVoiceFragment() {
+        findNavController().navigate(R.id.action_mypageFragment_to_mypageVoiceFragment)
     }
 }

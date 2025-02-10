@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Location
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -12,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.LocationServices
@@ -41,6 +43,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
     private lateinit var resultBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var tMapView: TMapView
     private lateinit var tmapData: TMapData
+    private var mode : String = ""
 
     override fun initObserver() {
         // 위치 권한 요청
@@ -51,6 +54,18 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
     }
 
     override fun initView() {
+        mode = viewModel.getMode()
+        viewModel.setLocation(true)
+        if(mode == "shared"){
+            val locationName = viewModel.selectedLocationName.value ?: ""
+            val longitude = viewModel.locationLongitude.value
+            val latitude = viewModel.locationLatitude.value
+
+            val location = SearchResult(locationName, "", latitude!!.toDouble(), longitude!!.toDouble())
+            viewModel.updateSearchResults(listOf(location))
+
+            findNavController().navigate(R.id.action_locationSearchFragment_to_locationResultFragment)
+        }
         bottomNavigationRemove()
         initTMapView() // TMapView 초기화
         initRecentSearchRVA()
