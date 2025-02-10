@@ -52,4 +52,10 @@ interface ScheduleService {
     suspend fun getSharedSchedule(
         @Path("scheduleId") scheduleId: Int
     ) : BaseResponse<SharedScheduleResponseDto>
+
+    @POST("/api/schedules/share/{scheduleId}")
+    suspend fun postSharedSchedule(
+        @Path("scheduleId") scheduleId: Int,
+        @Body request: ScheduleRequestDto
+    ): BaseResponse<SchedulesResponseDto>
 }
