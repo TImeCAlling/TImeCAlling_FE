@@ -6,7 +6,5 @@ import com.umc.timeCAlling.domain.model.response.CategoriesResponseModel
 import java.io.Serializable
 
 data class CreateScheduleResponseModel(
-    val scheduleId : Int,
-    val shareId : String?,
-    val createdAt : String
+    val scheduleId : Int
 )

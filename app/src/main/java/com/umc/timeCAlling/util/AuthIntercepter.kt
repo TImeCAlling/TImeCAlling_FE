@@ -18,10 +18,17 @@ class AuthInterceptor @Inject constructor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var accessToken = sharedPreferences.getString("jwt", "") ?: ""
-        val refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
+        var refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
+
+       /* accessToken = "스웨거에서 받은 accessToken"
+        //refreshToken = "스웨거에서 받은 refreshToken"
+        sharedPreferences.edit().apply{
+            putString("jwt", accessToken)
+            //putString("refreshToken", refreshToken)
+        }*/
 
         Log.d("AuthInterceptor", "Current Access Token: $accessToken")
-
+        Log.d("AuthInterceptor", "Current Refresh Token: $refreshToken")
         // JWT 디코딩 후 만료 여부 확인
         if (isAccessTokenExpired(accessToken)) {
             Log.d("AuthInterceptor","Access Token이 만료되었습니다. Refresh Token을 사용하여 새 토큰을 요청합니다.")
@@ -34,6 +41,8 @@ class AuthInterceptor @Inject constructor(
                 } else {
                     Log.e("AuthInterceptor","토큰 갱신 실패")
                 }
+            }else{
+                Log.e("AuthInterceptor","Refresh Token이 없습니다.")
             }
         }
 

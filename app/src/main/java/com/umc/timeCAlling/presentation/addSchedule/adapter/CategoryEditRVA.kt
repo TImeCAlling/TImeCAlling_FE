@@ -38,26 +38,14 @@ class CategoryEditRVA(
         val colorViews: Array<View> = arrayOf(
             itemView.findViewById(R.id.view_category_orange),
             itemView.findViewById(R.id.view_category_yellow),
-            itemView.findViewById(R.id.view_category_green),
             itemView.findViewById(R.id.view_category_mint),
             itemView.findViewById(R.id.view_category_skyblue),
+            itemView.findViewById(R.id.view_category_blue),
+            itemView.findViewById(R.id.view_category_green),
             itemView.findViewById(R.id.view_category_pink),
             itemView.findViewById(R.id.view_category_mauve),
             itemView.findViewById(R.id.view_category_purple),
-            itemView.findViewById(R.id.view_category_blue),
             itemView.findViewById(R.id.view_category_gray)
-        )
-        val colorResources: Array<Int> = arrayOf(
-            R.color.category_orange,
-            R.color.category_yellow,
-            R.color.category_green,
-            R.color.mint_main,
-            R.color.category_skyblue,
-            R.color.category_pink,
-            R.color.category_mauve,
-            R.color.category_purple,
-            R.color.category_blue,
-            R.color.gray_600
         )
     }
 
@@ -76,11 +64,8 @@ class CategoryEditRVA(
         val ivCategoryLogo = holder.ivCategoryLogo
         val layoutCategoryColor = holder.layoutCategoryColor
         val colorViews = holder.colorViews
-        val colorResources = holder.colorResources
 
-        ivCategoryLogo.setColorFilter(category.color) // ContextCompat.getColor() 제거
-        ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color) // ContextCompat.getColor() 제거
-
+        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context,  CategoryManager.getColor(category.color)))
 
         etCategoryName.setText(category.name)
         etCategoryName.isEnabled = false
@@ -92,7 +77,7 @@ class CategoryEditRVA(
                     modifiedCategories[position] = updatedCategory
                     CategoryManager.updateCategory(position, updatedCategory, context)
                     ivCategoryLogo.setColorFilter(category.color) // ContextCompat.getColor() 제거
-                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color) // ContextCompat.getColor() 제거
+                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context,CategoryManager.getColor(category.color)))
                     notifyItemChanged(position)
                     layoutCategoryColor.visibility = View.GONE
                     etCategoryName.isEnabled = false
@@ -102,14 +87,12 @@ class CategoryEditRVA(
         }
 
         colorViews.forEachIndexed { index, view ->
-            val colorResource = colorResources[index]
             view.setOnClickListener {
                 if (etCategoryName.isEnabled) {
-                    val updatedCategory = Category(etCategoryName.text.toString(), colorResource)
+                    val updatedCategory = Category(etCategoryName.text.toString(), index)
                     modifiedCategories[position] = updatedCategory
                     CategoryManager.updateCategory(position, updatedCategory, context)
-                    ivCategoryLogo.setColorFilter(colorResource) // ContextCompat.getColor() 제거
-                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(colorResource) // ContextCompat.getColor() 제거
+                    ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, CategoryManager.getColor(index)))
                     notifyItemChanged(position)
                     layoutCategoryColor.visibility = View.GONE
                 }
@@ -127,10 +110,10 @@ class CategoryEditRVA(
                             true
                         }
                         R.id.category_delete -> {
-                            val deletedCategory = modifiedCategories.removeAt(position)
                             CategoryManager.deleteCategory(position, context)
+                            modifiedCategories.removeAt(position)
                             notifyItemRemoved(position)
-                            notifyItemRangeChanged(position, itemCount)
+                            notifyItemRangeChanged(position, modifiedCategories.size-position)
                             true
                         }
                         else -> false

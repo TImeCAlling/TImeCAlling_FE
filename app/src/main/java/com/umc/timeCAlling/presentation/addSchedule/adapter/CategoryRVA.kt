@@ -2,12 +2,14 @@ package com.umc.timeCAlling.presentation.addSchedule.adapter
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
@@ -47,12 +49,7 @@ class CategoryRVA(
         val category = categories[position]
 
         holder.tvCategoryName.text = category.name
-        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(category.color)
-
-        holder.itemView.setOnClickListener {
-            viewModel.selectedCategory.value = category.name // ViewModel에 선택된 카테고리 업데이트
-            notifyDataSetChanged() // RecyclerView 업데이트
-        }
+        holder.ivCategoryLogo.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context,  CategoryManager.getColor(category.color)))
 
         // Update UI for selected category
         if (selectedCategoryPosition == position) {
@@ -65,7 +62,9 @@ class CategoryRVA(
 
         holder.itemView.setOnClickListener {
             selectedCategoryPosition = holder.adapterPosition
-            viewModel.selectedCategory.value = category.name // ViewModel에 선택된 카테고리 업데이트
+            viewModel.setCategoryName(category.name)
+            viewModel.setCategoryColor(category.color)
+            Log.d("CategoryRVA", "Selected category: ${category.name},${category.color}")
             notifyDataSetChanged() // RecyclerView 업데이트
         }
     }
