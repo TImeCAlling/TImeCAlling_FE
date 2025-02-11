@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.ui.semantics.text
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleBinding
@@ -18,8 +19,8 @@ import org.threeten.bp.format.DateTimeFormatter
 class TodayScheduleRVA(
 ) : RecyclerView.Adapter<TodayScheduleRVA.ViewHolder>() {
 
-    private var items = ArrayList<TodayScheduleResponseModel>()
-    fun setScheduleList(scheduleList: ArrayList<TodayScheduleResponseModel>) {
+    private var items : List<TodayScheduleResponseModel> = emptyList()
+    fun setScheduleList(scheduleList: List<TodayScheduleResponseModel>) {
         this.items = scheduleList
         notifyDataSetChanged()
     }
@@ -56,9 +57,12 @@ class TodayScheduleRVA(
         val parsedTime = parseTimeString(meetTime)
         if(parsedTime != null) {
             val (hours, minutes, seconds) = parsedTime
-            holder.timeType.text = if(hours < 12) "오전" else "오후"
-            holder.time.text = "${hours}:${minutes}"
-            holder.timeLeft.text = ""
+            val formattedHours = if (hours == 0) 12 else if (hours > 12) hours - 12 else hours
+            val formattedMinutes = String.format("%02d", minutes)
+            val timeType = if (hours < 12) "오전" else "오후"
+
+            holder.timeType.text = timeType
+            holder.time.text = "${String.format("%02d", formattedHours)}:${formattedMinutes}"
         }
         val leftMin = calculateMinutesUntilSpecificTime(meetTime)
         holder.timeLeft.text = leftMin.toString() + "\nmin"
