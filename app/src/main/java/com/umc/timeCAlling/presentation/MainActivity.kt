@@ -1,9 +1,13 @@
 package com.umc.timeCAlling.presentation
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.kakao.sdk.user.UserApiClient
@@ -20,6 +24,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     override fun initView() {
         initNavigator()
         initClickListener() // 클릭 이벤트 초기화
+        handleDeepLink(intent) // 딥링크 처리
     }
 
     override fun initObserver() {
@@ -45,6 +50,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     navController.navigate(menuItem.itemId)
                     true
                 }
+            }
+        }
+    }
+
+    private fun handleDeepLink(intent: Intent?) {
+        val appLinkData: Uri? = intent?.data
+        if (appLinkData != null) {
+            val scheduleId = appLinkData.lastPathSegment?.toIntOrNull()
+            if (scheduleId != null) {
+                Log.d("MainActivity", "scheduleId: $scheduleId")
+                val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+                val navOptions = navOptions {
+                    launchSingleTop = true
+                }
+                navController.navigate(R.id.homeFragment, bundle, navOptions)
             }
         }
     }

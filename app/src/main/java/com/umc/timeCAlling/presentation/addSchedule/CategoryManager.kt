@@ -18,6 +18,22 @@ object CategoryManager {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
+    fun getColor(color:Int):Int {
+        return when (color){
+            0 -> R.color.category_orange
+            1 -> R.color.category_yellow
+            2 -> R.color.mint_main
+            3 -> R.color.category_skyblue
+            4 -> R.color.category_blue
+            5 -> R.color.category_green
+            6 -> R.color.category_pink
+            7 -> R.color.category_mauve
+            8 -> R.color.category_purple
+            9 -> R.color.gray_600
+            else -> R.color.white
+        }
+    }
+
     fun loadCategories(context: Context) {
         val prefs = getSharedPreferences(context)
         val categoriesJson = prefs.getString(KEY_CATEGORIES, null)
@@ -31,10 +47,10 @@ object CategoryManager {
             categories.clear()
             categories.addAll(
                 listOf(
-                    Category("일상", R.color.category_orange),
-                    Category("학교", R.color.category_yellow),
-                    Category("알바", R.color.category_pink),
-                    Category("공부", R.color.category_skyblue),
+                    Category("일상", 0),
+                    Category("학교", 1),
+                    Category("알바",6),
+                    Category("공부", 3),
                 )
             )
             saveCategories(context)
