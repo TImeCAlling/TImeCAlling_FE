@@ -50,6 +50,7 @@ class TodayScheduleRVA(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bar.visibility = if(position == items.size -1) View.GONE else View.VISIBLE
         holder.title.text = items[position].name
         holder.description.text = items[position].body
 
@@ -65,7 +66,7 @@ class TodayScheduleRVA(
             holder.time.text = "${String.format("%02d", formattedHours)}:${formattedMinutes}"
         }
         val leftMin = calculateMinutesUntilSpecificTime(meetTime)
-        holder.timeLeft.text = leftMin.toString() + "\nmin"
+        holder.timeLeft.text = "${leftMin}\nmin"
 
         //제일 가까운 일정 ( 첫번째 인덱스 )는 민트색
         if(position == 0) {
@@ -76,8 +77,6 @@ class TodayScheduleRVA(
             holder.time.setTextColor(holder.timeType.context.getColor(R.color.mint_main))
             holder.description.setTextColor(holder.timeType.context.getColor(R.color.white))
         }
-
-        if(position == items.size - 1) holder.bar.visibility = View.GONE
 
         holder.itemView.setOnClickListener {
             itemClick?.onClick(it, position)

@@ -18,9 +18,9 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
     lateinit var onItemClick: ((ScheduleByDateResponseModel) -> Unit)
-    private var detailSchedules = ArrayList<ScheduleByDateResponseModel>()
+    private var detailSchedules : List<ScheduleByDateResponseModel> = emptyList()
 
-    fun setScheduleList(scheduleList: ArrayList<ScheduleByDateResponseModel>) {
+    fun setScheduleList(scheduleList: List<ScheduleByDateResponseModel>) {
         this.detailSchedules = ArrayList(scheduleList)
         Log.d("DetailScheduleRVA", "setScheduleList 호출됨")
         notifyDataSetChanged()
@@ -50,7 +50,7 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
     }
 
     override fun onBindViewHolder(holder: DetailScheduleViewHolder, position: Int) {
-
+        var isChecked = false
         val meetTime = detailSchedules[position].meetTime
         val parsedTime = parseTimeString(meetTime)
         if(parsedTime != null) {
@@ -63,7 +63,11 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
         }
 
         holder.title.text = detailSchedules[position].name
-        holder.repeatInfo.text = fromEnToKo(detailSchedules[position].repeatDays?.get(0)) ?: ""
+        if(detailSchedules[position].repeatDays != null) {
+            holder.repeatInfo.text = repeatDaysToKo(detailSchedules[position].repeatDays!!)
+        } else {
+            holder.repeatInfo.text = ""
+        }
         holder.category.text = detailSchedules[position].categories[0].categoryName //카테고리 색 반영 나중에
 
         if(position == 0) {
@@ -72,25 +76,17 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
             holder.time.setTextColor(holder.time.context.getColor(R.color.mint_600))
         }
 
-        if(position == detailSchedules.size -1) holder.bar.visibility = View.GONE
+        holder.bar.visibility = if(position == detailSchedules.size -1) View.GONE else View.VISIBLE
 
-        //----------------- 아래 부분은 api 연결 확인 후에 ----------//
-        /*holder.checkBtn.setOnClickListener {
-            detailSchedules[position].isChecked = !detailSchedules[position].isChecked
-            holder.checkBtn.setImageResource(if(detailSchedules[position].isChecked) R.drawable.ic_schedule_detail_check_mint else R.drawable.ic_schedule_detail_check)
-        }*/
-
-        /*//일정에 참여중인 인원이 3명 이상일 때
-        if(detailSchedules[position].memberCount >= 3) {
-            holder.extraMembersCount.text = "+${detailSchedules[position].memberCount - 2}"
-        }
-        //3명 미만
-        else {
-            holder.extraMembers.visibility = ViewGroup.GONE
-            holder.memberSecond.layoutParams = (holder.memberSecond.layoutParams as ViewGroup.MarginLayoutParams).apply {
-                marginEnd = 0
+        holder.checkBtn.setOnClickListener {
+            if(!isChecked) {
+                holder.checkBtn.setImageResource(R.drawable.ic_schedule_detail_check_mint)
+                isChecked = true
+            } else {
+                holder.checkBtn.setImageResource(R.drawable.ic_schedule_detail_check)
+                isChecked = false
             }
-        }*/
+        }
 
         holder.itemView.setOnClickListener {
             onItemClick.invoke(detailSchedules[position])
@@ -99,18 +95,26 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
 
     override fun getItemCount(): Int = detailSchedules.size
 
-    private fun fromEnToKo(en: String?) : String{
-        var value=""
-        when(en) {
-            "SUNDAY" -> value = "일요일"
-            "MONDAY" -> value = "월요일"
-            "TUESDAY" -> value = "화요일"
-            "WEDNESDAY" -> value = "수요일"
-            "THURSDAY" -> value = "목요일"
-            "FRIDAY" -> value = "금요일"
-            "SATURDAY" -> value = "토요일"
+    private fun dayConverter(day: String): String {
+        when(day) {
+            "MONDAY" -> return "월"
+            "TUESDAY" -> return "화"
+            "WEDNESDAY" -> return "수"
+            "THURSDAY" -> return "목"
+            "FRIDAY" -> return "금"
+            "SATURDAY" -> return "토"
+            "SUNDAY" -> return "일"
+            else -> return ""
         }
-        return "매주 $value 반복"
+    }
+
+    private fun repeatDaysToKo(repeatDays: List<String>): String {
+        var koDays = ""
+        if(repeatDays.size == 7) koDays = "매일"
+        else {
+            koDays = repeatDays.map { dayConverter(it) }.joinToString(", ")
+        }
+        return koDays + " 반복"
     }
 
     private fun parseTimeString(timeString: String): Triple<Int, Int, Int>? {
@@ -133,28 +137,5 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
         }
 
         return Triple(hours, minutes, seconds)
-    }
-
-    private fun calculateMinutesUntilSpecificTime(specificTime: String): Long {
-        // 현재 시간 가져오기
-        val now = LocalDateTime.now()
-
-        // 특정 시간 파싱 (hh:mm:ss 형식)
-        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-        val parsedTime = LocalTime.parse(specificTime, timeFormatter)
-
-        // 특정 시간의 LocalDateTime 생성
-        var specificDateTime = LocalDateTime.of(LocalDate.now(), parsedTime)
-
-        // 특정 시간이 현재 시간보다 이전일 경우, 다음 날로 계산
-        if (specificDateTime.isBefore(now)) {
-            specificDateTime = specificDateTime.plusDays(1)
-        }
-
-        // 시간 차이 계산
-        val duration = Duration.between(now, specificDateTime)
-
-        // 분 단위로 변환
-        return duration.toMinutes()
     }
 }

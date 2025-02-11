@@ -4,6 +4,7 @@ import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleRequestDto
 import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleResponseDto
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.DetailScheduleResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.PATCH
@@ -35,7 +36,7 @@ interface ScheduleService {
         @Path("scheduleId") scheduleId: Int
     ):BaseResponse<ScheduleResponseDto>
 
-  @GET("/api/schedules/date")
+   @GET("/api/schedules/date")
     suspend fun getScheduleByDate(
         @Query("date") date: String // ex. ?date=2025-01-20
     ) : BaseResponse<SchedulesResponseDto>
@@ -58,4 +59,9 @@ interface ScheduleService {
         @Path("scheduleId") scheduleId: Int,
         @Body request: ScheduleRequestDto
     ): BaseResponse<SchedulesResponseDto>
+
+    @GET("/api/schedules/{checklistId}")
+    suspend fun getDetailSchedule(
+        @Path("checklistId") checklistId: Int
+    ) : BaseResponse<DetailScheduleResponseDto>
 }
