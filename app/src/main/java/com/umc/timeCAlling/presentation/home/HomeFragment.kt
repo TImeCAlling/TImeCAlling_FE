@@ -71,7 +71,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                Log.d("slideOffset", slideOffset.toString())
             }
         })
 
@@ -148,25 +147,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun initTodayScheduleRV() {
         viewModel.getTodaySchedules()
-        val list2 = arrayListOf<TodaySchedule>(
-            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
-        )
-        val listSize = list2.size
         val adapter = TodayScheduleRVA()
         binding.rvHomeTodaySchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -182,14 +162,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 adapter.setScheduleList(scheduleList = scheduleList as ArrayList<TodayScheduleResponseModel>)
             }
         }
-        if(list2.isEmpty()) {
-            binding.rvHomeTodaySchedule.visibility = View.GONE
-            binding.layoutHomeNoTodaySchedule.visibility = View.VISIBLE
-        }
-        else {
-            binding.rvHomeTodaySchedule.visibility = View.VISIBLE
-            binding.layoutHomeNoTodaySchedule.visibility = View.GONE
-        }
+
         adapter.itemClick = object : TodayScheduleRVA.ItemClick {
             override fun onClick(view: View, position: Int) {
                 showTopSheet()
