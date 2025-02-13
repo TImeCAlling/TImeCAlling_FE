@@ -4,58 +4,50 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
+import android.media.MediaPlayer
 import android.util.Log
-import android.widget.Toast
-import java.text.SimpleDateFormat
-import java.util.Locale
-import kotlin.text.format
 
 class AlarmReceiver : BroadcastReceiver() {
+
+    companion object {
+        private var mediaPlayer: MediaPlayer? = null
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("AlarmReceiver", "Alarm received")
+        val alarmId = intent.getIntExtra("alarmId", 0)
+        val alarmName = intent.getStringExtra("alarmName") ?: ""
+        val year = intent.getIntExtra("year", -1)
+        val month = intent.getIntExtra("month", -1)
+        val dayOfMonth = intent.getIntExtra("dayOfMonth", -1)
+        val hourOfDay = intent.getIntExtra("hourOfDay", -1)
+        val minute = intent.getIntExtra("minute", -1)
 
-        val alarmName = intent.getStringExtra("alarmName") ?: "Unknown Alarm"
-        val year = intent.getIntExtra("year", 0)
-        val month = intent.getIntExtra("month", 0)
-        val dayOfMonth = intent.getIntExtra("dayOfMonth", 0)
-        val hourOfDay = intent.getIntExtra("hourOfDay", 0)
-        val minute = intent.getIntExtra("minute", 0)
-        val scheduleId = intent.getIntExtra("scheduleId", -1)
-        val isRepeating = intent.getBooleanExtra("isRepeating", false)
-        val startDate = intent.getStringExtra("startDate") ?: ""
-        val endDate = intent.getStringExtra("endDate") ?: ""
-        val repeatDays = intent.getStringArrayExtra("repeatDays") ?: emptyArray()
+        val currentCalendar = Calendar.getInstance()
+        val currentYear = currentCalendar.get(Calendar.YEAR)
+        val currentMonth = currentCalendar.get(Calendar.MONTH)
+        val currentDayOfMonth = currentCalendar.get(Calendar.DAY_OF_MONTH)
 
-        // AlarmActivity를 시작하는 Intent 생성
-        val alarmIntent = Intent(context, AlarmActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("alarmName", alarmName)
-            putExtra("year", year)
-            putExtra("month", month)
-            putExtra("dayOfMonth", dayOfMonth)
-            putExtra("hourOfDay", hourOfDay)
-            putExtra("minute", minute)
-            putExtra("scheduleId", scheduleId)
-            putExtra("isRepeating", isRepeating)
-            putExtra("startDate", startDate)
-            putExtra("endDate", endDate)
-            putExtra("repeatDays", repeatDays)
-        }
+        Log.d("AlarmReceiver", "Alarm received for: $alarmName, Date: $year-${month + 1}-$dayOfMonth, Time: $hourOfDay:$minute, alarmId: $alarmId")
+        Log.d("AlarmReceiver", "Current Date: $currentYear-${currentMonth + 1}-$currentDayOfMonth")
 
-        // AlarmActivity 시작
-        context.startActivity(alarmIntent)
 
-        // 알람 정보 로그 출력
-        Log.d("AlarmReceiver", "Alarm received for $alarmName at $year-$month-$dayOfMonth $hourOfDay:$minute, Schedule ID: $scheduleId")
-
-        // 반복 알람인 경우 다음 알람 설정
-        if (isRepeating) {
-            val startDate = intent.getStringExtra("startDate") ?: ""
-            val endDate = intent.getStringExtra("endDate") ?: ""
-            val repeatDays = intent.getStringArrayExtra("repeatDays")?.toList() ?: emptyList()
-
+        if (year == currentYear && month == currentMonth && dayOfMonth == currentDayOfMonth) {
+            Log.d("AlarmReceiver", "Date matches. Starting AlarmActivity.")
+            val alarmActivityIntent = Intent(context, AlarmActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("alarmId", alarmId)
+                putExtra("alarmName", alarmName)
+                putExtra("year", year)
+                putExtra("month", month)
+                putExtra("dayOfMonth", dayOfMonth)
+                putExtra("hourOfDay", hourOfDay)
+                putExtra("minute", minute)
+            }
+            context.startActivity(alarmActivityIntent)
+        } else {
+            Log.d("AlarmReceiver", "Date does not match. Canceling alarm.")
             val alarmHelper = AlarmHelper(context)
-            //alarmHelper.setRepeatingAlarm(alarmName, startDate, endDate, repeatDays, alarmHourOfDay, alarmMinute, scheduleId)
-            Log.d("AlarmReceiver", "Repeating alarm: Start Date: $startDate, End Date: $endDate, Repeat Days: ${repeatDays.joinToString()}")        }
+            alarmHelper.cancelAlarm(alarmId)
+        }
     }
 }

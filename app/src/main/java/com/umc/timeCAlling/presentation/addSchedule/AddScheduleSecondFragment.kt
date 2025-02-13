@@ -3,6 +3,7 @@ package com.umc.timeCAlling.presentation.addSchedule
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
@@ -20,10 +21,12 @@ import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
@@ -46,8 +49,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private var selectedDays = mutableListOf<String>()
     private var scheduleId : Int = -1
     private var mode : String = ""
+    private lateinit var spf: SharedPreferences
 
     override fun initView() {
+        binding.apply {
+            menuAddScheduleRepeat.setOnCheckedChangeListener { _, isChecked -> setSwitchColor(binding.menuAddScheduleRepeat, isChecked)}
+        }
+        spf = requireContext().getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
         mode = viewModel.getMode()
         scheduleId = arguments?.getInt("scheduleId") ?: -2
         Log.d("AddScheduleSecondFragment", "scheduleId: $scheduleId")
@@ -417,22 +425,32 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             moveToCategoryEdit()
         }
 
-        categoryBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+        val categoryBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (slideOffset <= 0) {
-                    binding.viewBottomSheetBackground.visibility = View.INVISIBLE
-                } else if (slideOffset > 0) {
-                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                if (isAdded && viewLifecycleOwner.lifecycle.currentState.isAtLeast(
+                        Lifecycle.State.INITIALIZED
+                    )
+                ) {
+                    if (slideOffset <= 0) {
+                        binding.viewBottomSheetBackground.visibility =
+                            View.INVISIBLE
+                    } else if (slideOffset > 0) {
+                        binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                    }
                 }
             }
+
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 
             }
-        })
+        }
 
         binding.tvAddScheduleCategorySave.setOnClickListener {
             categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            categoryBottomSheetBehavior.removeBottomSheetCallback(categoryBottomSheetCallback)
+            categoryBottomSheetBehavior.addBottomSheetCallback(categoryBottomSheetCallback)
             viewModel.categoryName.value?.let {
                 updateCategoryUI(getCategoryByName(it))
             }
@@ -526,30 +544,46 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         val scheduleDate = viewModel.scheduleDate.value
         val scheduleTime = viewModel.scheduleTime.value
 
-        // newScheduleId 변수를 선언하고, viewModel.scheduleId.value가 null이 아닐 경우에만 값을 할당합니다.
-        val newScheduleId = viewModel.scheduleId.value ?: -1 // null일 경우 기본값 -1로 설정
+        var alarmId = spf.getInt("lastAlarmId", 0)
+
+        alarmId++
+
+        with(spf.edit()) {
+            putInt("lastAlarmId", alarmId)
+            apply()
+        }
 
         if (scheduleDate != null && scheduleTime != null) {
             val (year, month, dayOfMonth) = parseDate(scheduleDate)
             val (hourOfDay, minute) = parseTime(scheduleTime)
 
-            // 반복 설정 여부 확인
-            if (viewModel.isRepeat.value == true) {
-                // 반복 알람 설정
-                val startDate = viewModel.startDate.value ?: ""
-                val endDate = viewModel.endDate.value ?: ""
-                val repeatDays = viewModel.repeatDates.value ?: emptyList()
-                Log.d("AddScheduleSecondFragment", "Setting repeating alarm for Schedule ID: $newScheduleId")
-                alarmHelper.setRepeatingAlarm(alarmName, startDate, endDate, repeatDays, hourOfDay, minute, newScheduleId)
-                Log.d("AddScheduleSecondFragment", "Repeating alarm set for Schedule ID: $newScheduleId")
-            } else {
-                // 일반 알람 설정
-                Log.d("AddScheduleSecondFragment", "Setting alarm for Schedule ID: $newScheduleId")
-                alarmHelper.setAlarm(alarmName, year, month, dayOfMonth, hourOfDay, minute, newScheduleId)
-                Log.d("AddScheduleSecondFragment", "Alarm set for Schedule ID: $newScheduleId")
-            }
+            alarmHelper.setAlarm(alarmName, year, month, dayOfMonth, hourOfDay, minute, alarmId)
+
+            /* // 반복 설정 여부 확인
+             if (viewModel.isRepeat.value == true) {
+                 // 반복 알람 설정
+                 val startDate = viewModel.startDate.value ?: ""
+                 val endDate = viewModel.endDate.value ?: ""
+                 val repeatDays = viewModel.repeatDates.value ?: emptyList()
+                 Log.d("AddScheduleSecondFragment", "Setting repeating alarm for Schedule ID: $alarmId")
+                 alarmHelper.setRepeatingAlarm(alarmName, startDate, endDate, repeatDays, hourOfDay, minute, alarmId)
+                 Log.d("AddScheduleSecondFragment", "Repeating alarm set for Schedule ID: $alarmId")
+             } else {
+                 // 일반 알람 설정
+                 Log.d("AddScheduleSecondFragment", "Setting alarm for Schedule ID: $alarmId")
+                 alarmHelper.setAlarm(alarmName, year, month, dayOfMonth, hourOfDay, minute, alarmId)
+                 Log.d("AddScheduleSecondFragment", "Alarm set for Schedule ID: $alarmId")
+             }*/
         } else {
             Log.e("AddScheduleSecondFragment", "scheduleDate or scheduleTime is null")
+        }
+    }
+
+    private fun setSwitchColor(switch: MaterialSwitch, isChecked: Boolean) {
+        if(isChecked) {
+            switch.trackTintList = getResources().getColorStateList(R.color.mint_main)
+        } else {
+            switch.trackTintList = getResources().getColorStateList(R.color.gray_400)
         }
     }
 
