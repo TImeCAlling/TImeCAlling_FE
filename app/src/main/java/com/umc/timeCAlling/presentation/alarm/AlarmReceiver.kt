@@ -26,14 +26,16 @@ class AlarmReceiver : BroadcastReceiver() {
         val currentYear = currentCalendar.get(Calendar.YEAR)
         val currentMonth = currentCalendar.get(Calendar.MONTH)
         val currentDayOfMonth = currentCalendar.get(Calendar.DAY_OF_MONTH)
+        val currentHourOfDay = currentCalendar.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = currentCalendar.get(Calendar.MINUTE)
 
         Log.d("AlarmReceiver", "Alarm received for: $alarmName, Date: $year-${month + 1}-$dayOfMonth, Time: $hourOfDay:$minute, alarmId: $alarmId")
         Log.d("AlarmReceiver", "Current Date: $currentYear-${currentMonth + 1}-$currentDayOfMonth")
 
 
-        if (year == currentYear && month == currentMonth && dayOfMonth == currentDayOfMonth) {
-            Log.d("AlarmReceiver", "Date matches. Starting AlarmActivity.")
+        if (year == currentYear && month == currentMonth && dayOfMonth == currentDayOfMonth && hourOfDay == currentHourOfDay && minute == currentMinute) {            Log.d("AlarmReceiver", "Date matches. Starting AlarmActivity.")
             val alarmActivityIntent = Intent(context, AlarmActivity::class.java).apply {
+                Log.d("AlarmReceiver", "Date and Time match. Starting AlarmActivity.")
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra("alarmId", alarmId)
                 putExtra("alarmName", alarmName)
