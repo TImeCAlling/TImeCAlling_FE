@@ -5,6 +5,7 @@ import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleRequestDto
 import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleResponseDto
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.ScheduleUsersResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SchedulesResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SharedScheduleResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SuccessRateResponseDto
@@ -23,4 +24,5 @@ class ScheduleDataSourceImpl @Inject constructor(
     override suspend fun getSuccessRate(): BaseResponse<SuccessRateResponseDto> = scheduleService.getSuccessRate()
     override suspend fun getSharedSchedule(scheduleId: Int): BaseResponse<SharedScheduleResponseDto> = scheduleService.getSharedSchedule(scheduleId)
     override suspend fun postSharedSchedule(scheduleId: Int, requestDto: ScheduleRequestDto): BaseResponse<SchedulesResponseDto> = scheduleService.postSharedSchedule(scheduleId,requestDto)
+    override suspend fun getScheduleUsers(scheduleId: Int): BaseResponse<ScheduleUsersResponseDto> = scheduleService.getScheduleUsers(scheduleId)
 }

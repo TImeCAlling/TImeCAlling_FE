@@ -17,4 +17,5 @@ interface ScheduleRepository {
     suspend fun getSuccessRate() : Result<SuccessRateResponseModel>
     suspend fun getSharedSchedule(scheduleId: Int) : Result<SharedScheduleResponseModel>
     suspend fun postSharedSchedule(scheduleId: Int,requestModel: ScheduleRequestModel) : Result<SchedulesResponseModel>
+    suspend fun getScheduleUsers(scheduleId: Int) : Result<ScheduleUsersResponseModel>
 }
