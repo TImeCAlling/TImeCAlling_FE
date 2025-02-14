@@ -26,7 +26,8 @@ class HomeViewModel @Inject constructor(
     fun getTodaySchedules() {
         viewModelScope.launch {
             scheduleRepository.getTodaySchedules().onSuccess { response ->
-                _todaySchedules.value = response.schedules
+                val sortedSchedules = response.schedules.sortedBy {it.meetTime}
+                _todaySchedules.value = sortedSchedules
                 Log.d("getTodaySchedules()" , response.toString())
             }.onFailure { error ->
                 // 에러 처리

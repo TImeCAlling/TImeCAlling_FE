@@ -160,7 +160,6 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_home_last_schedule"
                     android:layout_width="match_parent"
-                    tools:listitem="@layout/item_last_schedule"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:layout_marginTop="16dp"/>

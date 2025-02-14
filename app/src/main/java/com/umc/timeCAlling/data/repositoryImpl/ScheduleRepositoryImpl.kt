@@ -3,6 +3,7 @@ package com.umc.timeCAlling.data.repositoryImpl
 import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
@@ -45,4 +46,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun getScheduleUsers(scheduleId: Int): Result<List<ScheduleUsersResponseModel>> =
         runCatching { scheduleDataSource.getScheduleUsers(scheduleId).result.map { it.toScheduleUsersResponseModel() } }
+
+    override suspend fun getDetailSchedule(checklistId: Int): Result<DetailScheduleResponseModel> =
+        runCatching { scheduleDataSource.getDetailSchedule(checklistId).result.toDetailScheduleResponseModel() }
 }

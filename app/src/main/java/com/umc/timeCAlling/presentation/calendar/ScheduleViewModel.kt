@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
@@ -32,7 +33,7 @@ class ScheduleViewModel @Inject constructor(
             _isLoading.value = true
             scheduleRepository.getScheduleByDate(date).onSuccess { response ->
                 if (response.schedules.isNotEmpty()) {
-                    _schedules.value = response.schedules
+                    _schedules.value = response.schedules.sortedBy { it.meetTime }
                     Log.d("ScheduleViewModel", response.toString())
                 } else {
                     _schedules.value = emptyList()
@@ -46,11 +47,21 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
+<<<<<<< HEAD
     fun getScheduleUsers(scheduleId: Int) {
         viewModelScope.launch {
             scheduleRepository.getScheduleUsers(scheduleId).onSuccess { response ->
                 Log.d("ScheduleViewModel", response.toString())
                 _scheduleUsers.value = response
+=======
+    private val _detailSchedule = MutableLiveData<DetailScheduleResponseModel>()
+    val detailSchedule: LiveData<DetailScheduleResponseModel> get() = _detailSchedule
+
+    fun getDetailSchedule(checklistId: Int) {
+        viewModelScope.launch {
+            scheduleRepository.getDetailSchedule(checklistId).onSuccess { response ->
+                _detailSchedule.value = response
+>>>>>>> origin/FEAT/#62-홈화면-날짜별일정-api-ui-반영
             }.onFailure { error ->
                 Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
             }
