@@ -19,5 +19,5 @@ interface ScheduleDataSource {
     suspend fun getSuccessRate(): BaseResponse<SuccessRateResponseDto>
     suspend fun getSharedSchedule(scheduleId: Int): BaseResponse<SharedScheduleResponseDto>
     suspend fun postSharedSchedule(scheduleId: Int,requestDto:ScheduleRequestDto): BaseResponse<SchedulesResponseDto>
-    suspend fun getScheduleUsers(scheduleId: Int): BaseResponse<ScheduleUsersResponseDto>
+    suspend fun getScheduleUsers(scheduleId: Int): BaseResponse<List<ScheduleUsersResponseDto>>
 }

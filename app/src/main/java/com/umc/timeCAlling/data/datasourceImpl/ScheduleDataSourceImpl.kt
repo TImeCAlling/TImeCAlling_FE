@@ -24,5 +24,5 @@ class ScheduleDataSourceImpl @Inject constructor(
     override suspend fun getSuccessRate(): BaseResponse<SuccessRateResponseDto> = scheduleService.getSuccessRate()
     override suspend fun getSharedSchedule(scheduleId: Int): BaseResponse<SharedScheduleResponseDto> = scheduleService.getSharedSchedule(scheduleId)
     override suspend fun postSharedSchedule(scheduleId: Int, requestDto: ScheduleRequestDto): BaseResponse<SchedulesResponseDto> = scheduleService.postSharedSchedule(scheduleId,requestDto)
-    override suspend fun getScheduleUsers(scheduleId: Int): BaseResponse<ScheduleUsersResponseDto> = scheduleService.getScheduleUsers(scheduleId)
+    override suspend fun getScheduleUsers(scheduleId: Int): BaseResponse<List<ScheduleUsersResponseDto>> = scheduleService.getScheduleUsers(scheduleId)
 }

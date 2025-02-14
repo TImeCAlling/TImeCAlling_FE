@@ -55,7 +55,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         bottomNavigationShow()
 
         binding.layoutDetailMembers.setOnClickListener {
-            findNavController().navigate(R.id.action_calendarFragment_to_wakeupFragment)
+            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+            findNavController().navigate(R.id.action_calendarFragment_to_wakeupFragment, bundle)
         }
 
     }

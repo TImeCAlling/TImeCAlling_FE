@@ -63,6 +63,6 @@ interface ScheduleService {
     @GET("/api/schedules/{scheduleId}/users")
     suspend fun getScheduleUsers(
         @Path("scheduleId") scheduleId: Int
-    ): BaseResponse<ScheduleUsersResponseDto>
+    ): BaseResponse<List<ScheduleUsersResponseDto>>
 
 }

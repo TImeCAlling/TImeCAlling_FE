@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
+import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupPeopleRVA
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,6 +23,9 @@ class ScheduleViewModel @Inject constructor(
 
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val _scheduleUsers = MutableLiveData<List<ScheduleUsersResponseModel>>()
+    val scheduleUsers: LiveData<List<ScheduleUsersResponseModel>> get() = _scheduleUsers
 
     fun getScheduleByDate(date: String) {
         viewModelScope.launch {
@@ -37,6 +42,17 @@ class ScheduleViewModel @Inject constructor(
                 Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
             }.also {
                 _isLoading.value = false // 로딩 종료
+            }
+        }
+    }
+
+    fun getScheduleUsers(scheduleId: Int) {
+        viewModelScope.launch {
+            scheduleRepository.getScheduleUsers(scheduleId).onSuccess { response ->
+                Log.d("ScheduleViewModel", response.toString())
+                _scheduleUsers.value = response
+            }.onFailure { error ->
+                Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
             }
         }
     }

@@ -43,6 +43,6 @@ class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun postSharedSchedule(scheduleId: Int, requestModel: ScheduleRequestModel): Result<SchedulesResponseModel> =
         runCatching { scheduleDataSource.postSharedSchedule(scheduleId,requestModel.toScheduleRequestDto()).result.toSchedulesResponseModel() }
 
-    override suspend fun getScheduleUsers(scheduleId: Int): Result<ScheduleUsersResponseModel> =
-        runCatching { scheduleDataSource.getScheduleUsers(scheduleId).result.toScheduleUsersResponseModel() }
+    override suspend fun getScheduleUsers(scheduleId: Int): Result<List<ScheduleUsersResponseModel>> =
+        runCatching { scheduleDataSource.getScheduleUsers(scheduleId).result.map { it.toScheduleUsersResponseModel() } }
 }
