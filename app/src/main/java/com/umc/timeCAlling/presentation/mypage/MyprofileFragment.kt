@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.databinding.adapters.ViewBindingAdapter.setClickListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -84,7 +85,12 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     }
 
     override fun initObserver() {
-
+        /*
+        // 카카오 닉네임 가져오기 예시
+        signupViewModel.getKakaoUserInfo()
+        signupViewModel.kakaoUserInfo.observe(viewLifecycleOwner) { userInfo ->
+            Log.d("MypageFragment", "현재 로그인된 유저 닉네임: ${userInfo?.nickname ?: "정보 없음"}")
+        }*/
     }
 
     private fun observeViewModel() {

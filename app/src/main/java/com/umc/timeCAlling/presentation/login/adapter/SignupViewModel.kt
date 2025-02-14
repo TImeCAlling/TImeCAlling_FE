@@ -12,11 +12,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kakao.sdk.user.UserApiClient
 import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.domain.model.request.login.KakaoSignupRequestModel
 import com.umc.timeCAlling.domain.model.request.login.TokenRefreshRequestModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoSignupResponseModel
+import com.umc.timeCAlling.domain.model.response.login.KakaoUserInfoResponseModel
 import com.umc.timeCAlling.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -54,6 +56,9 @@ class SignupViewModel @Inject constructor(
 
     private val _signupResult = MutableLiveData<KakaoSignupResponseModel?>()
     val signupResult: LiveData<KakaoSignupResponseModel?> get() = _signupResult
+
+    private val _kakaoUserInfo = MutableLiveData<KakaoUserInfoResponseModel?>()
+    val kakaoUserInfo: LiveData<KakaoUserInfoResponseModel?> get() = _kakaoUserInfo
 
     fun setKakaoAccessToken(token: String) {
         _kakaoAccessToken.value = token
@@ -118,6 +123,24 @@ class SignupViewModel @Inject constructor(
             }.onFailure { error ->
                 _signupResult.postValue(null)
                 Log.d("SignupViewModel", "API Error: $error")
+            }
+        }
+    }
+
+    fun getKakaoUserInfo() {
+        viewModelScope.launch {
+            UserApiClient.instance.me { user, error ->
+                if (error != null) {
+                    Log.e("SignupViewModel", "카카오 유저 정보 가져오기 실패: ${error.message}")
+                    _kakaoUserInfo.postValue(null)
+                } else if (user != null) {
+                    val userInfo = KakaoUserInfoResponseModel(
+                        id = user.id ?: 0L,
+                        nickname = user.kakaoAccount?.profile?.nickname ?: "이름 없음"
+                    )
+                    _kakaoUserInfo.postValue(userInfo)
+                    Log.d("SignupViewModel", "카카오 유저 정보 가져오기 성공: ${userInfo.nickname}")
+                }
             }
         }
     }
