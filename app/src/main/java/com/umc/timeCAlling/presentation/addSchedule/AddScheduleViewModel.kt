@@ -101,10 +101,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     val repeatDates: LiveData<MutableList<String>> = _repeatDates // LiveData 타입 변경
 
     fun setRepeatDates(dates: List<String>?) {
-        if (dates != null) {
-            _repeatDates.value?.addAll(dates)
-        }
-        _repeatDates.value = _repeatDates.value
+        _repeatDates.value = dates?.toMutableList() ?: mutableListOf()
     }
 
     private val _isRepeat = MutableLiveData<Boolean>()

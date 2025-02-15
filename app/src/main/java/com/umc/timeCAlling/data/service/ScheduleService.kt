@@ -10,7 +10,6 @@ import retrofit2.http.DELETE
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
-import com.umc.timeCAlling.data.dto.response.schedule.ScheduleByDateResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.ScheduleStatusResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.ScheduleUsersResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SchedulesResponseDto
