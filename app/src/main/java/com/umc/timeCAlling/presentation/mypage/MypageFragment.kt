@@ -1,6 +1,7 @@
 package com.umc.timeCAlling.presentation.mypage
 
 import android.view.View
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.presentation.base.BaseFragment
@@ -10,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypage) {
+    private lateinit var navController: NavController
 
     override fun initView() {
         setClickListener()
@@ -26,10 +28,10 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
                 navigateToMyprofileFragment() // 내 프로필
             }
             layoutMypageAlarmlist.setOnClickListener {
-                //알람리스트
+                findNavController().navigate(R.id.action_mypageFragment_to_alarmlistFragment)
             }
             layoutMypageCategory.setOnClickListener {
-                //카테고리
+                findNavController().navigate(R.id.action_mypageFragment_to_categoryEditFragment)
             }
             layoutMypageSoundInfo.setOnClickListener {
                 navigateToMypageVoiceFragment()

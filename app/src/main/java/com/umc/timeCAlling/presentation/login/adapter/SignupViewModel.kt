@@ -54,8 +54,8 @@ class SignupViewModel @Inject constructor(
     private val _signupResult = MutableLiveData<KakaoSignupResponseModel?>()
     val signupResult: LiveData<KakaoSignupResponseModel?> get() = _signupResult
 
-    private val _isLoggedOut = MutableLiveData<Boolean>()
-    val isLoggedOut: LiveData<Boolean> get() = _isLoggedOut
+    private val _kakaoUserInfo = MutableLiveData<KakaoUserInfoResponseModel?>()
+    val kakaoUserInfo: LiveData<KakaoUserInfoResponseModel?> get() = _kakaoUserInfo
 
     fun setKakaoAccessToken(token: String) {
         _kakaoAccessToken.value = token
@@ -155,4 +155,5 @@ class SignupViewModel @Inject constructor(
         }
         Log.d("SignupViewModel", "토큰 삭제 완료: accessToken 및 refreshToken 초기화됨")
     }
+
 }

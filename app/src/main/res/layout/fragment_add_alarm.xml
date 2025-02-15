@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_add_alarm_topbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:gravity="center_vertical"
+                android:paddingTop="18dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:text="알람 추가"
+                    android:textAlignment="center"
+                    android:textColor="@color/gray_800"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_add_alarm_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_left_detail"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/gray_300"
+                app:layout_constraintTop_toBottomOf="@id/layout_add_alarm_topbar" />
+
+            <LinearLayout
+                android:id="@+id/layout_add_alarm_top_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_alarmlist_mail" />
+
+                    <TextView
+                        style="@style/TextAppearance.TimeCAlling.Head1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="알람으로" />
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/TextAppearance.TimeCAlling.Head1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="미리 알려드릴게요!" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="40dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/layout_add_alarm_top_section">
+
+                <TextView
+                    style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="몇분 전에 알람을 보내드릴까요?" />
+
+                <LinearLayout
+                    android:id="@+id/layout_add_alarm_select_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/shape_rect_10_gray200_fill"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="20dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_add_alarm_time" />
+
+                    <TextView
+                        android:id="@+id/tv_add_alarm_time_select"
+                        style="@style/TextAppearance.TimeCAlling.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="알람 시간을 선택해주세요"
+                        android:textColor="@color/gray_500" />
+
+                    <TextView
+                        android:id="@+id/tv_add_alarm_time_setted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="15분 전"
+                        style="@style/TextAppearance.TimeCAlling.Body1"
+                        android:layout_marginEnd="4dp"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_right_calender"
+                        app:tint="@color/gray_500" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="표시할 멘트를 입력해주세요" />
+
+                    <TextView
+                        android:id="@+id/tv_add_alarm_message_length"
+                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/mint_main" />
+
+                    <TextView
+                        style="@style/TextAppearance.TimeCAlling.Detail.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/20"
+                        android:textColor="@color/gray_700" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_add_alarm_message"
+                    style="@style/TextAppearance.TimeCAlling.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/shape_rect_10_gray200_fill"
+                    android:padding="16dp"
+                    android:text="메세지를 입력해주세요"
+                    android:textColor="@color/gray_500" />
+
+                <TextView
+                    style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="알람에 원하는 노래를 넣을까요?" />
+
+                <LinearLayout
+                    android:id="@+id/layout_add_alarm_music_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/shape_rect_10_gray200_fill"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="20dp">
+
+                    <LinearLayout
+                        android:id="@+id/layout_add_alarm_music"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="없음"
+                            android:textColor="@color/gray_500" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:src="@drawable/ic_arrow_right_calender"
+                            app:tint="@color/gray_500" />
+
+
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_add_alarm_music"
+                        android:layout_width="0dp"
+                        android:layout_height="22dp"
+                        android:layout_weight="1"
+                        app:thumbTint="@color/white"
+                        app:trackTint="@color/gray_400" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add_alarm_save"
+                style="@style/TextAppearance.TimeCAlling.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="26dp"
+                android:background="@drawable/shape_rect_999_mint_fill"
+                android:paddingVertical="20dp"
+                android:text="저장하기"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 알람 시간 선택 바텀시트 -->
+        <View
+            android:id="@+id/view_add_alarm_bottom_sheet_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bottomsheet_background"
+            android:visibility="invisible"
+            app:layout_anchor="@+id/constraintLayout"
+            app:layout_anchorGravity="center" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_add_alarm_bottom_sheet_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:background="@drawable/shape_bottom_sheet">
+
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/handle_add_alarm_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_add_alarm_bottom_sheet_time_close"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_percent="0.068"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_add_alarm_time_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_add_alarm_time_title"
+                android:layout_marginEnd="20dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_rect_999_white_fill_gray300_line_1"/>
+                <ImageView
+                    android:id="@+id/iv_add_alarm_bottom_sheet_time_close"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/ic_delete"
+                    android:backgroundTint="@color/gray_700"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_add_alarm_time_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="푸시 메시지 알람 시간"
+                style="@style/TextAppearance.TimeCAlling.Head2"
+                android:textColor="@color/gray_600"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/handle_add_alarm_time"/>
+
+            <LinearLayout
+                android:id="@+id/layout_add_alarm_time_selector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/tv_add_alarm_time_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_add_alarm_min1_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_alarm_arrow_up"/>
+
+                    <TextView
+                        android:id="@+id/tv_add_alarm_min1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        style="@style/TextAppearance.TimeCAlling.Head1"
+                        android:layout_marginVertical="8dp"/>
+
+                    <ImageView
+                        android:id="@+id/iv_add_alarm_min1_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_alarm_arrow_down"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_add_alarm_min2_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_alarm_arrow_up"/>
+
+                    <TextView
+                        android:id="@+id/tv_add_alarm_min2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5"
+                        style="@style/TextAppearance.TimeCAlling.Head1"
+                        android:layout_marginVertical="8dp"/>
+
+                    <ImageView
+                        android:id="@+id/iv_add_alarm_min2_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_alarm_arrow_down"/>
+
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="분 전"
+                    style="@style/TextAppearance.TimeCAlling.Head1"
+                    android:layout_marginStart="28dp"/>
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add_alarm_time_save"
+                style="@style/TextAppearance.TimeCAlling.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="26dp"
+                android:background="@drawable/shape_rect_999_mint_fill"
+                android:paddingVertical="20dp"
+                android:text="저장하기"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/layout_add_alarm_time_selector"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 멘트 입력 바텀시트 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_add_alarm_bottom_sheet_ment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:background="@drawable/shape_bottom_sheet">
+
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/handle_add_alarm_ment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_add_alarm_bottom_sheet_ment_close"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_percent="0.068"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_add_alarm_ment_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_add_alarm_ment_title"
+                android:layout_marginEnd="20dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_rect_999_white_fill_gray300_line_1"/>
+                <ImageView
+                    android:id="@+id/iv_add_alarm_bottom_sheet_ment_close"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/ic_delete"
+                    android:backgroundTint="@color/gray_700"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_add_alarm_ment_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="멘트"
+                style="@style/TextAppearance.TimeCAlling.Head2"
+                android:textColor="@color/gray_600"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/handle_add_alarm_ment"/>
+
+            <TextView
+                android:id="@+id/tv_input_ment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="멘트를 입력해주세요"
+                android:textColor="@color/gray_900"
+                android:textSize="24sp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_add_alarm_ment_title"/>
+
+            <LinearLayout
+                android:id="@+id/layout_add_alarm_ment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_rect_10_gray200_fill"
+                app:layout_constraintTop_toBottomOf="@id/tv_input_ment"
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginHorizontal="20dp">
+
+                <EditText
+                    android:id="@+id/et_add_alarm_ment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="멘트를 입력해주세요"
+                    style="@style/TextAppearance.TimeCAlling.Body1"
+                    android:background="@color/transparency"
+                    android:layout_weight="1"
+                    android:maxLength="20"
+                    android:singleLine="true"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_add_alarm_ment_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:fontFamily="@font/pretendard_medium"
+                android:textColor="@color/mint_main"
+                app:layout_constraintEnd_toStartOf="@id/tv_add_alarm_ment_length_20"
+                app:layout_constraintTop_toTopOf="@id/tv_add_alarm_ment_length_20"
+                app:layout_constraintBottom_toBottomOf="@id/tv_add_alarm_ment_length_20"/>
+            <TextView
+                android:id="@+id/tv_add_alarm_ment_length_20"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:text="/20"
+                android:textSize="12sp"
+                android:textColor="@color/gray_700"
+                android:gravity="center"
+                android:fontFamily="@font/pretendard_medium"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_add_alarm_ment"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add_alarm_ment_save"
+                style="@style/TextAppearance.TimeCAlling.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="26dp"
+                android:background="@drawable/shape_rect_999_mint_fill"
+                android:paddingVertical="20dp"
+                android:text="저장하기"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_add_alarm_ment_length"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 음악 설정 바텀시트 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_add_alarm_bottom_sheet_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:background="@drawable/shape_bottom_sheet">
+
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/handle_add_alarm_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_add_alarm_bottom_sheet_music_close"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_percent="0.068"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_add_alarm_music_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_add_alarm_music_title"
+                android:layout_marginEnd="20dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_rect_999_white_fill_gray300_line_1"/>
+                <ImageView
+                    android:id="@+id/iv_add_alarm_bottom_sheet_music_close"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/ic_delete"
+                    android:backgroundTint="@color/gray_700"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_add_alarm_music_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="음악"
+                style="@style/TextAppearance.TimeCAlling.Head2"
+                android:textColor="@color/gray_600"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/handle_add_alarm_music"/>
+
+            <TextView
+                android:id="@+id/tv_input_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="음악을 설정해주세요"
+                android:textColor="@color/gray_900"
+                android:textSize="24sp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_add_alarm_music_title"/>
+
+            <LinearLayout
+                android:id="@+id/layout_add_alarm_set_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginHorizontal="20dp"
+                android:padding="16dp"
+                android:background="@drawable/shape_rect_10_gray200_fill"
+                app:layout_constraintTop_toBottomOf="@id/tv_input_music">
+
+                <TextView
+                    android:id="@+id/tv_add_alarm_set_music"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="음악 선택"
+                    style="@style/TextAppearance.TimeCAlling.Body1.Bold"
+                    android:textColor="@color/gray_500"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_right_calender"
+                    app:tint="@color/gray_500" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add_alarm_music_save"
+                style="@style/TextAppearance.TimeCAlling.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="26dp"
+                android:background="@drawable/shape_rect_999_mint_fill"
+                android:paddingVertical="20dp"
+                android:text="저장하기"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/layout_add_alarm_set_music"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

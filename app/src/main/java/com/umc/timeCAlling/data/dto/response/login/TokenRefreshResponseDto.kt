@@ -4,9 +4,8 @@ import com.umc.timeCAlling.domain.model.response.login.TokenRefreshResponseModel
 
 data class TokenRefreshResponseDto(
     val userId: Int,
-    val accessToken: String,
-    val refreshToken: String
+    val accessToken: String
 ){
     fun toTokenRefreshResponseModel() =
-        TokenRefreshResponseModel(userId, accessToken, refreshToken)
+        TokenRefreshResponseModel(userId, accessToken)
 }

@@ -4,6 +4,7 @@ import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SchedulesResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.SharedScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodaySchedulesResponseModel
 
@@ -14,4 +15,6 @@ interface ScheduleRepository {
     suspend fun getScheduleByDate(date: String) : Result<SchedulesResponseModel>
     suspend fun getTodaySchedules() : Result<TodaySchedulesResponseModel>
     suspend fun getSuccessRate() : Result<SuccessRateResponseModel>
+    suspend fun getSharedSchedule(scheduleId: Int) : Result<SharedScheduleResponseModel>
+    suspend fun postSharedSchedule(scheduleId: Int,requestModel: ScheduleRequestModel) : Result<SchedulesResponseModel>
 }

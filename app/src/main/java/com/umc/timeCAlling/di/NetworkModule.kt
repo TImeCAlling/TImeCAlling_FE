@@ -7,6 +7,7 @@ import com.umc.timeCAlling.TimeCAllingApplication
 import com.umc.timeCAlling.data.datasource.LoginDataSource
 import com.umc.timeCAlling.util.AuthInterceptor
 import com.umc.timeCAlling.util.TmapInterceptor
+import com.umc.timeCAlling.util.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,24 +40,33 @@ object NetworkModule {
     @Provides
     @Singleton
     fun providesAuthInterceptor(
-        sharedPreferences: SharedPreferences,
-        loginDataSource: LoginDataSource
+        sharedPreferences: SharedPreferences
     ): AuthInterceptor {
-        return AuthInterceptor(sharedPreferences, loginDataSource)
+        return AuthInterceptor(sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun providesTokenAuthenticator(
+        sharedPreferences: SharedPreferences,
+        loginDataSource: Lazy<LoginDataSource>  // ✅ Lazy로 변경
+    ): TokenAuthenticator {
+        return TokenAuthenticator(sharedPreferences, loginDataSource)
     }
 
     @Provides
     @Singleton
     fun providesOkHttpClient(
-        authInterceptor: Lazy<AuthInterceptor>
+        authInterceptor: Lazy<AuthInterceptor>,
+        tokenAuthenticator: Lazy<TokenAuthenticator>  // ✅ Lazy로 변경
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder().apply {
             addInterceptor { chain -> authInterceptor.get().intercept(chain) }
+            authenticator(tokenAuthenticator.get())  // ✅ Lazy로 가져오기
             addInterceptor(loggingInterceptor)
-            addInterceptor(TmapInterceptor())
             connectTimeout(10, TimeUnit.SECONDS)
             readTimeout(10, TimeUnit.SECONDS)
             writeTimeout(10, TimeUnit.SECONDS)
