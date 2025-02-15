@@ -483,18 +483,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         val logoutBtn = dialog.findViewById<TextView>(R.id.btn_dialog_logout)
         logoutBtn.setOnClickListener {
             dialog.dismiss()
-            signupViewModel.logout()
-            signupViewModel.isLoggedOut.observe(viewLifecycleOwner) { isLoggedOut ->
-                if (isLoggedOut) {
-                    findNavController().navigate(
-                        R.id.action_myprofileFragment_to_loginFragment,
-                        null,
-                        NavOptions.Builder()
-                            .setPopUpTo(R.id.myprofileFragment, true) // myprofileFragment 포함 이전 모든 프래그먼트 제거
-                            .build()
-                    )
-                }
-            }
+            logoutUser()
         }
 
         val cancelBtn = dialog.findViewById<TextView>(R.id.btn_dialog_cancel)
@@ -528,7 +517,31 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                 }
             }
         }
+    }
 
+    private fun logoutUser(){
+        myprofileViewModel.logoutUser()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myprofileViewModel.logoutState.collectLatest { state ->
+                    when (state) {
+                        is UiState.Success -> {
+                            Log.d("MyprofileFragment", "로그아웃 성공, 로그인 화면으로 이동")
+
+                            // signupViewModel.clearAuthToken()
+
+                            findNavController().popBackStack(R.id.myprofileFragment, true)
+                            findNavController().navigate(R.id.loginFragment) // 로그인 화면으로 이동
+                        }
+                        is UiState.Error -> {
+                            Toast.makeText(requireContext(), "로그아웃 실패: ${state.error?.message}", Toast.LENGTH_SHORT).show()
+                            Log.e("MyprofileFragment", "로그아웃 실패")
+                        }
+                        else -> {} // 로딩 상태 처리 가능
+                    }
+                }
+            }
+        }
     }
 
     private fun showToast(message: String) {

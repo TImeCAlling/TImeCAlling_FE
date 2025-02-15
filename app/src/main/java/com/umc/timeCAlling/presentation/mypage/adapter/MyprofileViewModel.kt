@@ -35,6 +35,9 @@ class MyprofileViewModel @Inject constructor(
     private val _deleteState = MutableStateFlow<UiState<Boolean>>(UiState.Empty)
     val deleteState: StateFlow<UiState<Boolean>> = _deleteState.asStateFlow()
 
+    private val _logoutState = MutableStateFlow<UiState<Boolean>>(UiState.Empty)
+    val logoutState: StateFlow<UiState<Boolean>> = _logoutState.asStateFlow()
+
     fun getUser() {
         viewModelScope.launch {
             _userInfo.value = UiState.Loading // 상태 초기화
@@ -81,6 +84,21 @@ class MyprofileViewModel @Inject constructor(
                 .onFailure { exception ->
                     Log.e("MyprofileViewModel", "deleteUser() 실패: ${exception.message}\n${exception.stackTraceToString()}")
                     _deleteState.value = UiState.Error(exception)
+                }
+        }
+    }
+
+    fun logoutUser() {
+        viewModelScope.launch {
+            _logoutState.value = UiState.Loading // 로그아웃 요청 중
+            mypageRepository.logoutUser()
+                .onSuccess {
+                    Log.d("MyprofileViewModel", "logoutUser() 성공")
+                    _logoutState.value = UiState.Success(true)
+                }
+                .onFailure { exception ->
+                    Log.e("MyprofileViewModel", "logoutUser() 실패: ${exception.message}\n${exception.stackTraceToString()}")
+                    _logoutState.value = UiState.Error(exception)
                 }
         }
     }

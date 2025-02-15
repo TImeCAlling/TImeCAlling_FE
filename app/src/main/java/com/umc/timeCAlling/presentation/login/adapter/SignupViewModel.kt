@@ -155,10 +155,4 @@ class SignupViewModel @Inject constructor(
         }
         Log.d("SignupViewModel", "토큰 삭제 완료: accessToken 및 refreshToken 초기화됨")
     }
-
-    fun logout() {
-        clearAuthToken() // 저장된 토큰 삭제
-        _isLoggedOut.postValue(true) // UI에서 로그아웃 감지하도록 LiveData 업데이트
-        Log.d("SignupViewModel", "로그아웃 완료")
-    }
 }
