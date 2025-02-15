@@ -55,7 +55,7 @@ class WakeupPeopleRVA : RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHol
         return userList.size
     }
 
-    fun updateList(newList: List<ScheduleUsersResponseModel>) {
+    fun submitList(newList: List<ScheduleUsersResponseModel>) {
         userList = newList
         notifyDataSetChanged()
     }

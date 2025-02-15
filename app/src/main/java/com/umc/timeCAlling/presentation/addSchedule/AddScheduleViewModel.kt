@@ -96,9 +96,11 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _repeatDates = MutableLiveData<MutableList<String>>(mutableListOf()) // MutableList 사용
     val repeatDates: LiveData<MutableList<String>> = _repeatDates // LiveData 타입 변경
 
-    fun setRepeatDates(dates: List<String>) {
-        _repeatDates.value?.addAll(dates) // 기존 리스트에 추가
-        _repeatDates.value = _repeatDates.value // LiveData 값 업데이트
+    fun setRepeatDates(dates: List<String>?) {
+        if (dates != null) {
+            _repeatDates.value?.addAll(dates)
+        }
+        _repeatDates.value = _repeatDates.value
     }
 
     private val _isRepeat = MutableLiveData<Boolean>()
@@ -336,8 +338,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                 _locationLatitude.value = it.latitude
                 _repeatDates.value = repeatDates.value
                 _isRepeat.value = it.isRepeat
-                _startDate.value = it.start
-                _endDate.value = it.end
+                _startDate.value = it.start?:""
+                _endDate.value = it.end?:""
                 Log.d("sharedSchedule isRepeat", "${it.isRepeat}")
             }.onFailure {
                 Log.e("sharedSchedule", "API 호출 실패: $it")

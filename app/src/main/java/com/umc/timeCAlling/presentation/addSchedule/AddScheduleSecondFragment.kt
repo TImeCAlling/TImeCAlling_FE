@@ -80,8 +80,8 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 binding.menuAddScheduleRepeat.isChecked = isRepeat
                 viewModel.setIsRepeat(isRepeat)
                 Log.d("AddScheduleSecondFragment", "isRepeat: $isRepeat")
+                binding.layoutAddSheduleRepeatDate.visibility = if (isRepeat) View.VISIBLE else View.GONE
             }
-            binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             binding.bottomSheetRepeat.visibility = View.GONE
             repeatBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetRepeat)
         }else{

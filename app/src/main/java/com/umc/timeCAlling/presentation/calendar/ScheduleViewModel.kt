@@ -47,13 +47,17 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-<<<<<<< HEAD
     fun getScheduleUsers(scheduleId: Int) {
         viewModelScope.launch {
             scheduleRepository.getScheduleUsers(scheduleId).onSuccess { response ->
                 Log.d("ScheduleViewModel", response.toString())
                 _scheduleUsers.value = response
-=======
+            }.onFailure { error ->
+                Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
+            }
+        }
+    }
+
     private val _detailSchedule = MutableLiveData<DetailScheduleResponseModel>()
     val detailSchedule: LiveData<DetailScheduleResponseModel> get() = _detailSchedule
 
@@ -61,7 +65,6 @@ class ScheduleViewModel @Inject constructor(
         viewModelScope.launch {
             scheduleRepository.getDetailSchedule(checklistId).onSuccess { response ->
                 _detailSchedule.value = response
->>>>>>> origin/FEAT/#62-홈화면-날짜별일정-api-ui-반영
             }.onFailure { error ->
                 Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
             }

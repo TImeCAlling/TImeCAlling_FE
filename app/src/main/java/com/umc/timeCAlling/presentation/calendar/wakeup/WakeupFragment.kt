@@ -2,6 +2,9 @@ package com.umc.timeCAlling.presentation.calendar.wakeup
 
 import android.view.LayoutInflater
 import android.view.View
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,6 +14,7 @@ import com.umc.timeCAlling.databinding.DialogWakeupBinding
 import com.umc.timeCAlling.databinding.DialogWakeupShareBinding
 import com.umc.timeCAlling.databinding.FragmentWakeupBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,9 +22,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wakeup) {
 
     private lateinit var wakeupPeopleRVA: WakeupPeopleRVA
+    private val viewModel: ScheduleViewModel by activityViewModels()
 
     override fun initObserver() {
-
+        viewModel.scheduleUsers.observe(viewLifecycleOwner, Observer { users ->
+            wakeupPeopleRVA.submitList(users)
+        })
     }
 
     override fun initView() {
@@ -35,9 +42,13 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
             findNavController().popBackStack()
         }
 
-        wakeupPeopleRVA = WakeupPeopleRVA()
         binding.rvWakeupPeople.adapter = wakeupPeopleRVA
         binding.rvWakeupPeople.layoutManager = LinearLayoutManager(requireContext())
+
+        val scheduleId = arguments?.getInt("scheduleId") ?: -1
+        if (scheduleId != -1) {
+            viewModel.getScheduleUsers(scheduleId)
+        }
     }
 
     private fun bottomNavigationShow() {
