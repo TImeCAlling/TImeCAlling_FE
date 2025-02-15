@@ -4,7 +4,7 @@ import com.umc.timeCAlling.data.dto.request.CategoriesRequestDto
 
 data class ScheduleRequestDto(
     val name : String,
-    val body : String,
+    val body : String?,
     val meetDate : String,
     val meetTime : String,
     val place : String,

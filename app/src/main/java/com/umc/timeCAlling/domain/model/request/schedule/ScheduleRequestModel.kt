@@ -6,7 +6,7 @@ import java.io.Serializable
 
 data class ScheduleRequestModel(
     val name : String,
-    val body : String,
+    val body : String?,
     val meetDate : String,
     val meetTime : String,
     val place : String,
