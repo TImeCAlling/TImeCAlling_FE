@@ -2,7 +2,11 @@ package com.umc.timeCAlling
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -52,6 +56,9 @@ class TimeCAllingApplication : Application(), DefaultLifecycleObserver {
     }
 
     companion object {
+        const val CHANNEL_ID = "alarm_channel"
+        const val CHANNEL_NAME = "Alarm Channel"
+
         @SuppressLint("StaticFieldLeak")
         private lateinit var context: Context
 

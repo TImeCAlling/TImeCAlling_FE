@@ -7,11 +7,6 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
-import androidx.compose.ui.semantics.text
-import androidx.compose.ui.text.intl.Locale
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -36,6 +31,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private var scheduleId : Int = -1
     private var mode : String = ""
     private var location : Boolean = false
+    private var _binding : FragmentAddScheduleBinding? = null
 
     override fun initObserver() {
 
@@ -137,7 +133,6 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 val displayHour = if (hour == 0) 12 else if (hour > 12) hour - 12 else hour
                 val selectedTime = String.format("%s %02d:%s", amPm, displayHour, minute)
                 binding.tvAddScheduleTime.text = selectedTime
-                binding.tvAddScheduleTime.text = time
                 binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_alarm_black))
                 binding.tvAddScheduleTime.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_900))
                 binding.ivAddScheduleTimeArrow.visibility = View.VISIBLE
@@ -253,7 +248,12 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             val selectedHour = numberPickerHour.value // 선택한 시간
             val selectedMinute = numberPickerMinute.value // 선택한 분
             val selectedAmPm = amPmValues[numberPickerAmPm.value] // 오전/오후 문자열 가져오기
-            val formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
+            var formattedHour = selectedHour
+            // 오후이고 12보다 작으면 12를 더함
+            if (selectedAmPm == "오후" && formattedHour < 12) { formattedHour += 12 }
+            if(selectedAmPm == "오전" && formattedHour == 12){ formattedHour = 0 }
+
+            val formattedTime = String.format("%02d:%02d", formattedHour, selectedMinute)
             val selectedTime = String.format("%s %02d:%02d", selectedAmPm, selectedHour, selectedMinute) // 시간 형식 지정
             timeTextView.text = selectedTime // TextView에 시간 설정
             binding.ivAddScheduleTime.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_alarm_black)) // 아이콘 변경
@@ -276,13 +276,17 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 binding.viewBottomSheetBackground.visibility = View.INVISIBLE
             }
         }
+        val timeBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetTime)
 
         timeBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (slideOffset <= 0) {
-                    binding.viewBottomSheetBackground.visibility = View.INVISIBLE
-                } else if (slideOffset > 0) {
-                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                // binding 객체가 null이 아닌지 확인
+                if (_binding != null) {
+                    if (slideOffset <= 0) {
+                        binding.viewBottomSheetBackground.visibility = View.INVISIBLE
+                    } else if (slideOffset > 0) {
+                        binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                    }
                 }
             }
 
