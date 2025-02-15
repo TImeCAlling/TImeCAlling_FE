@@ -31,6 +31,9 @@ class ScheduleViewModel @Inject constructor(
     private val _scheduleUsers = MutableLiveData<List<ScheduleUsersResponseModel>>()
     val scheduleUsers: LiveData<List<ScheduleUsersResponseModel>> get() = _scheduleUsers
 
+    private val _scheduleId = MutableLiveData<Int>()
+    val scheduleId: LiveData<Int> get() = _scheduleId
+
     fun getScheduleByDate(date: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -79,6 +82,8 @@ class ScheduleViewModel @Inject constructor(
         viewModelScope.launch {
             scheduleRepository.getDetailSchedule(checklistId).onSuccess { response ->
                 _detailSchedule.value = response
+                _scheduleId.value = response.scheduleId
+                Log.d("ScheduleViewModel", scheduleId.value.toString())
             }.onFailure { error ->
                 Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
             }
