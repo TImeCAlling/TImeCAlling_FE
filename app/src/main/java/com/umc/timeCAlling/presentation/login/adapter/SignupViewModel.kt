@@ -16,6 +16,7 @@ import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.domain.model.request.login.KakaoSignupRequestModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoSignupResponseModel
+import com.umc.timeCAlling.domain.model.response.login.KakaoUserInfoResponseModel
 import com.umc.timeCAlling.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
