@@ -38,6 +38,10 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     private val maxRecentSearches = 10 // 최대 검색어 개수
 
+
+    private val _alarmId = MutableLiveData<Int>()
+    val alarmId: LiveData<Int> get() = _alarmId
+    
     //일정 생성 값
     private val _scheduleName = MutableLiveData<String>()
     val scheduleName : LiveData<String> = _scheduleName
@@ -158,6 +162,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     }
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
+        _alarmId.value = spf.getInt("alarmId", 0) // SharedPreferences에서 alarmId 로드, 없으면 0으로 초기화
     }
 
     fun setMode(m: String) { mode = m }
@@ -392,4 +397,14 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         _categoryName.value = ""
         _categoryColor.value = 0
     }
+
+    fun incrementScheduleId() {
+        val exAlarmId = _alarmId.value ?: 0
+        _alarmId.value = exAlarmId + 1
+        with(spf.edit()) {
+            putInt("alarmId", exAlarmId + 1)
+            apply()
+        }
+    }
+
 }

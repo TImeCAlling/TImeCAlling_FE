@@ -1,20 +1,13 @@
-package com.umc.timeCAlling.presentation.calendar
+package com.umc.timeCAlling.presentation.calendar.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.marginEnd
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleDetailBinding
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
-import org.threeten.bp.Duration
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.LocalTime
-import org.threeten.bp.format.DateTimeFormatter
 
 class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
     lateinit var onItemClick: ((ScheduleByDateResponseModel) -> Unit)

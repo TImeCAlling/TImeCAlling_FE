@@ -1,10 +1,14 @@
 package com.umc.timeCAlling.presentation
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.activityViewModels
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -15,7 +19,6 @@ import com.kakao.sdk.user.UserApiClient
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityMainBinding
 import com.umc.timeCAlling.presentation.base.BaseActivity
-import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +30,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         initNavigator()
         initClickListener() // 클릭 이벤트 초기화
         handleDeepLink(intent) // 딥링크 처리
+        requestNotificationPermission()
     }
 
     override fun initObserver() {
@@ -67,6 +71,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     launchSingleTop = true
                 }
                 navController.navigate(R.id.homeFragment, bundle, navOptions)
+            }
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                Log.d("MainActivity", "Notification permission granted")
+            } else {
+                Log.d("MainActivity", "Notification permission denied")
+            }
+        }
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }

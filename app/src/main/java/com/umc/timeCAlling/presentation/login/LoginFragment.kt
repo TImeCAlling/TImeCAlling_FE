@@ -25,7 +25,6 @@ import kotlin.math.sign
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
     private val viewModel: SignupViewModel by activityViewModels()
-    private val profileViewModel : MyprofileViewModel by activityViewModels()
 
     override fun initView() {
         Timber.d("LoginFragment", "initView() 호출됨")
