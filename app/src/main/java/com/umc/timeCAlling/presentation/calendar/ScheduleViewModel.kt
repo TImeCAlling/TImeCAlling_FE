@@ -64,12 +64,22 @@ class ScheduleViewModel @Inject constructor(
         return upcomingSchedules
     }
 
+    var isSharedSchedule: Boolean = false
+
     fun getScheduleUsers(scheduleId: Int) {
         viewModelScope.launch {
             scheduleRepository.getScheduleUsers(scheduleId).onSuccess { response ->
-                Log.d("ScheduleViewModel", response.toString())
-                _scheduleUsers.value = response
-            }.onFailure { error ->
+                if (response != null) {
+                    Log.d("ScheduleViewModel", response.toString())
+                    _scheduleUsers.value = response
+                    // 공유 스케줄 여부 판단
+                    isSharedSchedule = response.size > 1 // 참여자가 1명 초과면 공유 스케줄로 판단
+                } else {
+                    // 응답이 null인 경우, 빈 리스트를 할당하거나 오류 메시지를 표시
+                    Log.e("ScheduleViewModel", "getScheduleUsers 응답이 null입니다.")
+                    _scheduleUsers.value = emptyList()
+                    isSharedSchedule = false // 응답이 null이면 공유 스케줄이 아님
+                } }.onFailure { error ->
                 Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
             }
         }

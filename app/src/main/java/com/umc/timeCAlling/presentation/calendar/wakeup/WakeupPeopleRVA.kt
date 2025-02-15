@@ -17,12 +17,26 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.DialogWakeupBinding
 import com.umc.timeCAlling.databinding.DialogWakeupShareBinding
+import com.umc.timeCAlling.databinding.ItemWakeupPeopleBinding
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 
 class WakeupPeopleRVA : RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHolder>() {
 
     private var userList: List<ScheduleUsersResponseModel> = emptyList()
+    var onItemClick: ((ScheduleUsersResponseModel) -> Unit)? = null
+
+    inner class ViewHolder(private val binding: ItemWakeupPeopleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ScheduleUsersResponseModel) {
+            binding.tvWakeupPeopleName.text = item.nickname
+
+            // 아이템 클릭 시 콜백 함수 호출
+            binding.root.setOnClickListener {
+                onItemClick?.invoke(item)
+            }
+        }
+    }
 
     class WakeupPeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profileImageView: ImageView = itemView.findViewById(R.id.iv_wakeup_people_profile)

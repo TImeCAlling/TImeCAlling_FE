@@ -518,7 +518,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             if (mode == "shared") {
                 viewModel.createSharedSchedule(scheduleId)
             } else {
-                if (scheduleId != 1) {
+                if (scheduleId == -1) {
                     viewModel.createSchedule()
                     // 권한 요청
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
