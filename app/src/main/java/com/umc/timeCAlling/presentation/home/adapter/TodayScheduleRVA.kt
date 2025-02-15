@@ -8,6 +8,7 @@ import androidx.compose.ui.semantics.text
 import androidx.recyclerview.widget.RecyclerView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleBinding
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.presentation.home.TodaySchedule
 import org.threeten.bp.Duration
@@ -18,17 +19,13 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class TodayScheduleRVA(
 ) : RecyclerView.Adapter<TodayScheduleRVA.ViewHolder>() {
-
+    lateinit var onItemClick: ((TodayScheduleResponseModel) -> Unit)
     private var items : List<TodayScheduleResponseModel> = emptyList()
+
     fun setScheduleList(scheduleList: List<TodayScheduleResponseModel>) {
         this.items = scheduleList
         notifyDataSetChanged()
     }
-
-    interface ItemClick {
-        fun onClick(view: View, position: Int)
-    }
-    var itemClick: ItemClick? = null
 
     inner class ViewHolder(val binding: ItemTodayScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -79,7 +76,7 @@ class TodayScheduleRVA(
         }
 
         holder.itemView.setOnClickListener {
-            itemClick?.onClick(it, position)
+            onItemClick.invoke(items[position])
         }
         holder.more.setOnClickListener {
             Toast.makeText(holder.itemView.context, "${items[position].name} Clicked", Toast.LENGTH_SHORT).show()

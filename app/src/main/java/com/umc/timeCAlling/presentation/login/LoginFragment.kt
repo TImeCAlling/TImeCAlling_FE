@@ -29,6 +29,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     override fun initView() {
         Timber.d("LoginFragment", "initView() 호출됨")
+        viewModel.clearAuthToken()
         setClickListener()
         bottomNavigationRemove()
     }

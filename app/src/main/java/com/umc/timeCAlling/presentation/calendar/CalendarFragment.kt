@@ -16,7 +16,6 @@ import android.widget.Toast
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,15 +24,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
+import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
-import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
-import com.umc.timeCAlling.util.extension.viewLifeCycle
+import com.umc.timeCAlling.presentation.calendar.adapter.DetailScheduleRVA
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
-import timber.log.Timber
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -278,38 +276,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
                 Log.d("DetailSchedule", schedule.toString())
 
-                val meetTime = schedule.meetTime
-                val parsedTime = parseTimeString(meetTime)
-                if(parsedTime != null) {
-                    val (hours, minutes) = parsedTime
-                    val formattedHours = if (hours == 0) 12 else if (hours > 12) hours - 12 else hours
-                    val formattedMinutes = String.format("%02d", minutes)
-
-                    binding.tvDetailTimeType.text = if (hours < 12) "오전" else "오후"
-                    binding.tvDetailTime.text = "${String.format("%02d", formattedHours)}:${formattedMinutes}"
-                }
-
-                binding.tvDetailTitle.text = schedule.name
-                binding.tvDetailDesc.text = schedule.body
-                binding.tvDetailDate.text = schedule.meetDate
-                binding.tvDetailPlace.text = schedule.place
-                binding.tvDetailHour.text = if(schedule.moveTime >= 60) (schedule.moveTime/60).toString() else "0"
-                binding.tvDetailMinute.text = if(schedule.moveTime >= 60) (schedule.moveTime%60).toString() else schedule.moveTime.toString()
-
-                binding.tvDetailType.text = freeTimeConverter(schedule.freeTime)
-
-                if(schedule.repeatDays != null && schedule.start != null && schedule.end != null) {
-                    binding.tvDetailRepeatInfo.text = repeatDaysToKo(schedule.repeatDays)
-                    binding.tvDetailStart.text = schedule.start
-                    binding.tvDetailEnd.text = schedule.end
-                    binding.layoutDetailWhenRepeatExist.visibility = View.VISIBLE
-                }
-                else {
-                    binding.tvDetailRepeatInfo.text = "반복 안함"
-                    binding.layoutDetailWhenRepeatExist.visibility = View.GONE
-                }
-
-                binding.tvDetailCategory.text = schedule.categories[0].categoryName
+                initDetailScheduleBottomSheet(schedule)
             }
 
 
@@ -363,6 +330,43 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 popup.show()
             }
         }
+    }
+
+    private fun initDetailScheduleBottomSheet(schedule: DetailScheduleResponseModel) {
+        val meetTime = schedule.meetTime
+        val parsedTime = parseTimeString(meetTime)
+        if (parsedTime != null) {
+            val (hours, minutes) = parsedTime
+            val formattedHours = if (hours == 0) 12 else if (hours > 12) hours - 12 else hours
+            val formattedMinutes = String.format("%02d", minutes)
+
+            binding.tvDetailTimeType.text = if (hours < 12) "오전" else "오후"
+            binding.tvDetailTime.text =
+                "${String.format("%02d", formattedHours)}:${formattedMinutes}"
+        }
+
+        binding.tvDetailTitle.text = schedule.name
+        binding.tvDetailDesc.text = schedule.body
+        binding.tvDetailDate.text = schedule.meetDate
+        binding.tvDetailPlace.text = schedule.place
+        binding.tvDetailHour.text =
+            if (schedule.moveTime >= 60) (schedule.moveTime / 60).toString() else "0"
+        binding.tvDetailMinute.text =
+            if (schedule.moveTime >= 60) (schedule.moveTime % 60).toString() else schedule.moveTime.toString()
+
+        binding.tvDetailType.text = freeTimeConverter(schedule.freeTime)
+
+        if (schedule.repeatDays != null && schedule.start != null && schedule.end != null) {
+            binding.tvDetailRepeatInfo.text = repeatDaysToKo(schedule.repeatDays)
+            binding.tvDetailStart.text = schedule.start
+            binding.tvDetailEnd.text = schedule.end
+            binding.layoutDetailWhenRepeatExist.visibility = View.VISIBLE
+        } else {
+            binding.tvDetailRepeatInfo.text = "반복 안함"
+            binding.layoutDetailWhenRepeatExist.visibility = View.GONE
+        }
+
+        binding.tvDetailCategory.text = schedule.categories[0].categoryName
     }
 
     private fun parseTimeString(timeString: String): Pair<Int, Int>? {

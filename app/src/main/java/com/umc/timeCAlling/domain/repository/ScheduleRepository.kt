@@ -4,6 +4,7 @@ import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleStatusResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SchedulesResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SharedScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
@@ -19,5 +20,5 @@ interface ScheduleRepository {
     suspend fun getSharedSchedule(scheduleId: Int) : Result<SharedScheduleResponseModel>
     suspend fun postSharedSchedule(scheduleId: Int,requestModel: ScheduleRequestModel) : Result<SchedulesResponseModel>
     suspend fun getDetailSchedule(checklistId: Int) : Result<DetailScheduleResponseModel>
-
+    suspend fun getScheduleStatus(scheduleId: Int) : Result<ScheduleStatusResponseModel>
 }

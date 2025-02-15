@@ -33,8 +33,10 @@ import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.LocalTime
 
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -101,6 +103,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         initTodayScheduleRV()
         initTopSheet()
         bottomNavigationShow()
+        setProgressBar()
     }
     override fun initObserver() {
 
@@ -143,7 +146,40 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
     }
 
-    private fun showTopSheet() {
+    private fun showTopSheet(scheduleId: Int) {
+
+        viewModel.getScheduleStatus(scheduleId)
+
+        viewModel.scheduleStatus.observe(viewLifecycleOwner) { status ->
+            binding.apply {
+                val meetTime = status.meetTime
+                val parsedTime = parseTimeString(meetTime)
+                if (parsedTime != null) {
+                    val (hours, minutes, seconds) = parsedTime
+                    val formattedHours = if (hours == 0) 12 else if (hours > 12) hours - 12 else hours
+                    val formattedMinutes = String.format("%02d", minutes)
+
+                    tvPreTimeType.text = if (hours < 12) "오전" else "오후"
+                    tvPreTime.text = "${String.format("%02d", formattedHours)}:${formattedMinutes}"
+                }
+
+                tvPreTitle.text = status.name
+
+                val totalTime = status.totalTime
+                val parsedTotalTime = parseTimeString(totalTime)
+                if(parsedTotalTime != null) {
+                    val (hours, minutes, seconds) = parsedTotalTime
+                    tvPreTotalTime.text = if(hours == 0) "${minutes}분" else "${hours}시간 ${minutes}분"
+                }
+                tvPreLeftTime.text = status.leftTime.toString()
+
+                val progress = calculatePreparationProgress(meetTime, totalTime)
+                progressbar.progress = progress
+                tvProgressPercent.text = progress.toString()
+            }
+        }
+
+
         behavior.state = TopSheetBehavior.STATE_EXPANDED
         binding.viewHomeTopsheetBackground.visibility = View.VISIBLE
         binding.viewHomeTopsheetBackground.setOnSingleClickListener {
@@ -168,8 +204,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             LastSchedule("신선전 포스터 제작", "A0 사이즈로 제작", true, "20:00"),
             LastSchedule("UMC 8th 회장단 회의", "노션 회의록 참고", true, "21:00")
         )
-        val listSize = list.size
-        setProgressBar(listSize, listSize)
         val adapter = LastScheduleRVA(list)
         binding.rvHomeLastSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -196,7 +230,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         if(idx != -1) {
             list.removeAt(idx)
             adapter.notifyDataSetChanged()
-            setProgressBar(listSize, list.size)
             if(list.isEmpty()) {
                 binding.rvHomeLastSchedule.visibility = View.GONE
                 binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
@@ -222,24 +255,25 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
         }
 
-        adapter.itemClick = object : TodayScheduleRVA.ItemClick {
-            override fun onClick(view: View, position: Int) {
-                showTopSheet()
-            }
+        adapter.onItemClick = { schedule ->
+            showTopSheet(schedule.scheduleId)
         }
     }
 
-    private fun setProgressBar(size: Int, currentSize: Int) {
-        val maxWidth = binding.viewHomeProgressBarBackground.width
-        val progress = ((1-(currentSize.toFloat() / size.toFloat())) * maxWidth).toInt()
-        binding.viewHomeProgressBarForeground.layoutParams = (binding.viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
-            width = if(progress <= 20) requireContext().toPx(20).toInt() else requireContext().toPx(progress).toInt()
-        }
-        binding.tvHomeProgress.text = "${((1 - (currentSize.toFloat() / size.toFloat())) * 100).toInt()}%"
-
-        viewModel.getSuccessRate()
-        viewModel.successRate.observe(viewLifecycleOwner) { response ->
-            binding.tvHomeProgress.text = "${response.successRate}%"
+    private fun setProgressBar() {
+        // viewHomeProgressBarBackground가 레이아웃된 후에 실행
+        binding.viewHomeProgressBarBackground.post {
+            val maxWidth = binding.viewHomeProgressBarBackground.width
+            viewModel.getSuccessRate()
+            viewModel.successRate.observe(viewLifecycleOwner) { response ->
+                binding.apply {
+                    tvHomeProgress.text = "${response.successRate}%"
+                    viewHomeProgressBarForeground.layoutParams = (viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
+                        this.width = maxWidth * response.successRate / 100
+                        if(this.width < requireContext().toPx(20).toInt()) this.width = requireContext().toPx(20).toInt()
+                    }
+                }
+            }
         }
     }
 
@@ -271,6 +305,60 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
         ovalImageView?.visibility = View.VISIBLE
+    }
+
+    private fun parseTimeString(timeString: String): Triple<Int, Int, Int>? {
+        // 입력 문자열이 유효한 형식인지 확인
+        if (!timeString.matches(Regex("\\d{2}:\\d{2}:\\d{2}"))) {
+            return null
+        }
+        val parts = timeString.split(":")
+        if (parts.size != 3) {
+            return null
+        }
+
+        val hours = parts[0].toIntOrNull()
+        val minutes = parts[1].toIntOrNull()
+        val seconds = parts[2].toIntOrNull()
+
+        // 변환 실패 시 null 반환
+        if (hours == null || minutes == null || seconds == null) {
+            return null
+        }
+
+        return Triple(hours, minutes, seconds)
+    }
+
+    private fun calculatePreparationProgress(meetTime: String, totalTime: String): Int {
+
+        //1. LocalTime으로 변환
+        val meetTimeLocalTime = LocalTime.parse(meetTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
+        val totalTimeLocalTime = LocalTime.parse(totalTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
+
+        // 2. 준비 시작 시간 계산
+        val preparationStartTime = meetTimeLocalTime.minusHours(totalTimeLocalTime.hour.toLong())
+            .minusMinutes(totalTimeLocalTime.minute.toLong())
+            .minusSeconds(totalTimeLocalTime.second.toLong())
+
+        // 3. 현재 시간 가져오기
+        val now = LocalTime.now()
+
+        // 6. 예외 처리
+        if (now.isAfter(meetTimeLocalTime)) {
+            return 100 // 현재 시간이 meetTime 이후일 경우, 진행도는 100%
+        }
+        if(now.isBefore(preparationStartTime)) {
+            return 0 // 현재 시간이 준비 시작 시간 이전일 경우, 진행도는 0%
+        }
+
+        // 4. 시간 차이 계산
+        val durationToNow = Duration.between(preparationStartTime, now)
+        val durationToMeetTime = Duration.between(preparationStartTime, meetTimeLocalTime)
+
+        // 5. 진행도 계산
+        val progress = (durationToNow.toMillis().toDouble() / durationToMeetTime.toMillis() * 100).toInt()
+
+        return progress
     }
 
     fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(
