@@ -5,11 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleStatusResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalTime
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,13 +23,12 @@ class HomeViewModel @Inject constructor(
     private val _todaySchedules = MutableLiveData<List<TodayScheduleResponseModel>>()
     val todaySchedules: LiveData<List<TodayScheduleResponseModel>> get() = _todaySchedules
 
-    private val _successRate = MutableLiveData<SuccessRateResponseModel>()
-    val successRate: LiveData<SuccessRateResponseModel> get() = _successRate
-
     fun getTodaySchedules() {
         viewModelScope.launch {
             scheduleRepository.getTodaySchedules().onSuccess { response ->
-                _todaySchedules.value = response.schedules
+                val sortedSchedules = response.schedules.sortedBy {it.meetTime}
+                val upcomingSchedules = getUpcomingSchedules(sortedSchedules)
+                _todaySchedules.value = sortedSchedules
                 Log.d("getTodaySchedules()" , response.toString())
             }.onFailure { error ->
                 // 에러 처리
@@ -35,6 +37,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun getUpcomingSchedules(schedules: List<TodayScheduleResponseModel>): List<TodayScheduleResponseModel> {
+        val now = LocalTime.now()
+        val upcomingSchedules = schedules.filter { schedule ->
+            val meetTime = LocalTime.parse(schedule.meetTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
+            meetTime.isAfter(now)
+        }
+        return upcomingSchedules
+    }
+
+    private val _successRate = MutableLiveData<SuccessRateResponseModel>()
+    val successRate: LiveData<SuccessRateResponseModel> get() = _successRate
     fun getSuccessRate() {
         viewModelScope.launch {
             scheduleRepository.getSuccessRate().onSuccess { response ->
@@ -45,6 +58,18 @@ class HomeViewModel @Inject constructor(
                 Log.d("getSuccessRate()" , error.toString())
             }
         }
+    }
 
+    private val _scheduleStatus = MutableLiveData<ScheduleStatusResponseModel>()
+    val scheduleStatus: LiveData<ScheduleStatusResponseModel> get() = _scheduleStatus
+
+    fun getScheduleStatus(scheduleId: Int) {
+        viewModelScope.launch {
+            scheduleRepository.getScheduleStatus(scheduleId).onSuccess { response ->
+                _scheduleStatus.value = response
+            }.onFailure { error ->
+                Log.d("getScheduleStatus()" , error.toString())
+            }
+        }
     }
 }

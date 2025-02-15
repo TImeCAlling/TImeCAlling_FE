@@ -3,8 +3,10 @@ package com.umc.timeCAlling.data.repositoryImpl
 import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleStatusResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SchedulesResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SharedScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
@@ -41,4 +43,10 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun postSharedSchedule(scheduleId: Int, requestModel: ScheduleRequestModel): Result<SchedulesResponseModel> =
         runCatching { scheduleDataSource.postSharedSchedule(scheduleId,requestModel.toScheduleRequestDto()).result.toSchedulesResponseModel() }
+
+    override suspend fun getDetailSchedule(checklistId: Int): Result<DetailScheduleResponseModel> =
+        runCatching { scheduleDataSource.getDetailSchedule(checklistId).result.toDetailScheduleResponseModel() }
+
+    override suspend fun getScheduleStatus(scheduleId: Int): Result<ScheduleStatusResponseModel> =
+        runCatching { scheduleDataSource.getScheduleStatus(scheduleId).result.toScheduleStatusResponseModel() }
 }
