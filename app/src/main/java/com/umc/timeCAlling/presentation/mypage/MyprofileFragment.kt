@@ -511,8 +511,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
                             signupViewModel.clearAuthToken()
 
-                            findNavController().popBackStack(R.id.myprofileFragment, true)
-                            findNavController().navigate(R.id.loginFragment) // 로그인 화면으로 이동
+                            findNavController().navigate(R.id.action_myprofileFragment_to_loginFragment) // 로그인 화면으로 이동
                         }
                         is UiState.Error -> {
                             Toast.makeText(requireContext(), "회원탈퇴 실패: ${state.error?.message}", Toast.LENGTH_SHORT).show()

@@ -116,11 +116,21 @@ class SignupViewModel @Inject constructor(
 
         viewModelScope.launch {
             loginRepository.kakaoSignup(profileImagePart, request).onSuccess { response ->
-                Log.d("SignupViewModel", "API Response: $response")
+                Log.d("SignupViewModel", "회원가입 성공! API Response: $response")
+
+                spf.edit().apply {
+                    putString("jwt", response.accessToken)
+                    putString("refreshToken", response.refreshToken)
+                    putBoolean("isLoggedIn", true)
+                    apply()
+                }
+                Log.d("SignupViewModel", "신규 회원 Access Token 저장 완료: ${response.accessToken}")
+                Log.d("SignupViewModel", "신규 회원 Refresh Token 저장 완료: ${response.refreshToken}")
+
                 _signupResult.postValue(response) // 성공 시 데이터를 LiveData에 전달
             }.onFailure { error ->
                 _signupResult.postValue(null)
-                Log.d("SignupViewModel", "API Error: $error")
+                Log.d("SignupViewModel", "회원가입 실패: ${error.message}")
             }
         }
     }
