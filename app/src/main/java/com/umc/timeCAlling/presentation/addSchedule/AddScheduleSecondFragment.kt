@@ -1,22 +1,32 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
+import android.app.AlarmManager
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
@@ -24,6 +34,7 @@ import com.umc.timeCAlling.data.Category
 import com.umc.timeCAlling.databinding.FragmentAddScheduleSecondBinding
 import com.umc.timeCAlling.presentation.addSchedule.CategoryManager.getCategoryByName
 import com.umc.timeCAlling.presentation.addSchedule.adapter.CategoryRVA
+import com.umc.timeCAlling.presentation.alarm.AlarmHelper
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.format.DateTimeFormatter
@@ -38,8 +49,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private var selectedDays = mutableListOf<String>()
     private var scheduleId : Int = -1
     private var mode : String = ""
+    private lateinit var spf: SharedPreferences
 
     override fun initView() {
+        binding.apply {
+            menuAddScheduleRepeat.setOnCheckedChangeListener { _, isChecked -> setSwitchColor(binding.menuAddScheduleRepeat, isChecked)}
+        }
+        spf = requireContext().getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
         mode = viewModel.getMode()
         scheduleId = arguments?.getInt("scheduleId") ?: -2
         Log.d("AddScheduleSecondFragment", "scheduleId: $scheduleId")
@@ -409,22 +425,32 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             moveToCategoryEdit()
         }
 
-        categoryBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+        val categoryBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (slideOffset <= 0) {
-                    binding.viewBottomSheetBackground.visibility = View.INVISIBLE
-                } else if (slideOffset > 0) {
-                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                if (isAdded && viewLifecycleOwner.lifecycle.currentState.isAtLeast(
+                        Lifecycle.State.INITIALIZED
+                    )
+                ) {
+                    if (slideOffset <= 0) {
+                        binding.viewBottomSheetBackground.visibility =
+                            View.INVISIBLE
+                    } else if (slideOffset > 0) {
+                        binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                    }
                 }
             }
+
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 
             }
-        })
+        }
 
         binding.tvAddScheduleCategorySave.setOnClickListener {
             categoryBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            categoryBottomSheetBehavior.removeBottomSheetCallback(categoryBottomSheetCallback)
+            categoryBottomSheetBehavior.addBottomSheetCallback(categoryBottomSheetCallback)
             viewModel.categoryName.value?.let {
                 updateCategoryUI(getCategoryByName(it))
             }
@@ -476,25 +502,133 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     }
 
     private fun moveToAddScheduleSuccess() {
-            binding.tvAddScheduleNext.isEnabled = true
-            binding.tvAddScheduleNext.backgroundTintList =
-                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
-            binding.tvAddScheduleNext.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.white
-                )
+        binding.tvAddScheduleNext.isEnabled = true
+        binding.tvAddScheduleNext.backgroundTintList =
+            ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
+        binding.tvAddScheduleNext.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.white
             )
-            binding.tvAddScheduleNext.setOnClickListener {
-                scheduleId = arguments?.getInt("scheduleId") ?: -1
-                val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
-                findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment, bundle)
-                if(mode == "shared"){
-                    viewModel.createSharedSchedule(scheduleId)
-                }else{
-                    if(scheduleId != 1){ viewModel.createSchedule() }else{ viewModel.editSchedule(scheduleId) }
+        )
+        binding.tvAddScheduleNext.setOnClickListener {
+            scheduleId = arguments?.getInt("scheduleId") ?: -1
+            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+            findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment, bundle)
+            if (mode == "shared") {
+                viewModel.createSharedSchedule(scheduleId)
+            } else {
+                if (scheduleId != 1) {
+                    viewModel.createSchedule()
+                    // 권한 요청
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (!requireContext().getSystemService(AlarmManager::class.java).canScheduleExactAlarms()) {
+                            requestExactAlarmPermission()
+                            return@setOnClickListener
+                        }
+                    }
+                    setAlarm()
+                } else {
+                    viewModel.editSchedule(scheduleId)
                 }
-                viewModel.setMode("")
             }
+            viewModel.setMode("")
+        }
+    }
+
+    private fun setAlarm() {
+        val alarmHelper = AlarmHelper(requireContext())
+        val alarmName = viewModel.scheduleName.value ?: "Unknown Alarm"
+
+        // scheduleDate와 scheduleTime을 사용하여 알람 시간 설정
+        val scheduleDate = viewModel.scheduleDate.value
+        val scheduleTime = viewModel.scheduleTime.value
+
+        var alarmId = spf.getInt("lastAlarmId", 0)
+
+        alarmId++
+
+        with(spf.edit()) {
+            putInt("lastAlarmId", alarmId)
+            apply()
+        }
+
+        if (scheduleDate != null && scheduleTime != null) {
+            val (year, month, dayOfMonth) = parseDate(scheduleDate)
+            val (hourOfDay, minute) = parseTime(scheduleTime)
+
+            alarmHelper.setAlarm(alarmName, year, month, dayOfMonth, hourOfDay, minute, alarmId)
+
+            /* // 반복 설정 여부 확인
+             if (viewModel.isRepeat.value == true) {
+                 // 반복 알람 설정
+                 val startDate = viewModel.startDate.value ?: ""
+                 val endDate = viewModel.endDate.value ?: ""
+                 val repeatDays = viewModel.repeatDates.value ?: emptyList()
+                 Log.d("AddScheduleSecondFragment", "Setting repeating alarm for Schedule ID: $alarmId")
+                 alarmHelper.setRepeatingAlarm(alarmName, startDate, endDate, repeatDays, hourOfDay, minute, alarmId)
+                 Log.d("AddScheduleSecondFragment", "Repeating alarm set for Schedule ID: $alarmId")
+             } else {
+                 // 일반 알람 설정
+                 Log.d("AddScheduleSecondFragment", "Setting alarm for Schedule ID: $alarmId")
+                 alarmHelper.setAlarm(alarmName, year, month, dayOfMonth, hourOfDay, minute, alarmId)
+                 Log.d("AddScheduleSecondFragment", "Alarm set for Schedule ID: $alarmId")
+             }*/
+        } else {
+            Log.e("AddScheduleSecondFragment", "scheduleDate or scheduleTime is null")
+        }
+    }
+
+    private fun setSwitchColor(switch: MaterialSwitch, isChecked: Boolean) {
+        if(isChecked) {
+            switch.trackTintList = getResources().getColorStateList(R.color.mint_main)
+        } else {
+            switch.trackTintList = getResources().getColorStateList(R.color.gray_400)
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (requireContext().getSystemService(AlarmManager::class.java).canScheduleExactAlarms()) {
+                    setAlarm()
+                } else {
+                    // 권한 거부 시 처리
+                }
+            }
+        }
+
+    private fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                data = Uri.fromParts("package", requireContext().packageName, null)
+            }
+            requestPermissionLauncher.launch(intent)
+        }
+    }
+
+    // 날짜 문자열을 파싱하여 년, 월, 일을 반환하는 함수
+    private fun parseDate(dateString: String): Triple<Int, Int, Int> {
+        val parts = dateString.split("-")
+        if (parts.size == 3) {
+            val year = parts[0].toInt()
+            val month = parts[1].toInt() - 1 // Calendar의 month는 0부터 시작
+            val dayOfMonth = parts[2].toInt()
+            return Triple(year, month, dayOfMonth)
+        } else {
+            throw IllegalArgumentException("Invalid date format: $dateString")
+        }
+    }
+
+    // 시간 문자열을 파싱하여 시, 분을 반환하는 함수
+    private fun parseTime(timeString: String): Pair<Int, Int> {
+        val parts = timeString.split(":")
+        if (parts.size == 2) {
+            val hourOfDay = parts[0].toInt()
+            val minute = parts[1].toInt()
+            return Pair(hourOfDay, minute)
+        } else {
+            throw IllegalArgumentException("Invalid time format: $timeString")
+        }
     }
 }
