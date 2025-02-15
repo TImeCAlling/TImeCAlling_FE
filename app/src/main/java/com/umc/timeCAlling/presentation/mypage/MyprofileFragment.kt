@@ -534,10 +534,8 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                         is UiState.Success -> {
                             Log.d("MyprofileFragment", "로그아웃 성공, 로그인 화면으로 이동")
 
-                            // signupViewModel.clearAuthToken()
-
-                            findNavController().popBackStack(R.id.myprofileFragment, true)
-                            findNavController().navigate(R.id.loginFragment) // 로그인 화면으로 이동
+                            signupViewModel.clearAuthToken()
+                            findNavController().navigate(R.id.action_myprofileFragment_to_loginFragment) // 로그인 화면으로 이동
                         }
                         is UiState.Error -> {
                             Toast.makeText(requireContext(), "로그아웃 실패: ${state.error?.message}", Toast.LENGTH_SHORT).show()
