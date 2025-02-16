@@ -21,6 +21,7 @@ class TokenAuthenticator @Inject constructor(
 
     override fun authenticate(route: Route?, response: Response): Request? {
         val refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
+        val accessToken = sharedPreferences.getString("jwt", "") ?: ""
 
         if (refreshToken.isEmpty()) {
             Log.e("TokenAuthenticator", "401 발생 → Refresh Token 없음 → 로그아웃 처리")
@@ -29,7 +30,7 @@ class TokenAuthenticator @Inject constructor(
         }
 
         val newAccessToken = runBlocking {
-            refreshAccessToken(refreshToken)
+            refreshAccessToken(accessToken, refreshToken)
         }
 
         return if (newAccessToken != null) {
@@ -44,8 +45,8 @@ class TokenAuthenticator @Inject constructor(
         }
     }
 
-    private suspend fun refreshAccessToken(refreshToken: String): String? {
-        val requestDto = TokenRefreshRequestDto("", refreshToken)
+    private suspend fun refreshAccessToken(accessToken: String, refreshToken: String): String? {
+        val requestDto = TokenRefreshRequestDto(accessToken, refreshToken)  // ✅ Access Token도 함께 전달
 
         return try {
             val loginDataSource = loginDataSourceProvider.get()  // ✅ Lazy로 가져오기
