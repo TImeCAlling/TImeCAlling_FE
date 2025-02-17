@@ -20,7 +20,7 @@ class AuthInterceptor @Inject constructor(
         var accessToken = sharedPreferences.getString("jwt", "") ?: ""
         var refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
 
-       /* accessToken = "스웨거에서 받은 accessToken"
+        /*accessToken = "스웨거에서 받은 accessToken"
         //refreshToken = "스웨거에서 받은 refreshToken"
         sharedPreferences.edit().apply{
             putString("jwt", accessToken)

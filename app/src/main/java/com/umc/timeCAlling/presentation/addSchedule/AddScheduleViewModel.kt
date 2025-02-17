@@ -353,7 +353,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         viewModelScope.launch {
             val request = ScheduleRequestModel(
                 name = scheduleName.value ?: "",
-                body = scheduleMemo.value ?: "",
+                body = if (scheduleMemo.value.isNullOrEmpty()) null else scheduleMemo.value,
                 meetDate = scheduleDate.value ?: "",
                 meetTime = scheduleTime.value ?: "",
                 place = selectedLocationName.value ?: "",
@@ -361,10 +361,10 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                 latitude = locationLatitude.value ?: "",
                 moveTime = moveTime.value ?: 0,
                 freeTime = freeTime.value ?: "TIGHT",
-                repeatDays = repeatDates.value ?: emptyList(),
+                repeatDays = if (isRepeat.value == true) repeatDates.value else null,
                 isRepeat =  isRepeat.value ?: false,
-                start = startDate.value ?: "",
-                end = endDate.value ?: "",
+                start = if (startDate.value.isNullOrEmpty()) null else startDate.value,
+                end = if (endDate.value.isNullOrEmpty()) null else endDate.value,
                 categories =  listOf(CategoriesRequestModel(categoryName.value ?: "", categoryColor.value ?: 0))
             )
             Log.d("","${request}")
