@@ -1,10 +1,13 @@
 package com.umc.timeCAlling.data.service
 
 import com.umc.timeCAlling.data.dto.BaseResponse
-import com.umc.timeCAlling.data.dto.FcmTokenDto
+import com.umc.timeCAlling.data.dto.request.alarm.FcmTokenRequestDto
 import com.umc.timeCAlling.data.dto.request.alarm.WakeUpAlarmRequestDto
+import com.umc.timeCAlling.data.dto.response.alarm.FcmTokenResponseDto
 import com.umc.timeCAlling.data.dto.response.alarm.WakeUpAlarmResponseDto
 import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 
 interface AlarmService {
@@ -14,8 +17,9 @@ interface AlarmService {
         @Body request: WakeUpAlarmRequestDto
     ): BaseResponse<WakeUpAlarmResponseDto>
 
-    @POST("/api/push-requests/fcm-token")
+    @PATCH("/api/push-requests/fcm-token")
     suspend fun fcmToken(
-        @Body request: FcmTokenDto
-    ): BaseResponse<FcmTokenDto>
+        @Header("Authorization") Authorization: String,
+        @Body request: FcmTokenRequestDto
+    ): BaseResponse<FcmTokenResponseDto>
 }
