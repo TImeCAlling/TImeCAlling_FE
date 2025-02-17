@@ -100,9 +100,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _repeatDates = MutableLiveData<MutableList<String>>(mutableListOf()) // MutableList 사용
     val repeatDates: LiveData<MutableList<String>> = _repeatDates // LiveData 타입 변경
 
-    fun setRepeatDates(dates: List<String>) {
-        _repeatDates.value?.addAll(dates) // 기존 리스트에 추가
-        _repeatDates.value = _repeatDates.value // LiveData 값 업데이트
+    fun setRepeatDates(dates: List<String>?) {
+        _repeatDates.value = dates?.toMutableList() ?: mutableListOf()
     }
 
     private val _isRepeat = MutableLiveData<Boolean>()
@@ -341,8 +340,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                 _locationLatitude.value = it.latitude
                 _repeatDates.value = repeatDates.value
                 _isRepeat.value = it.isRepeat
-                _startDate.value = it.start
-                _endDate.value = it.end
+                _startDate.value = it.start?:""
+                _endDate.value = it.end?:""
                 Log.d("sharedSchedule isRepeat", "${it.isRepeat}")
             }.onFailure {
                 Log.e("sharedSchedule", "API 호출 실패: $it")
@@ -354,7 +353,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         viewModelScope.launch {
             val request = ScheduleRequestModel(
                 name = scheduleName.value ?: "",
-                body = scheduleMemo.value ?: "",
+                body = if (scheduleMemo.value.isNullOrEmpty()) null else scheduleMemo.value,
                 meetDate = scheduleDate.value ?: "",
                 meetTime = scheduleTime.value ?: "",
                 place = selectedLocationName.value ?: "",
@@ -362,10 +361,10 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                 latitude = locationLatitude.value ?: "",
                 moveTime = moveTime.value ?: 0,
                 freeTime = freeTime.value ?: "TIGHT",
-                repeatDays = repeatDates.value ?: emptyList(),
+                repeatDays = if (isRepeat.value == true) repeatDates.value else null,
                 isRepeat =  isRepeat.value ?: false,
-                start = startDate.value ?: "",
-                end = endDate.value ?: "",
+                start = if (startDate.value.isNullOrEmpty()) null else startDate.value,
+                end = if (endDate.value.isNullOrEmpty()) null else endDate.value,
                 categories =  listOf(CategoriesRequestModel(categoryName.value ?: "", categoryColor.value ?: 0))
             )
             Log.d("","${request}")

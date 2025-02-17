@@ -53,13 +53,17 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         bottomNavigationShow()
 
         binding.layoutDetailMembers.setOnClickListener {
-            findNavController().navigate(R.id.action_calendarFragment_to_wakeupFragment)
+            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+            findNavController().navigate(R.id.action_calendarFragment_to_wakeupFragment, bundle)
         }
 
     }
 
     override fun initObserver() {
-
+        scheduleViewModel.scheduleId.observe(viewLifecycleOwner) { newScheduleId ->
+        scheduleId = newScheduleId ?: 0
+        Log.d("CalendarFragment", "scheduleId updated: $scheduleId")
+    }
     }
 
     private fun initBottomSheet() {
@@ -316,8 +320,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                     when (menuItem.itemId) {
                         R.id.popup_edit -> {
                             val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
-                            navController.navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
-                            Toast.makeText(requireContext(), "수정하기", Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
                             true
                         }
                         R.id.popup_delete -> {

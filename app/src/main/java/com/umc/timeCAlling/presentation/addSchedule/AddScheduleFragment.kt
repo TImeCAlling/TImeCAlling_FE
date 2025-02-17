@@ -344,7 +344,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     private fun moveToAddScheduleSecond() {
         if(mode == "shared"){
-            if(binding.etAddScheduleMemo.text.isNotEmpty()&&binding.tvAddScheduleMinute.text.isNotEmpty()){
+            if(binding.tvAddScheduleMinute.text != "    "){
                 binding.tvAddScheduleNext.isEnabled = true
                 binding.tvAddScheduleNext.backgroundTintList =
                     ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))

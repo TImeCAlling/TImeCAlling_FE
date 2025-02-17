@@ -15,8 +15,12 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         var accessToken = sharedPreferences.getString("jwt", "") ?: ""
 
-        // Access Token 유효 시간 체크 및 만료된 경우 바로 요청 진행
-        logTokenExpiration(accessToken, chain)?.let { return it }
+        /*accessToken = "스웨거에서 받은 accessToken"
+        //refreshToken = "스웨거에서 받은 refreshToken"
+        sharedPreferences.edit().apply{
+            putString("jwt", accessToken)
+            //putString("refreshToken", refreshToken)
+        }*/
 
         // 요청에 최신 Access Token 추가
         val request = chain.request().newBuilder()
