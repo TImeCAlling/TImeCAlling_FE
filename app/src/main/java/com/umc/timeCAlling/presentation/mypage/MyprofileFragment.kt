@@ -18,10 +18,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.databinding.adapters.ViewBindingAdapter.setClickListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -37,6 +39,7 @@ import com.umc.timeCAlling.util.network.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 
 @AndroidEntryPoint
 class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragment_myprofile) {
@@ -47,6 +50,12 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     private var isPhotoSelected = false
     private var isInputValid = false
     private var previousCenterPosition: Int? = null
+
+    private var nickname: String = ""
+    private var avgPrepTime: Int = 15
+    private var freeTime: String = "PLENTY"
+    private var imageFile: File? = null
+    private var selectedImageUri: Uri? = null
 
     private val timeOptions = listOf(" ", " ", "15분", "30분", "45분", "60분", "90분+", " ", " ")
     private val spareOptions by lazy {
@@ -84,7 +93,12 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
     }
 
     override fun initObserver() {
-
+        /*
+        // 카카오 닉네임 가져오기 예시
+        signupViewModel.getKakaoUserInfo()
+        signupViewModel.kakaoUserInfo.observe(viewLifecycleOwner) { userInfo ->
+            Log.d("MypageFragment", "현재 로그인된 유저 닉네임: ${userInfo?.nickname ?: "정보 없음"}")
+        }*/
     }
 
     private fun observeViewModel() {
@@ -98,6 +112,12 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                         is UiState.Success -> {
                             val user = state.data
                             Log.d("MyprofileFragment", "UI 업데이트: $user")
+
+                            nickname = user.nickname
+                            avgPrepTime = user.avgPrepTime
+                            freeTime = user.freeTime
+                            imageFile = null // 프로필 이미지는 초기에는 null
+
                             binding.tvMyprofileCurrentName.text = user.nickname
                             binding.tvMyprofileNameEdit.text = user.nickname
                             binding.tvMyprofileTimeEdit.text = user.avgPrepTime.toString()
@@ -137,6 +157,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         binding.ivMyprofileNameArrow.setOnClickListener { toggleBottomSheetState(nameBottomSheetBehavior) }
         binding.ivMyprofileTimeArrow.setOnClickListener { toggleBottomSheetState(timeBottomSheetBehavior) }
         binding.ivMyprofileSpareArrow.setOnClickListener { toggleBottomSheetState(spareBottomSheetBehavior) }
+        binding.ivMyprofileLogoutArrow.setOnClickListener { showLogoutDialog() }
         binding.clMyprofileNameDelete.setOnClickListener { clearInputField() }
         binding.tvMyprofileWithdraw.setOnClickListener { showWithdrawDialog() }
 
@@ -173,36 +194,32 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
     private fun initBottomSheetActions() {
         binding.tvMyprofileNameSave.setOnClickListener {
-            val newName = binding.etMyprofileNameInput.text.toString().trim()
-            if (newName.isNotEmpty()) {
-                binding.tvMyprofileCurrentName.text = newName
-                binding.tvMyprofileNameEdit.text = newName
-                nameBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            } else {
-                showToast("이름을 입력해주세요.")
-            }
+            nickname = binding.etMyprofileNameInput.text.toString().trim()
+            binding.tvMyprofileCurrentName.text = nickname
+            binding.tvMyprofileNameEdit.text = nickname
+            nameBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            updateUserProfile()
         }
 
         binding.tvMyprofileTimeSave.setOnClickListener {
-            val numericTime = timeOptions.getOrNull(previousCenterPosition ?: -1)
-                ?.trim()?.takeWhile { it.isDigit() }.orEmpty()
-            if (numericTime.isNotEmpty()) {
-                binding.tvMyprofileTimeEdit.text = numericTime
-                timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            } else {
-                showToast("시간을 선택해주세요.")
-            }
+            avgPrepTime = timeOptions.getOrNull(previousCenterPosition ?: -1)
+                ?.trim()?.takeWhile { it.isDigit() }?.toIntOrNull() ?: 15
+            binding.tvMyprofileTimeEdit.text = avgPrepTime.toString()
+            timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            updateUserProfile()
         }
 
         binding.tvMyprofileSpareSave.setOnClickListener {
             val selectedSpareOption = spareOptions.find { isOptionSelected(it) }
-            val selectedSpareText = (selectedSpareOption as? TextView)?.text?.toString()?.trim().orEmpty()
-            if (selectedSpareText.isNotEmpty()) {
-                binding.tvMyprofileSpareEdit.text = selectedSpareText
-                spareBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            } else {
-                showToast("옵션을 선택해주세요.")
+            freeTime = when ((selectedSpareOption as? TextView)?.text?.toString()?.trim().orEmpty()) {
+                "여유" -> "PLENTY"
+                "넉넉" -> "RELAXED"
+                "딱딱" -> "TIGHT"
+                else -> "PLENTY"
             }
+            binding.tvMyprofileSpareEdit.text = (selectedSpareOption as? TextView)?.text?.toString().orEmpty()
+            spareBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            updateUserProfile()
         }
 
         binding.ivMyprofileBottomSheetNameClose.setOnClickListener { nameBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN }
@@ -356,6 +373,11 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         bottomSheetBehavior.state = if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_HIDDEN
     }
 
+    // updateUser() 호출
+    private fun updateUserProfile() {
+        myprofileViewModel.updateUser(nickname, avgPrepTime, freeTime, imageFile)
+    }
+
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         galleryLauncher.launch(intent)
@@ -363,15 +385,30 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == androidx.fragment.app.FragmentActivity.RESULT_OK) {
-            val selectedImageUri: Uri? = result.data?.data
+            selectedImageUri = result.data?.data
             if (selectedImageUri != null) {
                 binding.ivMyprofileOvalEdit.setImageURI(selectedImageUri)
                 binding.ivMyprofileFace.visibility = View.INVISIBLE
                 isPhotoSelected = true
+
+                imageFile = uriToFile(selectedImageUri!!, requireContext()) // 전역 변수 업데이트
+                updateUserProfile() // 이미지 선택 후 updateUserProfile() 호출
             } else {
                 showToast("이미지를 선택하지 않았습니다.")
             }
         }
+    }
+
+    private fun uriToFile(uri: Uri, context: Context): File {
+        val contentResolver = context.contentResolver
+        val inputStream = contentResolver.openInputStream(uri) ?: throw IllegalArgumentException("Cannot open input stream from URI")
+
+        val tempFile = File.createTempFile("profile_image", ".jpg", context.cacheDir)
+        tempFile.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+
+        return tempFile
     }
 
     private fun setupRecyclerView() {
@@ -438,6 +475,31 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         dialog.show()
     }
 
+    private fun showLogoutDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.layout_logout_account_dialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.8).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+
+        val logoutBtn = dialog.findViewById<TextView>(R.id.btn_dialog_logout)
+        logoutBtn.setOnClickListener {
+            dialog.dismiss()
+            logoutUser()
+        }
+
+        val cancelBtn = dialog.findViewById<TextView>(R.id.btn_dialog_cancel)
+        cancelBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
     private fun deleteUser(){
         myprofileViewModel.deleteUser()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -449,8 +511,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
                             signupViewModel.clearAuthToken()
 
-                            findNavController().popBackStack(R.id.myprofileFragment, true)
-                            findNavController().navigate(R.id.loginFragment) // 로그인 화면으로 이동
+                            findNavController().navigate(R.id.action_myprofileFragment_to_loginFragment) // 로그인 화면으로 이동
                         }
                         is UiState.Error -> {
                             Toast.makeText(requireContext(), "회원탈퇴 실패: ${state.error?.message}", Toast.LENGTH_SHORT).show()
@@ -461,7 +522,29 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                 }
             }
         }
+    }
 
+    private fun logoutUser(){
+        myprofileViewModel.logoutUser()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myprofileViewModel.logoutState.collectLatest { state ->
+                    when (state) {
+                        is UiState.Success -> {
+                            Log.d("MyprofileFragment", "로그아웃 성공, 로그인 화면으로 이동")
+
+                            signupViewModel.clearAuthToken()
+                            findNavController().navigate(R.id.action_myprofileFragment_to_loginFragment) // 로그인 화면으로 이동
+                        }
+                        is UiState.Error -> {
+                            Toast.makeText(requireContext(), "로그아웃 실패: ${state.error?.message}", Toast.LENGTH_SHORT).show()
+                            Log.e("MyprofileFragment", "로그아웃 실패")
+                        }
+                        else -> {} // 로딩 상태 처리 가능
+                    }
+                }
+            }
+        }
     }
 
     private fun showToast(message: String) {
