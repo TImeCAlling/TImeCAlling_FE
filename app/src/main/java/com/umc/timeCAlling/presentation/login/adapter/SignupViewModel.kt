@@ -12,6 +12,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.messaging.FirebaseMessaging
+import com.umc.timeCAlling.MyFirebaseMessagingService
 import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.domain.model.request.login.KakaoSignupRequestModel
 import com.umc.timeCAlling.domain.model.request.login.TokenRefreshRequestModel
@@ -114,6 +116,10 @@ class SignupViewModel @Inject constructor(
         viewModelScope.launch {
             loginRepository.kakaoSignup(profileImagePart, request).onSuccess { response ->
                 Log.d("SignupViewModel", "API Response: $response")
+                Log.d("SignupViewModel", "카카오 token : ${request.kakaoAccessToken}")
+                spf.edit().apply {
+                    putString("kakaoAccessToken", request.kakaoAccessToken)  // 새 AccessToken 저장
+                }
                 _signupResult.postValue(response) // 성공 시 데이터를 LiveData에 전달
             }.onFailure { error ->
                 _signupResult.postValue(null)
@@ -125,17 +131,26 @@ class SignupViewModel @Inject constructor(
     fun handleLoginSuccess(accessToken: String, refreshToken: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             loginRepository.kakaoLogin(KakaoLoginRequestModel(accessToken)).onSuccess { response ->
-                
+                Log.d("SignupViewModel", "카카오 token : ${accessToken}")
                 Log.d("SignupViewModel", "카카오 로그인 성공: Access Token = ${response.accessToken}")
                 Log.d("SignupViewModel", "카카오 로그인 성공: Refresh Token = ${response.refreshToken}")
 
                 spf.edit().apply {
+                    putString("kakaoAccessToken",accessToken)  // 새 AccessToken 저장
                     putString("jwt", response.accessToken)  // 새 AccessToken 저장
                     putString("refreshToken", response.refreshToken)  // 새 RefreshToken 저장
                     putBoolean("isLoggedIn", true)
                     apply()
                 }
-
+                // FCM 토큰 갱신 요청
+                FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val token = task.result
+                        Log.d("SignupViewModel", "FCM token on login: $token")
+                    } else {
+                        Log.e("SignupViewModel", "Failed to get FCM token on login", task.exception)
+                    }
+                }
                 callback(true)
             }.onFailure { error ->
                 Log.e("SignupViewModel", "서버 로그인 실패: ${error.message}")

@@ -11,6 +11,6 @@ import okhttp3.MultipartBody
 interface LoginRepository {
     suspend fun kakaoLogin(requestModel: KakaoLoginRequestModel): Result<KakaoLoginResponseModel>
     suspend fun kakaoSignup(proflieImage:MultipartBody.Part, requestModel: KakaoSignupRequestModel): Result<KakaoSignupResponseModel>
-    suspend fun tokenRefresh(authorization:String, requestModel: TokenRefreshRequestModel): Result<TokenRefreshResponseModel>
+    suspend fun tokenRefresh(requestModel: TokenRefreshRequestModel): Result<TokenRefreshResponseModel>
 
 }
