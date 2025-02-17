@@ -6,6 +6,6 @@ import com.umc.timeCAlling.domain.model.response.alarm.WakeUpAlarmRequestModel
 import com.umc.timeCAlling.domain.model.response.alarm.WakeUpAlarmResponseModel
 
 interface AlarmRepository {
-    suspend fun wakeUpAlarm(authorization:String, requestModel: WakeUpAlarmRequestModel): Result<WakeUpAlarmResponseModel>
-    suspend fun fcmToken(authorization:String, requestModel: FcmTokenRequestModel): Result<FcmTokenResponseModel>
+    suspend fun wakeUpAlarm(requestModel: WakeUpAlarmRequestModel): Result<WakeUpAlarmResponseModel>
+    suspend fun fcmToken(requestModel: FcmTokenRequestModel): Result<FcmTokenResponseModel>
 }

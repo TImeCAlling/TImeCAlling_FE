@@ -14,13 +14,11 @@ interface AlarmService {
 
     @POST("/api/push-requests")
     suspend fun wakeUpAlarm(
-        @Header("Authorization") Authorization: String,
         @Body request: WakeUpAlarmRequestDto
     ): BaseResponse<WakeUpAlarmResponseDto>
 
     @PATCH("/api/push-requests/fcm-token")
     suspend fun fcmToken(
-        @Header("Authorization") Authorization: String,
         @Body request: FcmTokenRequestDto
     ): BaseResponse<FcmTokenResponseDto>
 }

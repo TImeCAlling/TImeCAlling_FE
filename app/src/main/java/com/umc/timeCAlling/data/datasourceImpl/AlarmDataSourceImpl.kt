@@ -12,6 +12,6 @@ import javax.inject.Inject
 class AlarmDataSourceImpl @Inject constructor(
     private val alarmService: AlarmService
 ): AlarmDataSource {
-    override suspend fun wakeUpAlarm(authorization: String, request: WakeUpAlarmRequestDto): BaseResponse<WakeUpAlarmResponseDto> = alarmService.wakeUpAlarm(authorization, request)
-    override suspend fun fcmToekn(authorization: String, request: FcmTokenRequestDto): BaseResponse<FcmTokenResponseDto> = alarmService.fcmToken(authorization, request)
+    override suspend fun wakeUpAlarm(request: WakeUpAlarmRequestDto): BaseResponse<WakeUpAlarmResponseDto> = alarmService.wakeUpAlarm(request)
+    override suspend fun fcmToekn(request: FcmTokenRequestDto): BaseResponse<FcmTokenResponseDto> = alarmService.fcmToken(request)
 }

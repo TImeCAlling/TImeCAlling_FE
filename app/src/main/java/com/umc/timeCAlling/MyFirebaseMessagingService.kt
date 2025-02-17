@@ -51,17 +51,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(fcmToken: String) {
-        val kakaoAccessToken = spf.getString("kakaoAccessToken", null)
-        Log.d("MyFirebaseMessagingService", "kakaoAccessToken: $kakaoAccessToken")
-        if (kakaoAccessToken == null) {
-            Log.e("MyFirebaseMessagingService", "kakaoAccessToken is null")
-            return
-        }
-        val authorization = "Bearer $kakaoAccessToken"
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response: BaseResponse<FcmTokenResponseDto> = alarmService.fcmToken(authorization, FcmTokenRequestDto(fcmToken))
+                val response: BaseResponse<FcmTokenResponseDto> = alarmService.fcmToken(FcmTokenRequestDto(fcmToken))
                 Log.d("MyFirebaseMessagingService", "response: $response")
                 if (response.isSuccess) {
                     val result = response.result
