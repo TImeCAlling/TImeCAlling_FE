@@ -5,6 +5,7 @@ import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.mypage.UpdateUserRequestDto
 import com.umc.timeCAlling.data.dto.response.mypage.DeleteUserResponseDto
 import com.umc.timeCAlling.data.dto.response.mypage.GetUserResponseDto
+import com.umc.timeCAlling.data.dto.response.mypage.LogoutUserResponseDto
 import com.umc.timeCAlling.data.dto.response.mypage.UpdateUserResponseDto
 import com.umc.timeCAlling.data.service.MypageService
 import okhttp3.MultipartBody
@@ -16,9 +17,12 @@ class MypageDataSourceImpl @Inject constructor(
     override suspend fun getUser(): BaseResponse<GetUserResponseDto> =
         mypageService.getUser()
 
-    override suspend fun updateUser(profileImage: MultipartBody.Part, requestDto: UpdateUserRequestDto): BaseResponse<UpdateUserResponseDto> =
+    override suspend fun updateUser(profileImage: MultipartBody.Part?, requestDto: UpdateUserRequestDto): BaseResponse<UpdateUserResponseDto> =
         mypageService.updateUser(profileImage, requestDto)
 
     override suspend fun deleteUser(): BaseResponse<DeleteUserResponseDto> =
         mypageService.deleteUser()
+
+    override suspend fun logoutUser(): BaseResponse<LogoutUserResponseDto> =
+        mypageService.logoutUser()
 }

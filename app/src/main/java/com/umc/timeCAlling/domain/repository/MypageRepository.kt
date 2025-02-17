@@ -7,11 +7,13 @@ import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoSignupResponseModel
 import com.umc.timeCAlling.domain.model.response.mypage.DeleteUserResponseModel
 import com.umc.timeCAlling.domain.model.response.mypage.GetUserResponseModel
+import com.umc.timeCAlling.domain.model.response.mypage.LogoutUserResponseModel
 import com.umc.timeCAlling.domain.model.response.mypage.UpdateUserResponseModel
 import okhttp3.MultipartBody
 
 interface MypageRepository {
     suspend fun getUser(): Result<GetUserResponseModel>
-    suspend fun updateUser(proflieImage:MultipartBody.Part, requestModel: UpdateUserRequestModel): Result<UpdateUserResponseModel>
+    suspend fun updateUser(proflieImage:MultipartBody.Part?, requestModel: UpdateUserRequestModel): Result<UpdateUserResponseModel>
     suspend fun deleteUser(): Result<DeleteUserResponseModel>
+    suspend fun logoutUser(): Result<LogoutUserResponseModel>
 }

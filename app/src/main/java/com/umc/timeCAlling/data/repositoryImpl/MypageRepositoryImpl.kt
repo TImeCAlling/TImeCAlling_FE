@@ -4,6 +4,7 @@ import com.umc.timeCAlling.data.datasource.MypageDataSource
 import com.umc.timeCAlling.domain.model.request.mypage.UpdateUserRequestModel
 import com.umc.timeCAlling.domain.model.response.mypage.DeleteUserResponseModel
 import com.umc.timeCAlling.domain.model.response.mypage.GetUserResponseModel
+import com.umc.timeCAlling.domain.model.response.mypage.LogoutUserResponseModel
 import com.umc.timeCAlling.domain.model.response.mypage.UpdateUserResponseModel
 import com.umc.timeCAlling.domain.repository.MypageRepository
 import okhttp3.MultipartBody
@@ -18,7 +19,7 @@ class MypageRepositoryImpl @Inject constructor(
             mypageDataSource.getUser().result.toGetUserResponseModel()
         }
 
-    override suspend fun updateUser(profileImage: MultipartBody.Part, requestModel: UpdateUserRequestModel): Result<UpdateUserResponseModel> =
+    override suspend fun updateUser(profileImage: MultipartBody.Part?, requestModel: UpdateUserRequestModel): Result<UpdateUserResponseModel> =
         runCatching {
             mypageDataSource.updateUser(profileImage, requestModel.toUpdateUserRequestDto()).result.toUpdateUserResponseModel()
         }
@@ -26,5 +27,10 @@ class MypageRepositoryImpl @Inject constructor(
     override suspend fun deleteUser(): Result<DeleteUserResponseModel> =
         runCatching {
             mypageDataSource.deleteUser().result.toDeleteUserResponseModel()
+        }
+
+    override suspend fun logoutUser(): Result<LogoutUserResponseModel> =
+        runCatching {
+            mypageDataSource.logoutUser().result.toLogoutUserResponseModel()
         }
 }
