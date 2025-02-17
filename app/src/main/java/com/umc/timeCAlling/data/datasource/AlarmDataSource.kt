@@ -7,6 +7,6 @@ import com.umc.timeCAlling.data.dto.response.alarm.FcmTokenResponseDto
 import com.umc.timeCAlling.data.dto.response.alarm.WakeUpAlarmResponseDto
 
 interface AlarmDataSource{
-    suspend fun wakeUpAlarm(request: WakeUpAlarmRequestDto): BaseResponse<WakeUpAlarmResponseDto>
+    suspend fun wakeUpAlarm(authorization: String, request: WakeUpAlarmRequestDto): BaseResponse<WakeUpAlarmResponseDto>
     suspend fun fcmToekn(authorization: String, request: FcmTokenRequestDto): BaseResponse<FcmTokenResponseDto>
 }

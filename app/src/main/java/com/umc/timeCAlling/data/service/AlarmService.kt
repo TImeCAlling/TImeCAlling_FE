@@ -14,6 +14,7 @@ interface AlarmService {
 
     @POST("/api/push-requests")
     suspend fun wakeUpAlarm(
+        @Header("Authorization") Authorization: String,
         @Body request: WakeUpAlarmRequestDto
     ): BaseResponse<WakeUpAlarmResponseDto>
 
