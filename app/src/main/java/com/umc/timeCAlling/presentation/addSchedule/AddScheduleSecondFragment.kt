@@ -96,8 +96,8 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 binding.menuAddScheduleRepeat.isChecked = isRepeat
                 viewModel.setIsRepeat(isRepeat)
                 Log.d("AddScheduleSecondFragment", "isRepeat: $isRepeat")
+                binding.layoutAddSheduleRepeatDate.visibility = if (isRepeat) View.VISIBLE else View.GONE
             }
-            binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             binding.bottomSheetRepeat.visibility = View.GONE
             repeatBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetRepeat)
         }else{
@@ -516,9 +516,10 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
             findNavController().navigate(R.id.action_addScheduleSecondFragment_to_addScheduleSuccessFragment, bundle)
             if (mode == "shared") {
+                viewModel.isRepeat
                 viewModel.createSharedSchedule(scheduleId)
             } else {
-                if (scheduleId != 1) {
+                if (scheduleId == -1) {
                     viewModel.createSchedule()
                     // 권한 요청
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

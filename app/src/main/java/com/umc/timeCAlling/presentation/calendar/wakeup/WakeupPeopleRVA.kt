@@ -12,13 +12,31 @@ import androidx.compose.ui.semantics.text
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.DialogWakeupBinding
 import com.umc.timeCAlling.databinding.DialogWakeupShareBinding
+import com.umc.timeCAlling.databinding.ItemWakeupPeopleBinding
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 
-class WakeupPeopleRVA (): RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHolder>() {
+class WakeupPeopleRVA : RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHolder>() {
+
+    private var userList: List<ScheduleUsersResponseModel> = emptyList()
+    var onItemClick: ((ScheduleUsersResponseModel) -> Unit)? = null
+
+    inner class ViewHolder(private val binding: ItemWakeupPeopleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ScheduleUsersResponseModel) {
+            binding.tvWakeupPeopleName.text = item.nickname
+
+            // 아이템 클릭 시 콜백 함수 호출
+            binding.root.setOnClickListener {
+                onItemClick?.invoke(item)
+            }
+        }
+    }
 
     class WakeupPeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profileImageView: ImageView = itemView.findViewById(R.id.iv_wakeup_people_profile)
@@ -34,13 +52,16 @@ class WakeupPeopleRVA (): RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewH
 
     override fun onBindViewHolder(holder: WakeupPeopleViewHolder, position: Int) {
         val user = userList[position]
-        holder.profileImageView.setImageResource(user.profileImage)
-        holder.nameTextView.text = user.name
+        // 이미지를 Glide를 사용하여 불러옵니다.
+        Glide.with(holder.itemView.context)
+            .load(user.profile)
+            .into(holder.profileImageView)
+        holder.nameTextView.text = user.nickname
 
         holder.wakeup.setOnClickListener {
             holder.wakeup.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.context, R.color.mint_main))
-            Log.d("WakeupPeopleRVA", "Next button clicked for ${user.name}")
-            showWakeupShareDialog(holder, user.name)
+            Log.d("WakeupPeopleRVA", "Next button clicked for ${user.nickname}")
+            showWakeupShareDialog(holder, user.nickname)
         }
     }
 
@@ -48,15 +69,10 @@ class WakeupPeopleRVA (): RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewH
         return userList.size
     }
 
-    data class User(val name: String, val profileImage: Int)
-
-    private val userList = listOf(
-        User("김승혁", R.drawable.img_people_profile_example),
-        User("똘병이", R.drawable.img_people_profile_example2),
-        User("Chill Guy", R.drawable.img_people_profile_example3),
-        User("똟븅", R.drawable.img_people_profile_example4),
-        User("지예은", R.drawable.img_people_profile_example5)
-    )
+    fun submitList(newList: List<ScheduleUsersResponseModel>) {
+        userList = newList
+        notifyDataSetChanged()
+    }
 
     private fun showWakeupShareDialog(holder: WakeupPeopleViewHolder, userName: String) {
         val dialogView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.dialog_wakeup, null)

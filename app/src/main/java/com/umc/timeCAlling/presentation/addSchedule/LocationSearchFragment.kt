@@ -12,10 +12,12 @@ import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -44,16 +46,15 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
     private lateinit var tMapView: TMapView
     private lateinit var tmapData: TMapData
     private var mode : String = ""
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun initObserver() {
-        // 위치 권한 요청
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-        } else {
-        }
+
     }
 
     override fun initView() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         mode = viewModel.getMode()
         viewModel.setLocation(true)
         if(mode == "shared"){
@@ -72,21 +73,8 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         initRecentBottomSheet()
         tmapData = TMapData()
 
-        // initView()에서 현재 위치 로그에 출력
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    Log.d("LocationSearchFragment", "Current Location in initView(): ${location.latitude}, ${location.longitude}")
-                    viewModel.updateCurrentLocation(location)
-                    tMapView.setOnMapReadyListener {
-                        tMapView.setLocationPoint(location.latitude, location.longitude)
-                        tMapView.setCenterPoint(location.latitude, location.longitude)
-                        tMapView.setZoomLevel(15)
-                    }
-                }
-            }
-        }
+        checkLocationPermission()
+
 
         binding.etLocationSearchLocation.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -114,6 +102,59 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         }
         binding.ivLocationSearchBack.setOnSingleClickListener {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // 권한이 이미 있는 경우
+            Log.d("LocationSearchFragment", "Location permission already granted")
+            getCurrentLocation()
+        } else {
+            // 권한이 없는 경우 권한 요청
+            Log.d("LocationSearchFragment", "Requesting location permission")
+            requestLocationPermission()
+        }
+    }
+
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 허용된 경우
+                Log.d("LocationSearchFragment", "Location permission granted by user")
+                getCurrentLocation()
+            } else {
+                // 권한이 거부된 경우
+                Log.d("LocationSearchFragment", "Location permission denied by user")
+                // 권한이 거부되었을 때의 처리 (예: 사용자에게 권한이 필요한 이유를 설명)
+            }
+        }
+    }
+
+    private fun getCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    Log.d("LocationSearchFragment", "Current Location in getCurrentLocation(): ${location.latitude}, ${location.longitude}")
+                    viewModel.updateCurrentLocation(location)
+                    tMapView.setOnMapReadyListener {
+                        tMapView.setLocationPoint(location.latitude, location.longitude)
+                        tMapView.setCenterPoint(location.latitude, location.longitude)
+                        tMapView.setZoomLevel(15)
+                    }
+                }else {
+                    Log.d("LocationSearchFragment", "Location is null")
+                }
+            }
         }
     }
 
