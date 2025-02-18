@@ -58,7 +58,6 @@
             android:layout_width="138dp"
             android:layout_height="138dp"
             android:background="@drawable/shape_rect_999_white_fill"
-            app:layout_constraintWidth_percent="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topbar"
