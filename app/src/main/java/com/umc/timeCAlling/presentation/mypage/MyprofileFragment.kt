@@ -129,15 +129,14 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                             }
 
                             if (user.profileImage.isNullOrEmpty()) {
-                                binding.ivMyprofileOvalEdit.setImageResource(R.drawable.shape_rect_999_trans_fill)
-                                binding.ivMyprofileOvalEdit.visibility = View.VISIBLE
+                                binding.ivMyprofilePhoto.setImageResource(R.drawable.shape_rect_999_trans_fill)
+                                binding.ivMyprofilePhoto.visibility = View.VISIBLE
                             } else {
                                 Glide.with(this@MyprofileFragment)
                                     .load(user.profileImage)
-                                    .placeholder(R.drawable.shape_rect_999_trans_fill)
-                                    .error(R.drawable.shape_rect_999_trans_fill)
-                                    .into(binding.ivMyprofileOvalEdit)
-                                binding.ivMyprofileOvalEdit.visibility = View.INVISIBLE
+                                    .placeholder(R.drawable.shape_rect_999_white_fill)
+                                    .error(R.drawable.ic_profile_default)
+                                    .into(binding.ivMyprofilePhoto)
                             }
                         }
                         is UiState.Error -> {
@@ -387,8 +386,8 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         if (result.resultCode == androidx.fragment.app.FragmentActivity.RESULT_OK) {
             selectedImageUri = result.data?.data
             if (selectedImageUri != null) {
-                binding.ivMyprofileOvalEdit.setImageURI(selectedImageUri)
-                binding.ivMyprofileDefault.visibility = View.INVISIBLE
+                binding.ivMyprofilePhoto.setImageURI(selectedImageUri)
+                binding.ivMyprofilePhoto.visibility = View.INVISIBLE
                 isPhotoSelected = true
 
                 imageFile = uriToFile(selectedImageUri!!, requireContext()) // 전역 변수 업데이트
