@@ -16,6 +16,7 @@ import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
 import com.umc.timeCAlling.presentation.mypage.MyprofileViewModel
+import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -35,9 +36,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     override fun initObserver() {}
 
     private fun setClickListener() {
-        binding.ivLoginKakaoLogin.setOnClickListener {
-            /*profileViewModel.deleteUser()
-            viewModel.clearAuthToken()*/
+        binding.ivLoginKakaoLogin.setOnSingleClickListener {
             loginWithKakao(requireContext())
         }
 
