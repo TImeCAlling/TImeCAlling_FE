@@ -36,7 +36,7 @@ class SignupPhotoFragment : BaseFragment<FragmentSignupPhotoBinding>(R.layout.fr
             Timber.d("Observed Profile Image URI: $uri")
             uri?.let {
                 binding.ivSignupPhotoOval1.setImageURI(it)
-                binding.ivSignupPhotoFace.visibility = View.INVISIBLE
+                binding.ivSignupPhotoDefault.visibility = View.INVISIBLE
                 isPhotoSelected = true
                 updateNextButtonState()
             }

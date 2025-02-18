@@ -103,12 +103,11 @@
                 android:scaleType="centerCrop"/>
 
             <ImageView
-                android:id="@+id/iv_signup_photo_face"
+                android:id="@+id/iv_signup_photo_default"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_face"
+                android:src="@drawable/ic_profile_default"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintWidth_percent="0.56"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -162,7 +161,7 @@
             android:textSize="18dp"
             android:text="기본프로필로 설정할래요"
             android:fontFamily="@font/pretendard_medium"
-            android:textColor="@color/gray_400"
+            android:textColor="@color/gray_500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tv_signup_photo_next"

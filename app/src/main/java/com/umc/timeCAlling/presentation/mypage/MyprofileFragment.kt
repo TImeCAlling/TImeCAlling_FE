@@ -388,7 +388,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
             selectedImageUri = result.data?.data
             if (selectedImageUri != null) {
                 binding.ivMyprofileOvalEdit.setImageURI(selectedImageUri)
-                binding.ivMyprofileFace.visibility = View.INVISIBLE
+                binding.ivMyprofileDefault.visibility = View.INVISIBLE
                 isPhotoSelected = true
 
                 imageFile = uriToFile(selectedImageUri!!, requireContext()) // 전역 변수 업데이트
