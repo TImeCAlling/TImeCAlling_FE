@@ -28,6 +28,7 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
 
     private lateinit var wakeupPeopleRVA: WakeupPeopleRVA
     private val viewModel: ScheduleViewModel by activityViewModels()
+    private val wakeupAlarmViewModel : WakeupViewModel by activityViewModels()
 
     override fun initObserver() {
         viewModel.scheduleUsers.observe(viewLifecycleOwner) { users ->
@@ -47,7 +48,9 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
             initDetailScheduleBottomSheet(schedule)
         }
 
-        wakeupPeopleRVA = WakeupPeopleRVA()
+        wakeupPeopleRVA = WakeupPeopleRVA(
+            wakeupAlarmViewModel,viewLifecycleOwner
+        )
         wakeupPeopleRVA.onItemClick = { user ->
             // 공유 스케줄 여부 확인
             if (viewModel.isSharedSchedule) {
@@ -117,6 +120,8 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
 
     private fun initDetailScheduleBottomSheet(schedule: DetailScheduleResponseModel) {
         val meetTime = schedule.meetTime
+        wakeupAlarmViewModel.setScheduledDate(meetTime)
+        wakeupAlarmViewModel.setSharedId(schedule.shareId?:"")
         val parsedTime = parseTimeString(meetTime)
         if (parsedTime != null) {
             val (hours, minutes) = parsedTime
