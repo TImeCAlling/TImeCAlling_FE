@@ -23,6 +23,14 @@ class TokenAuthenticator @Inject constructor(
         val refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
         val accessToken = sharedPreferences.getString("jwt", "") ?: ""
 
+        val requestUrl = response.request.url.toString()
+
+        // ✅ API 호출이 'https://timecalling.shop'가 아니면 Access Token 검사 건너뛰기
+        if (!requestUrl.startsWith("https://timecalling.shop")) {
+            Log.w("TokenAuthenticator", "외부 API 호출 감지 → Access Token 검사 건너뜀")
+            return null
+        }
+
         if (refreshToken.isEmpty()) {
             Log.e("TokenAuthenticator", "401 발생 → Refresh Token 없음 → 로그아웃 처리")
             forceLogout()
@@ -39,11 +47,12 @@ class TokenAuthenticator @Inject constructor(
                 .header("Authorization", "Bearer $newAccessToken")
                 .build()
         } else {
-            Log.e("TokenAuthenticator", "401 발생 → Access Token 갱신 실패 → 로그아웃 처리")
+            Log.e("TokenAuthenticator", "오류 발생 → Access Token 갱신 실패 → 로그아웃 처리")
             forceLogout()
             return null
         }
     }
+
 
     private suspend fun refreshAccessToken(accessToken: String, refreshToken: String): String? {
         val requestDto = TokenRefreshRequestDto(accessToken, refreshToken)  // ✅ Access Token도 함께 전달
@@ -61,9 +70,16 @@ class TokenAuthenticator @Inject constructor(
             }
         } catch (e: Exception) {
             Log.e("TokenAuthenticator", "Access Token 갱신 중 예외 발생: ${e.message}")
+
+            if (e.message?.contains("HTTP 400") == true) {
+                Log.w("TokenAuthenticator", "HTTP 400 발생 → 기존 Access Token 유지")
+                return accessToken
+            }
+
             null
         }
     }
+
 
     private fun forceLogout() {
         sharedPreferences.edit().clear().apply()
