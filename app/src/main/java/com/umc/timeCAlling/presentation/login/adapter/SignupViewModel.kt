@@ -5,13 +5,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.graphics.vector.path
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.umc.timeCAlling.R
 import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.domain.model.request.login.KakaoSignupRequestModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
@@ -27,6 +30,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -80,11 +85,32 @@ class SignupViewModel @Inject constructor(
 
     private val context: Context = application
 
+    private fun getMultipartBodyFromUri(context: Context, uri: Uri?, paramName: String): MultipartBody.Part? {
+        if (uri == null) return null
+
+        val contentResolver = context.contentResolver
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val file = File(context.cacheDir, "profile_image.png")
+
+        inputStream?.use { input ->
+            FileOutputStream(file).use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        val requestFile = file.asRequestBody("image/png".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(paramName, file.name, requestFile)
+    }
+
     fun signup() {
-        val profileImagePart = try {
-            val profileImageUri = _profileImage.value
-                ?: throw IllegalArgumentException("Profile image URI is required.")
-            val inputStream = context.contentResolver.openInputStream(profileImageUri)
+            val profileImagePart = try {
+                val profileImageUri = _profileImage.value
+                if (profileImageUri != null) {
+                    getMultipartBodyFromUri(context, profileImageUri, "profileImage") // Uri를 File로 변환 후 Multipart 생성
+                } else {
+                    null // 기본 프로필 이미지는 서버에서 처리할 수도 있으므로 null 허용
+                }
+            val inputStream = profileImageUri?.let { context.contentResolver.openInputStream(it) }
             val selectedImageBitmap = BitmapFactory.decodeStream(inputStream)
             val defaultImageStream = ByteArrayOutputStream().apply {
                 selectedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, this)
@@ -138,7 +164,7 @@ class SignupViewModel @Inject constructor(
     fun handleLoginSuccess(accessToken: String, refreshToken: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             loginRepository.kakaoLogin(KakaoLoginRequestModel(accessToken)).onSuccess { response ->
-                
+
                 Log.d("SignupViewModel", "카카오 로그인 성공: Access Token = ${response.accessToken}")
                 Log.d("SignupViewModel", "카카오 로그인 성공: Refresh Token = ${response.refreshToken}")
 

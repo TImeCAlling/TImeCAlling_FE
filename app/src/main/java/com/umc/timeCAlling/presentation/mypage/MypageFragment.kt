@@ -99,7 +99,7 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
                                 Glide.with(this@MypageFragment)
                                     .load(user.profileImage)
                                     .placeholder(R.drawable.shape_rect_999_white_fill)
-                                    .error(R.drawable.ic_profile_default)
+                                    .error(R.drawable.ic_profile_default_default)
                                     .into(binding.ivMypageProfile)
                             }
                         }

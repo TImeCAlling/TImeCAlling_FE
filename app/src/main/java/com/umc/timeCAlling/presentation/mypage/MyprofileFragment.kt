@@ -133,7 +133,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                                 Glide.with(this@MyprofileFragment)
                                     .load(user.profileImage)
                                     .placeholder(R.drawable.shape_rect_999_white_fill)
-                                    .error(R.drawable.ic_profile_default)
+                                    .error(R.drawable.ic_profile_default_default)
                                     .into(binding.ivMyprofilePhoto)
                             }
                         }

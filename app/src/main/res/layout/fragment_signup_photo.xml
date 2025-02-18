@@ -81,7 +81,7 @@
                 android:id="@+id/iv_signup_photo"
                 android:layout_width="178dp"
                 android:layout_height="178dp"
-                android:background="@drawable/ic_profile_default"
+                android:background="@drawable/ic_profile_default_default"
                 app:layout_constraintWidth_percent="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
