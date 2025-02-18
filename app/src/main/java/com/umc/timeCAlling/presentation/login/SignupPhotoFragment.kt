@@ -35,8 +35,7 @@ class SignupPhotoFragment : BaseFragment<FragmentSignupPhotoBinding>(R.layout.fr
         viewModel.profileImage.observe(viewLifecycleOwner) { uri ->
             Timber.d("Observed Profile Image URI: $uri")
             uri?.let {
-                binding.ivSignupPhotoOval1.setImageURI(it)
-                binding.ivSignupPhotoDefault.visibility = View.INVISIBLE
+                binding.ivSignupPhoto.setImageURI(it)
                 isPhotoSelected = true
                 updateNextButtonState()
             }
@@ -76,7 +75,7 @@ class SignupPhotoFragment : BaseFragment<FragmentSignupPhotoBinding>(R.layout.fr
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             result.data?.data?.let { uri ->
                 profileImageUri = uri
-                binding.ivSignupPhotoOval1.setImageURI(uri) // 선택한 이미지 미리보기
+                binding.ivSignupPhoto.setImageURI(uri) // 선택한 이미지 미리보기
                 viewModel.setProfileImage(uri) // ViewModel에 URI 저장
             }
         }
