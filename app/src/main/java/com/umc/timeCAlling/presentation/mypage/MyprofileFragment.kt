@@ -374,8 +374,31 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
     // updateUser() 호출
     private fun updateUserProfile() {
-        myprofileViewModel.updateUser(nickname, avgPrepTime, freeTime, imageFile)
+        val updatedNickname = if (nickname != binding.tvMyprofileCurrentName.text.toString()) {
+            binding.tvMyprofileCurrentName.text.toString()
+        } else null
+
+        val updatedAvgPrepTime = if (avgPrepTime != binding.tvMyprofileTimeEdit.text.toString().toInt()) {
+            binding.tvMyprofileTimeEdit.text.toString().toInt()
+        } else null
+
+        val updatedFreeTime = if (freeTime != binding.tvMyprofileSpareEdit.text.toString()) {
+            when (binding.tvMyprofileSpareEdit.text.toString()) {
+                "여유" -> "PLENTY"
+                "넉넉" -> "RELAXED"
+                "딱딱" -> "TIGHT"
+                else -> null
+            }
+        } else null
+
+        myprofileViewModel.updateUser(
+            updatedNickname,
+            updatedAvgPrepTime,
+            updatedFreeTime,
+            imageFile
+        )
     }
+
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
