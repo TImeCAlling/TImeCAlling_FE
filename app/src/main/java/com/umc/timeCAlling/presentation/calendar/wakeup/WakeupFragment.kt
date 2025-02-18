@@ -1,6 +1,7 @@
 package com.umc.timeCAlling.presentation.calendar.wakeup
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -29,6 +30,7 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
     private lateinit var wakeupPeopleRVA: WakeupPeopleRVA
     private val viewModel: ScheduleViewModel by activityViewModels()
     private val wakeupAlarmViewModel : WakeupViewModel by activityViewModels()
+    private var scheduleId: Int = -1
 
     override fun initObserver() {
         viewModel.scheduleUsers.observe(viewLifecycleOwner) { users ->
@@ -65,7 +67,8 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
         bottomNavigationShow()
 
         binding.ivWakeupShare.setOnSingleClickListener {
-            showWakeupShareDialog()
+            issueLink()
+            //showWakeupShareDialog()
         }
 
         binding.ivWakeupBack.setOnSingleClickListener {
@@ -119,8 +122,9 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
 
 
     private fun initDetailScheduleBottomSheet(schedule: DetailScheduleResponseModel) {
+        val meetDate = schedule.meetDate
         val meetTime = schedule.meetTime
-        wakeupAlarmViewModel.setScheduledDate(meetTime)
+        wakeupAlarmViewModel.setScheduledDate(meetDate)
         wakeupAlarmViewModel.setSharedId(schedule.shareId?:"")
         val parsedTime = parseTimeString(meetTime)
         if (parsedTime != null) {
@@ -204,4 +208,15 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
         dp.toFloat(),
         resources.displayMetrics
     )
+
+    private fun issueLink() {
+        scheduleId = viewModel.scheduleId.value ?: -1
+        val deepLink = "https://umc.timecalling.com/schedules/$scheduleId"
+        val shareText = "우리 일정 함께할래? 타임콜링으로 지각 걱정 없이 딱 맞춰 가자!\n$deepLink"
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+        startActivity(Intent.createChooser(intent, "공유하기"))
+    }
 }

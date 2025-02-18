@@ -1,6 +1,7 @@
 package com.umc.timeCAlling
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
@@ -12,6 +13,7 @@ import com.umc.timeCAlling.data.dto.response.alarm.FcmTokenResponseDto
 import com.umc.timeCAlling.data.service.AlarmService
 import com.umc.timeCAlling.domain.model.request.alarm.FcmTokenRequestModel
 import com.umc.timeCAlling.domain.model.response.alarm.FcmTokenResponseModel
+import com.umc.timeCAlling.presentation.alarm.AlarmActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,14 +41,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
         Log.d("MyFirebaseMessagingService", "From: ${remoteMessage.from}")
 
-        // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             Log.d("MyFirebaseMessagingService", "Message data payload: ${remoteMessage.data}")
-        }
-
-        // Check if message contains a notification payload.
-        remoteMessage.notification?.let {
-            Log.d("MyFirebaseMessagingService", "Message Notification Body: ${it.body}")
+            val title = remoteMessage.data["title"] ?: "기본 제목"
+            val body = remoteMessage.data["body"] ?: "기본 내용"
+            // AlarmActivity 실행
+            val intent = Intent(this, AlarmActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("title", title)
+                putExtra("body", body)
+            }
+            startActivity(intent)
         }
     }
 
