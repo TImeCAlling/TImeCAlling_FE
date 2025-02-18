@@ -25,8 +25,7 @@
                 android:layout_height="wrap_content"
                 android:text="마이페이지"
                 android:textSize="20sp"
-                android:textColor="@color/gray_800"
-                android:fontFamily="@font/pretendard_bold"
+                style="@style/TextAppearance.TimeCAlling.Head2"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
