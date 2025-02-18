@@ -28,11 +28,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/pretendard_bold"
                     android:text="알람 추가"
                     android:textAlignment="center"
-                    android:textColor="@color/gray_800"
-                    android:textSize="20sp"
+                    style="@style/TextAppearance.TimeCAlling.Head2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
