@@ -2,6 +2,6 @@ package com.umc.timeCAlling.data.dto.request.alarm
 
 data class WakeUpAlarmRequestDto(
     val receiverId: Int,
-    val sharedId: String,
+    val shareId: String,
     val scheduledDate: String
 )

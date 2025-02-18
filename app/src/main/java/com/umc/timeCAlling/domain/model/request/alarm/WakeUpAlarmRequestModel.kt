@@ -4,8 +4,8 @@ import com.umc.timeCAlling.data.dto.request.alarm.WakeUpAlarmRequestDto
 
 data class WakeUpAlarmRequestModel(
     val receiverId: Int,
-    val sharedId: String,
+    val shareId: String,
     val scheduledDate: String
 ){
-    fun toWakeUpAlarmRequestDto() = WakeUpAlarmRequestDto(receiverId, sharedId, scheduledDate)
+    fun toWakeUpAlarmRequestDto() = WakeUpAlarmRequestDto(receiverId, shareId, scheduledDate)
 }

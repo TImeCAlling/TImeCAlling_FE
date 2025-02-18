@@ -46,7 +46,7 @@ class WakeupViewModel @Inject constructor(
     fun wakeUpAlarm() {
         val request = WakeUpAlarmRequestModel(
             receiverId = receiverId.value?:0,
-            sharedId = sharedId.value?:"",
+            shareId = sharedId.value?:"",
             scheduledDate = scheduledDate.value?:""
         )
         viewModelScope.launch {
