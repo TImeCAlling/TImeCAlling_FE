@@ -159,7 +159,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         }
         viewModel.moveTime.value?.let { moveTime ->
             binding.tvAddScheduleHour.text = if (moveTime >= 60) (moveTime / 60).toString() else "0"
-            binding.tvAddScheduleMinute.text = (moveTime % 60).toString()
+            binding.tvAddScheduleMinute.text = (moveTime % 60).toString()?:null
             if (moveTime != 0) { // 0이 아닌 경우에만 배경 변경
                 binding.tvAddScheduleTimeTaken.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray900_fill)
                 binding.tvAddScheduleTimeTaken.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -401,7 +401,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 }
             }
         }
-        if(binding.etAddScheduleName.text.isNotEmpty()&& binding.etAddScheduleMemo.text.isNotEmpty()&& binding.tvAddScheduleDate.text.isNotEmpty()&& binding.tvAddScheduleTime.text.isNotEmpty()&& binding.tvAddScheduleLocation.text.isNotEmpty()&& binding.tvAddScheduleMinute.text.isNotEmpty()) {
+        if(binding.etAddScheduleName.text.isNotEmpty()&& binding.etAddScheduleMemo.text.isNotEmpty()&& binding.tvAddScheduleDate.text!="날짜를 입력하세요"&& binding.tvAddScheduleTime.text!="시간을 입력하세요"&& binding.tvAddScheduleLocation.text!="장소를 입력해주세요"&& binding.tvAddScheduleMinute.text!="    ") {
             binding.tvAddScheduleNext.isEnabled = true
             binding.tvAddScheduleNext.backgroundTintList =
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
