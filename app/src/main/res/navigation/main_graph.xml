@@ -84,7 +84,7 @@
             android:id="@+id/alarmlistFragment"
             android:name="com.umc.timeCAlling.presentation.mypage.alarmlist.AlarmlistFragment"
             android:label="AlarmlistFragment"
-            tools:layout="@layout/fragment_alarmlist">
+            tools:layout="@layout/fragment_mypage_alarmlist">
             <action
                 android:id="@+id/action_alarmlistFragment_to_mypageFragment"
                 app:destination="@id/mypageFragment"/>

@@ -1,8 +1,11 @@
 package com.umc.timeCAlling.util
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.auth0.android.jwt.JWT
+import com.umc.timeCAlling.R
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
@@ -10,44 +13,32 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthInterceptor @Inject constructor(
+    private val context: Context,
     private val sharedPreferences: SharedPreferences
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        var accessToken = sharedPreferences.getString("jwt", "") ?: ""
+        val originalRequest = chain.request()
+        val originalUrl = originalRequest.url.toString()
 
-        /*accessToken = "스웨거에서 받은 accessToken"
-        //refreshToken = "스웨거에서 받은 refreshToken"
-        sharedPreferences.edit().apply{
-            putString("jwt", accessToken)
-            //putString("refreshToken", refreshToken)
-        }*/
+        val requestBuilder = originalRequest.newBuilder()
 
-        Log.d("AuthInterceptor", "Current Access Token: $accessToken")
-        Log.d("AuthInterceptor", "Current Refresh Token: $refreshToken")
-        // JWT 디코딩 후 만료 여부 확인
-        if (isAccessTokenExpired(accessToken)) {
-            Log.d("AuthInterceptor","Access Token이 만료되었습니다. Refresh Token을 사용하여 새 토큰을 요청합니다.")
+        if (originalUrl.contains("apis.openapi.sk.com")) {
+            // ✅ SK OpenAPI 요청이면 appKey 추가 (Authorization 변경 X)
+            val tmapAppKey = context.getString(R.string.tmap_app_key)
+            requestBuilder.addHeader("appKey", tmapAppKey)
+        } else {
+            // ✅ 기존 로직 유지 (Access Token 추가)
+            val accessToken = sharedPreferences.getString("jwt", "") ?: ""
 
-            if (refreshToken.isNotEmpty()) {
-                val newAccessToken = runBlocking { refreshAccessToken(refreshToken) }
-                if (newAccessToken != null) {
-                    accessToken = newAccessToken
-                    Log.d("AuthInterceptor","새로운 Access Token 발급 완료: $accessToken")
-                } else {
-                    Log.e("AuthInterceptor","토큰 갱신 실패")
-                }
-            }else{
-                Log.e("AuthInterceptor","Refresh Token이 없습니다.")
-            }
+            logTokenExpiration(accessToken, chain)?.let { return it }
+
+            requestBuilder.addHeader("Authorization", "Bearer $accessToken")
         }
 
-        // 요청에 최신 Access Token 추가
-        val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $accessToken")
-            .build()
-
-        return chain.proceed(request)
+        return chain.proceed(requestBuilder.build())
     }
+
+
 
     // Access Token 만료 시간 로그, 만료 시 재발급 요청
     private fun logTokenExpiration(token: String?, chain: Interceptor.Chain): Response? {
