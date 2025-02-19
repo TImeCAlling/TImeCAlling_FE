@@ -46,7 +46,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var scheduleId : Int = 0
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
     private val adapter : DetailScheduleRVA by lazy {
-        DetailScheduleRVA(scheduleViewModel, viewLifecycleOwner)
+        DetailScheduleRVA(requireContext(), scheduleViewModel, viewLifecycleOwner)
     }
     private val wakeupViewModel: WakeupViewModel by activityViewModels()
 

@@ -99,9 +99,10 @@
             app:layout_constraintBottom_toBottomOf="@id/img_detail_schedule_check">
 
             <ImageView
+                android:id="@+id/iv_detail_schedule_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_category_blue"/>
+                android:background="@drawable/ic_category_blue"/>
 
             <TextView
                 android:id="@+id/tv_detail_schedule_category"
