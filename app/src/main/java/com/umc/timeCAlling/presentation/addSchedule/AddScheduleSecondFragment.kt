@@ -37,6 +37,7 @@ import com.umc.timeCAlling.presentation.addSchedule.adapter.CategoryRVA
 import com.umc.timeCAlling.presentation.alarm.AlarmHelper
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
 @AndroidEntryPoint
@@ -383,6 +384,18 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
             binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+            // CalendarDay를 LocalDate로 변환
+            val startLocalDate = LocalDate.of(startDate!!.year, startDate!!.month + 1, startDate!!.day)
+            val endLocalDate = LocalDate.of(endDate!!.year, endDate!!.month + 1, endDate!!.day)
+
+            // 날짜 비교 및 재설정
+            if (startLocalDate.isAfter(endLocalDate)) {
+                // startLocalDate가 endLocalDate보다 늦은 경우, 두 날짜를 교환
+                val temp = startDate
+                startDate = endDate
+                endDate = temp
+            }
 
             viewModel.setStartDate(startTextView.text.toString())
             viewModel.setEndDate(endTextView.text.toString())
