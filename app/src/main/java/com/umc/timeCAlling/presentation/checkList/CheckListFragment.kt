@@ -144,7 +144,7 @@ class CheckListFragment: BaseFragment<FragmentCheckListBinding>(R.layout.fragmen
             0 -> request.isSuccess = selectedIndex == 0
             1 -> request.spare = when(selectedIndex) {
                 0 -> "10분 이상"
-                1 -> "5뷴 ~ 10분"
+                1 -> "5분 ~ 10분"
                 2 -> "거의 정시"
                 else -> ""
             }

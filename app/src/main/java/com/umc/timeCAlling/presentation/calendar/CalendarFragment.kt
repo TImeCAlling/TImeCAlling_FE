@@ -30,6 +30,7 @@ import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponse
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.calendar.adapter.DetailScheduleRVA
+import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
