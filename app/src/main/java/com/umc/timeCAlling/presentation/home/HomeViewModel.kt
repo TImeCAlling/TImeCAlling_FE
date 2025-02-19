@@ -56,6 +56,7 @@ class HomeViewModel @Inject constructor(
             val meetTime = LocalTime.parse(schedule.meetTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
             meetTime.isBefore(now) || meetTime == now
         }
+        loadDeletedItems()
         last.forEach { schedule ->
             addItem(schedule.checkListId)
         }
@@ -91,6 +92,10 @@ class HomeViewModel @Inject constructor(
 
     fun loadItems() {
         _checklists.value = sharedPrefsHelper.getList("ChecklistPrefs")
+    }
+
+    fun loadDeletedItems() {
+        _deletedId.value = sharedPrefsHelper.getDeletedList("DeletedChecklistPrefs")
     }
 
     fun addItem(item: Int) {
