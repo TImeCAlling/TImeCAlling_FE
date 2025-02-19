@@ -58,7 +58,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
         }
         spf = requireContext().getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
         mode = viewModel.getMode()
-        scheduleId = arguments?.getInt("scheduleId") ?: -2
+        scheduleId = arguments?.getInt("scheduleId") ?: -1
         Log.d("AddScheduleSecondFragment", "scheduleId: $scheduleId")
 
         initSavedData()
