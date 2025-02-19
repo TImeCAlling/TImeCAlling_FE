@@ -1,6 +1,8 @@
 package com.umc.timeCAlling.presentation.home
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -8,15 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.compose.material3.AlertDialog
-import androidx.compose.ui.semantics.dismiss
-import androidx.compose.ui.semantics.text
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,10 +24,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.TopSheetBehavior
 import com.umc.timeCAlling.databinding.DialogScheduleShareBinding
-import com.umc.timeCAlling.databinding.DialogWakeupShareBinding
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
 import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
-import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
@@ -53,6 +49,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private var dialog: androidx.appcompat.app.AlertDialog? = null
 
     override fun initView() {
+        checkLocationPermission()
         viewModel.clearAll()
         arguments?.let {
             val scheduleId = it.getInt("scheduleId", -1)
@@ -398,4 +395,35 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         resources.displayMetrics
     )
 
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.d("LocationSearchFragment", "Location permission already granted")
+        } else {
+            Log.d("LocationSearchFragment", "Requesting location permission")
+            requestLocationPermission()
+        }
+    }
+
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("LocationSearchFragment", "Location permission granted by user")
+            } else {
+                Log.d("LocationSearchFragment", "Location permission denied by user")
+            }
+        }
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
 }

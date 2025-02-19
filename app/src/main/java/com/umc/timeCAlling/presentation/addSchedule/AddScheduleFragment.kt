@@ -1,6 +1,8 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Rect
 import android.os.Bundle
@@ -16,8 +18,11 @@ import android.widget.EditText
 import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.umc.timeCAlling.R
@@ -40,6 +45,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private var mode : String = ""
     private var location : Boolean = false
     private var _binding : FragmentAddScheduleBinding? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun initObserver() {
 
@@ -102,6 +108,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             findNavController().popBackStack()
             viewModel.setMode("")
         }
+        getCurrentLocation()
     }
 
     private fun bottomNavigationRemove() {
@@ -416,5 +423,18 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private fun hideKeyboard(view: View) {
         val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+    private fun getCurrentLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    Log.d("AddScheduleFragment", "Current Location in getCurrentLocation(): ${location.latitude}, ${location.longitude}")
+                    viewModel.updateCurrentLocation(location)
+                } else {
+                    Log.d("AddScheduleFragment", "Location is null")
+                }
+            }
+        }
     }
 }
