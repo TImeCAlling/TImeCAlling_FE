@@ -53,9 +53,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private lateinit var spf: SharedPreferences
 
     override fun initView() {
-        binding.apply {
-            menuAddScheduleRepeat.setOnCheckedChangeListener { _, isChecked -> setSwitchColor(binding.menuAddScheduleRepeat, isChecked)}
-        }
         spf = requireContext().getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
         mode = viewModel.getMode()
         scheduleId = arguments?.getInt("scheduleId") ?: -1
@@ -247,6 +244,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             isRepeatEnabled = isChecked
             viewModel.setIsRepeat(isRepeatEnabled)
             updateRepeatInfo()
+            if (isChecked) {
+                binding.menuAddScheduleRepeat.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
+                binding.menuAddScheduleRepeat.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+            } else {
+                binding.menuAddScheduleRepeat.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_400))
+                binding.menuAddScheduleRepeat.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_600))
+            }
         }
     }
 
@@ -572,14 +576,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
              }*/
         } else {
             Log.e("AddScheduleSecondFragment", "scheduleDate or scheduleTime is null")
-        }
-    }
-
-    private fun setSwitchColor(switch: MaterialSwitch, isChecked: Boolean) {
-        if(isChecked) {
-            switch.trackTintList = getResources().getColorStateList(R.color.mint_main)
-        } else {
-            switch.trackTintList = getResources().getColorStateList(R.color.gray_400)
         }
     }
 

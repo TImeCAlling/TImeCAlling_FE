@@ -4,18 +4,14 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.location.LocationManagerCompat.getCurrentLocation
@@ -25,6 +21,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentAddScheduleBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
@@ -230,8 +227,10 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (slideOffset <= 0) {
                     binding.viewBottomSheetBackground.visibility = View.INVISIBLE
+                    binding.viewBottomSheetBackground.isClickable = false
                 } else if (slideOffset > 0) {
                     binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                    binding.viewBottomSheetBackground.isClickable = true
                 }
             }
 
@@ -299,8 +298,10 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (slideOffset <= 0) {
                     binding.viewBottomSheetBackground.visibility = View.INVISIBLE
+                    binding.viewBottomSheetBackground.isClickable = false
                 } else if (slideOffset > 0) {
                     binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                    binding.viewBottomSheetBackground.isClickable = true
                 }
             }
 
@@ -436,5 +437,10 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
