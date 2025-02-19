@@ -1,8 +1,10 @@
 package com.umc.timeCAlling.util
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.auth0.android.jwt.JWT
+import com.umc.timeCAlling.R
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -11,21 +13,32 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthInterceptor @Inject constructor(
+    private val context: Context,
     private val sharedPreferences: SharedPreferences
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        var accessToken = sharedPreferences.getString("jwt", "") ?: ""
+        val originalRequest = chain.request()
+        val originalUrl = originalRequest.url.toString()
 
-        // Access Token 유효 시간 체크 및 만료된 경우 바로 요청 진행
-        logTokenExpiration(accessToken, chain)?.let { return it }
+        val requestBuilder = originalRequest.newBuilder()
 
-        // 요청에 최신 Access Token 추가
-        val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $accessToken")
-            .build()
+        if (originalUrl.contains("apis.openapi.sk.com")) {
+            // ✅ SK OpenAPI 요청이면 appKey 추가 (Authorization 변경 X)
+            val tmapAppKey = context.getString(R.string.tmap_app_key)
+            requestBuilder.addHeader("appKey", tmapAppKey)
+        } else {
+            // ✅ 기존 로직 유지 (Access Token 추가)
+            val accessToken = sharedPreferences.getString("jwt", "") ?: ""
 
-        return chain.proceed(request)
+            logTokenExpiration(accessToken, chain)?.let { return it }
+
+            requestBuilder.addHeader("Authorization", "Bearer $accessToken")
+        }
+
+        return chain.proceed(requestBuilder.build())
     }
+
+
 
     // Access Token 만료 시간 로그, 만료 시 재발급 요청
     private fun logTokenExpiration(token: String?, chain: Interceptor.Chain): Response? {

@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.di
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.GsonBuilder
 import com.umc.timeCAlling.R
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 import dagger.Lazy
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -40,9 +42,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun providesAuthInterceptor(
+        @ApplicationContext context: Context,
         sharedPreferences: SharedPreferences
     ): AuthInterceptor {
-        return AuthInterceptor(sharedPreferences)
+        return AuthInterceptor(context, sharedPreferences)
     }
 
     @Provides

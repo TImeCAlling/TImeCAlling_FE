@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class TokenAuthenticator @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val loginDataSourceProvider: Lazy<LoginDataSource>  // ✅ Lazy로 변경
+    private val loginDataSourceProvider: Lazy<LoginDataSource>
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -55,10 +55,10 @@ class TokenAuthenticator @Inject constructor(
 
 
     private suspend fun refreshAccessToken(accessToken: String, refreshToken: String): String? {
-        val requestDto = TokenRefreshRequestDto(accessToken, refreshToken)  // ✅ Access Token도 함께 전달
+        val requestDto = TokenRefreshRequestDto(accessToken, refreshToken)
 
         return try {
-            val loginDataSource = loginDataSourceProvider.get()  // ✅ Lazy로 가져오기
+            val loginDataSource = loginDataSourceProvider.get()
             val response = loginDataSource.tokenRefresh(requestDto)
             if (response.isSuccess && response.result != null) {
                 val newAccessToken = response.result.accessToken
