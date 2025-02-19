@@ -1,10 +1,10 @@
 package com.umc.timeCAlling.util
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.auth0.android.jwt.JWT
-import com.umc.timeCAlling.data.datasource.LoginDataSource
-import com.umc.timeCAlling.data.dto.request.login.TokenRefreshRequestDto
+import com.umc.timeCAlling.R
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -13,98 +13,58 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthInterceptor @Inject constructor(
-    private val sharedPreferences: SharedPreferences,
-    private val loginDataSource: LoginDataSource
+    private val context: Context,
+    private val sharedPreferences: SharedPreferences
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        var accessToken = sharedPreferences.getString("jwt", "") ?: ""
-        var refreshToken = sharedPreferences.getString("refreshToken", "") ?: ""
+        val originalRequest = chain.request()
+        val originalUrl = originalRequest.url.toString()
 
-         /*accessToken = "스웨거에서 발급받은 accessToken"
-         //refreshToken = "스웨거에서 발급받은 refreshToken"
-         sharedPreferences.edit().apply{
-             putString("jwt", accessToken)
-             //putString("refreshToken", refreshToken)
-         }*/
+        val requestBuilder = originalRequest.newBuilder()
 
-        Log.d("AuthInterceptor", "Current Access Token: $accessToken")
-        Log.d("AuthInterceptor", "Current Refresh Token: $refreshToken")
-        // JWT 디코딩 후 만료 여부 확인
-        if (isAccessTokenExpired(accessToken)) {
-            Log.d("AuthInterceptor","Access Token이 만료되었습니다. Refresh Token을 사용하여 새 토큰을 요청합니다.")
+        if (originalUrl.contains("apis.openapi.sk.com")) {
+            // ✅ SK OpenAPI 요청이면 appKey 추가 (Authorization 변경 X)
+            val tmapAppKey = context.getString(R.string.tmap_app_key)
+            requestBuilder.addHeader("appKey", tmapAppKey)
+        } else {
+            // ✅ 기존 로직 유지 (Access Token 추가)
+            val accessToken = sharedPreferences.getString("jwt", "") ?: ""
 
-            if (refreshToken.isNotEmpty()) {
-                val newAccessToken = runBlocking { refreshAccessToken(refreshToken) }
-                if (newAccessToken != null) {
-                    accessToken = newAccessToken
-                    Log.d("AuthInterceptor","새로운 Access Token 발급 완료: $accessToken")
-                } else {
-                    Log.e("AuthInterceptor","토큰 갱신 실패")
-                }
-            }else{
-                Log.e("AuthInterceptor","Refresh Token이 없습니다.")
-            }
+            logTokenExpiration(accessToken, chain)?.let { return it }
+
+            requestBuilder.addHeader("Authorization", "Bearer $accessToken")
         }
 
-        // 요청에 최신 Access Token 추가
-        val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $accessToken")
-            .build()
-
-        var response = chain.proceed(request)
-
-        // 401 응답이 온 경우 > Refresh Token 사용하여 Access Token 갱신
-        if (response.code == 401 && refreshToken.isNotEmpty()) {
-            val newAccessToken = runBlocking { refreshAccessToken(refreshToken) }
-            if (newAccessToken != null) {
-                Log.d("AuthInterceptor","401 오류 발생 → 새로운 Access Token 발급 완료: $newAccessToken")
-
-                sharedPreferences.edit().putString("jwt", newAccessToken).apply()
-
-                // 새로운 Access Token으로 다시 요청
-                val newRequest = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer $newAccessToken")
-                    .build()
-                response = chain.proceed(newRequest)
-            } else {
-                Log.e("AuthInterceptor","401 오류 발생 → Refresh Token도 만료됨. 로그아웃 필요")
-            }
-        }
-
-        return response
+        return chain.proceed(requestBuilder.build())
     }
 
-    // JWT Access Token 만료되었는지 확인
-    private fun isAccessTokenExpired(token: String?): Boolean {
-        if (token.isNullOrEmpty()) return true
+
+
+    // Access Token 만료 시간 로그, 만료 시 재발급 요청
+    private fun logTokenExpiration(token: String?, chain: Interceptor.Chain): Response? {
+        if (token.isNullOrEmpty()) {
+            Log.d("AuthInterceptor", "Access Token 없음. 만료 여부 확인 생략.")
+            return null
+        }
 
         return try {
             val jwt = JWT(token)
-            jwt.isExpired(10) // 10초 여유 두고 체크
-        } catch (e: Exception) {
-            Log.e("AuthInterceptor","JWT 파싱 실패: ${e.message}")
-            true // JWT 파싱 실패 시 만료된 것으로 간주
-        }
-    }
+            val expirationTime = jwt.expiresAt?.time ?: 0
+            val currentTime = System.currentTimeMillis()
+            val remainingTimeMs = expirationTime - currentTime
 
-    // Refresh Token을 이용하여 새로운 Access Token 요청
-    private suspend fun refreshAccessToken(refreshToken: String): String? {
-        val requestDto = TokenRefreshRequestDto("", refreshToken)
-        return try {
-            val response = loginDataSource.tokenRefresh(requestDto)
-
-            if (response.isSuccess && response.result != null) {
-                val newAccessToken = response.result.accessToken
-                sharedPreferences.edit().putString("jwt", newAccessToken).apply()
-                Log.d("AuthInterceptor","새로운 Access Token 발급 완료: $newAccessToken")
-                newAccessToken
+            if (remainingTimeMs > 0) {
+                val remainingMinutes = remainingTimeMs / (1000 * 60)  // 분 단위
+                val remainingSeconds = (remainingTimeMs / 1000) % 60  // 초 단위
+                Log.d("AuthInterceptor", "Access Token 유효 시간: ${remainingMinutes}분 ${remainingSeconds}초 남음")
+                null  // 만료되지 않음 → 기존 흐름 유지
             } else {
-                Log.e("AuthInterceptor","토큰 갱신 실패: 서버 응답 실패 (${response.message})")
-                null
+                Log.e("AuthInterceptor", "Access Token이 만료됨. 요청 차단 및 재발급 처리.")
+                chain.proceed(chain.request())  // 만료된 경우 요청을 그대로 진행 (재발급 로직이 처리)
             }
         } catch (e: Exception) {
-            Log.e("AuthInterceptor","Access Token 갱신 실패: ${e.message}")
-            null
+            Log.e("AuthInterceptor", "JWT 파싱 실패: ${e.message}")
+            null  // 파싱 실패 시 만료 여부 확인하지 않고 기존 흐름 유지
         }
     }
 }

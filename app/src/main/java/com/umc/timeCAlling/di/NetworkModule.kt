@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.di
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.GsonBuilder
 import com.umc.timeCAlling.R
@@ -7,6 +8,7 @@ import com.umc.timeCAlling.TimeCAllingApplication
 import com.umc.timeCAlling.data.datasource.LoginDataSource
 import com.umc.timeCAlling.util.AuthInterceptor
 import com.umc.timeCAlling.util.TmapInterceptor
+import com.umc.timeCAlling.util.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +21,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 import dagger.Lazy
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,24 +42,34 @@ object NetworkModule {
     @Provides
     @Singleton
     fun providesAuthInterceptor(
-        sharedPreferences: SharedPreferences,
-        loginDataSource: LoginDataSource
+        @ApplicationContext context: Context,
+        sharedPreferences: SharedPreferences
     ): AuthInterceptor {
-        return AuthInterceptor(sharedPreferences, loginDataSource)
+        return AuthInterceptor(context, sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun providesTokenAuthenticator(
+        sharedPreferences: SharedPreferences,
+        loginDataSource: Lazy<LoginDataSource>  // ✅ Lazy로 변경
+    ): TokenAuthenticator {
+        return TokenAuthenticator(sharedPreferences, loginDataSource)
     }
 
     @Provides
     @Singleton
     fun providesOkHttpClient(
-        authInterceptor: Lazy<AuthInterceptor>
+        authInterceptor: Lazy<AuthInterceptor>,
+        tokenAuthenticator: Lazy<TokenAuthenticator>  // ✅ Lazy로 변경
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder().apply {
             addInterceptor { chain -> authInterceptor.get().intercept(chain) }
+            authenticator(tokenAuthenticator.get())  // ✅ Lazy로 가져오기
             addInterceptor(loggingInterceptor)
-            addInterceptor(TmapInterceptor())
             connectTimeout(10, TimeUnit.SECONDS)
             readTimeout(10, TimeUnit.SECONDS)
             writeTimeout(10, TimeUnit.SECONDS)

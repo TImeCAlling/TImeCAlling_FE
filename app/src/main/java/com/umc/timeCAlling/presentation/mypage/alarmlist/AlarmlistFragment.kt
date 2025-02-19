@@ -6,12 +6,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.umc.timeCAlling.R
-import com.umc.timeCAlling.databinding.FragmentAlarmlistBinding
+import com.umc.timeCAlling.databinding.FragmentMypageAlarmlistBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AlarmlistFragment : BaseFragment<FragmentAlarmlistBinding>(R.layout.fragment_alarmlist) {
+class AlarmlistFragment : BaseFragment<FragmentMypageAlarmlistBinding>(R.layout.fragment_mypage_alarmlist) {
     private lateinit var navController: NavController
 
     override fun initView() {
