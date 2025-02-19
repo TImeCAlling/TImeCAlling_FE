@@ -4,8 +4,8 @@ import com.umc.timeCAlling.domain.model.response.alarm.WakeUpAlarmResponseModel
 
 data class WakeUpAlarmResponseDto(
     val receiverId: Int,
-    val senderId: String,
-    val scheduledDate: String
+    val shareId: String,
+    val status: String
 ){
-    fun toWakeUpAlarmResponseModel() = WakeUpAlarmResponseModel(receiverId, senderId, scheduledDate)
+    fun toWakeUpAlarmResponseModel() = WakeUpAlarmResponseModel(receiverId, shareId, status)
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.semantics.dismiss
 import androidx.compose.ui.semantics.text
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -21,8 +22,10 @@ import com.umc.timeCAlling.databinding.ItemWakeupPeopleBinding
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 
-class WakeupPeopleRVA : RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHolder>() {
-
+class WakeupPeopleRVA(
+    private val viewModel : WakeupViewModel,
+    private val viewLifecycleOwner: LifecycleOwner
+) : RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHolder>() {
     private var userList: List<ScheduleUsersResponseModel> = emptyList()
     var onItemClick: ((ScheduleUsersResponseModel) -> Unit)? = null
 
@@ -31,7 +34,6 @@ class WakeupPeopleRVA : RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHol
         fun bind(item: ScheduleUsersResponseModel) {
             binding.tvWakeupPeopleName.text = item.nickname
 
-            // 아이템 클릭 시 콜백 함수 호출
             binding.root.setOnClickListener {
                 onItemClick?.invoke(item)
             }
@@ -51,6 +53,7 @@ class WakeupPeopleRVA : RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHol
     }
 
     override fun onBindViewHolder(holder: WakeupPeopleViewHolder, position: Int) {
+        Log.d("WakeupPeopleRVA", "${userList}")
         val user = userList[position]
         // 이미지를 Glide를 사용하여 불러옵니다.
         Glide.with(holder.itemView.context)
@@ -60,6 +63,9 @@ class WakeupPeopleRVA : RecyclerView.Adapter<WakeupPeopleRVA.WakeupPeopleViewHol
 
         holder.wakeup.setOnClickListener {
             holder.wakeup.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.context, R.color.mint_main))
+            Log.d("WakeupPeopleRVA", "Next button clicked for ${user.userId}")
+            viewModel.setReceiverId(user.userId)
+            viewModel.wakeUpAlarm()
             Log.d("WakeupPeopleRVA", "Next button clicked for ${user.nickname}")
             showWakeupShareDialog(holder, user.nickname)
         }

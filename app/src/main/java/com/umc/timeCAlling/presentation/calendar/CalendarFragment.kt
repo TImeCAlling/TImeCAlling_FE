@@ -30,7 +30,6 @@ import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponse
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.calendar.adapter.DetailScheduleRVA
-import com.umc.timeCAlling.presentation.mypage.MyprofileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -48,6 +47,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private val adapter : DetailScheduleRVA by lazy {
         DetailScheduleRVA(scheduleViewModel, viewLifecycleOwner)
     }
+    private val wakeupViewModel: WakeupViewModel by activityViewModels()
 
     override fun initView() {
         initDetailScheduleRVA()
@@ -281,6 +281,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
             scheduleViewModel.detailSchedule.observe(viewLifecycleOwner) { schedule ->
 
+                wakeupViewModel.setScheduledDate(scheduleViewModel.meetDate.value?:"")
+                wakeupViewModel.setSharedId(scheduleViewModel.shareId.value?:"")
                 Log.d("DetailSchedule", schedule.toString())
 
                 initDetailScheduleBottomSheet(schedule)

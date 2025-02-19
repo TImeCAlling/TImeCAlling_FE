@@ -34,8 +34,8 @@
                 android:textAlignment="center"
                 android:text="알람 리스트"
                 android:textSize="20sp"
-                android:textColor="@color/gray_800"
-                android:fontFamily="@font/pretendard_bold"/>
+                style="@style/TextAppearance.TimeCAlling.Head2"
+                />
 
             <ImageView
                 android:id="@+id/iv_alarmlist_delete"

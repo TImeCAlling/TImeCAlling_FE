@@ -13,6 +13,7 @@ import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseM
 import com.umc.timeCAlling.domain.repository.MypageRepository
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
 import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupPeopleRVA
+import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
@@ -91,11 +92,20 @@ class ScheduleViewModel @Inject constructor(
     private val _detailSchedule = MutableLiveData<DetailScheduleResponseModel>()
     val detailSchedule: LiveData<DetailScheduleResponseModel> get() = _detailSchedule
 
+    private val _shareId = MutableLiveData<String>()
+    val shareId: LiveData<String> get() = _shareId
+
+    private val _meetDate = MutableLiveData<String>()
+    val meetDate: LiveData<String> get() = _meetDate
+
     fun getDetailSchedule(checklistId: Int) {
         viewModelScope.launch {
             scheduleRepository.getDetailSchedule(checklistId).onSuccess { response ->
                 _detailSchedule.value = response
                 _scheduleId.value = response.scheduleId
+                _shareId.value = response.shareId?:""
+                _meetDate.value = response.meetDate
+                Log.d("ScheduleViewModel", "${shareId},${meetDate}")
                 Log.d("ScheduleViewModel", scheduleId.value.toString())
             }.onFailure { error ->
                 Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
