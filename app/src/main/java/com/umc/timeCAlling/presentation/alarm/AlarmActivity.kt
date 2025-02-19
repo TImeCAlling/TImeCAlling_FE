@@ -20,6 +20,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.semantics.text
 import androidx.core.content.ContextCompat
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityAlarmBinding
@@ -72,6 +73,12 @@ class AlarmActivity : AppCompatActivity() {
         val hourOfDay = intent.getIntExtra("hourOfDay", 0)
         val minute = intent.getIntExtra("minute", 0)
 
+        // Intent에서 FCM data payload 가져오기
+        val fcmTitle = intent.getStringExtra("title")
+        val fcmBody = intent.getStringExtra("body")
+        val fcmScheduledDate = intent.getStringExtra("scheduledDate")
+        val fcmSenderNickname = intent.getStringExtra("senderNickname")
+
         // 다른 앱 위에 윈도우 표시
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             window.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
@@ -96,6 +103,17 @@ class AlarmActivity : AppCompatActivity() {
         alarmTitleTextView.text = "'${alarmName}' 님의 알람" // 예시 텍스트
         alarmContentTextView.text = "김콜링님이 빨리 일어나라고 했어" // 예시 텍스트
         alarmContent2TextView.text = "준비 끝났지?" // 예시 텍스트
+
+        // TextView에 추가 텍스트 설정 (FCM data payload)
+        if (fcmTitle != null && fcmBody != null && fcmScheduledDate != null && fcmSenderNickname != null) {
+            alarmTitleTextView.text = "'${fcmTitle}'" // 예시 텍스트
+            alarmContentTextView.text = "${fcmSenderNickname}님이 빨리 일어나라고 했어" // 예시 텍스트
+            alarmContent2TextView.text = "${fcmBody}" // 예시 텍스트
+        } else {
+            alarmTitleTextView.text = "'${alarmName}' 님의 알람" // 예시 텍스트
+            alarmContentTextView.text = "김콜링님이 빨리 일어나라고 했어" // 예시 텍스트
+            alarmContent2TextView.text = "준비 끝났지?" // 예시 텍스트
+        }
 
         // 알람 끄기 버튼 클릭 리스너
         alarmStopImageView.setOnClickListener {
