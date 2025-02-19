@@ -9,6 +9,7 @@ import com.umc.timeCAlling.data.dto.response.mypage.GetUserResponseDto
 import com.umc.timeCAlling.data.dto.response.mypage.LogoutUserResponseDto
 import com.umc.timeCAlling.data.dto.response.mypage.UpdateUserResponseDto
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -25,7 +26,7 @@ interface MypageService {
     @PUT("/api/users")
     suspend fun updateUser(
         @Part profileImage: MultipartBody.Part?,
-        @Part("request") request: UpdateUserRequestDto
+        @Part("userUpdateDTO") requestBody: RequestBody
     ): BaseResponse<UpdateUserResponseDto>
 
     @DELETE("/api/users")

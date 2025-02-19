@@ -53,45 +53,17 @@
             android:background="@color/mint_300"/>
 
         <!-- 사진 -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_myprofile_photo"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintWidth_percent="0.337"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_myprofile_photo"
+            android:layout_width="138dp"
+            android:layout_height="138dp"
+            android:background="@drawable/shape_rect_999_white_fill"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topbar"
             android:layout_marginBottom="40dp"
             android:layout_marginTop="47dp"
-            android:visibility="visible">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_myprofile_oval_edit"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/mint_300"
-                app:layout_constraintWidth_percent="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:scaleType="centerCrop"/>
-
-            <ImageView
-                android:id="@+id/iv_myprofile_face"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_face"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintWidth_percent="0.56"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:visibility="visible"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:scaleType="centerCrop"/>
 
         <!-- 카메라 버튼 -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -100,8 +72,8 @@
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_percent="0.1"
-            app:layout_constraintEnd_toEndOf="@id/cl_myprofile_photo"
-            app:layout_constraintBottom_toBottomOf="@id/cl_myprofile_photo"
+            app:layout_constraintEnd_toEndOf="@id/iv_myprofile_photo"
+            app:layout_constraintBottom_toBottomOf="@id/iv_myprofile_photo"
             android:visibility="visible">
 
             <ImageView
@@ -137,7 +109,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_myprofile_photo"
+            app:layout_constraintTop_toBottomOf="@id/iv_myprofile_photo"
             android:layout_marginTop="30dp">
 
             <TextView

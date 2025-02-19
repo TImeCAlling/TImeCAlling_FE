@@ -9,6 +9,7 @@ import com.umc.timeCAlling.data.dto.response.mypage.LogoutUserResponseDto
 import com.umc.timeCAlling.data.dto.response.mypage.UpdateUserResponseDto
 import com.umc.timeCAlling.data.service.MypageService
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class MypageDataSourceImpl @Inject constructor(
@@ -17,8 +18,8 @@ class MypageDataSourceImpl @Inject constructor(
     override suspend fun getUser(): BaseResponse<GetUserResponseDto> =
         mypageService.getUser()
 
-    override suspend fun updateUser(profileImage: MultipartBody.Part?, requestDto: UpdateUserRequestDto): BaseResponse<UpdateUserResponseDto> =
-        mypageService.updateUser(profileImage, requestDto)
+    override suspend fun updateUser(profileImage: MultipartBody.Part?, requestBody: RequestBody): BaseResponse<UpdateUserResponseDto> =
+        mypageService.updateUser(profileImage, requestBody)
 
     override suspend fun deleteUser(): BaseResponse<DeleteUserResponseDto> =
         mypageService.deleteUser()

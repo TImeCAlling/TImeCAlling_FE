@@ -18,12 +18,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.databinding.adapters.ViewBindingAdapter.setClickListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -129,15 +127,14 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                             }
 
                             if (user.profileImage.isNullOrEmpty()) {
-                                binding.ivMyprofileOvalEdit.setImageResource(R.drawable.shape_rect_999_trans_fill)
-                                binding.ivMyprofileOvalEdit.visibility = View.VISIBLE
+                                binding.ivMyprofilePhoto.setImageResource(R.drawable.shape_rect_999_trans_fill)
+                                binding.ivMyprofilePhoto.visibility = View.VISIBLE
                             } else {
                                 Glide.with(this@MyprofileFragment)
                                     .load(user.profileImage)
-                                    .placeholder(R.drawable.shape_rect_999_trans_fill)
-                                    .error(R.drawable.shape_rect_999_trans_fill)
-                                    .into(binding.ivMyprofileOvalEdit)
-                                binding.ivMyprofileOvalEdit.visibility = View.INVISIBLE
+                                    .placeholder(R.drawable.shape_rect_999_white_fill)
+                                    .error(R.drawable.ic_profile_default_default)
+                                    .into(binding.ivMyprofilePhoto)
                             }
                         }
                         is UiState.Error -> {
@@ -375,8 +372,31 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
 
     // updateUser() 호출
     private fun updateUserProfile() {
-        myprofileViewModel.updateUser(nickname, avgPrepTime, freeTime, imageFile)
+        val updatedNickname = if (nickname != binding.tvMyprofileCurrentName.text.toString()) {
+            binding.tvMyprofileCurrentName.text.toString()
+        } else null
+
+        val updatedAvgPrepTime = if (avgPrepTime != binding.tvMyprofileTimeEdit.text.toString().toInt()) {
+            binding.tvMyprofileTimeEdit.text.toString().toInt()
+        } else null
+
+        val updatedFreeTime = if (freeTime != binding.tvMyprofileSpareEdit.text.toString()) {
+            when (binding.tvMyprofileSpareEdit.text.toString()) {
+                "여유" -> "PLENTY"
+                "넉넉" -> "RELAXED"
+                "딱딱" -> "TIGHT"
+                else -> null
+            }
+        } else null
+
+        myprofileViewModel.updateUser(
+            updatedNickname,
+            updatedAvgPrepTime,
+            updatedFreeTime,
+            imageFile
+        )
     }
+
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -387,8 +407,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         if (result.resultCode == androidx.fragment.app.FragmentActivity.RESULT_OK) {
             selectedImageUri = result.data?.data
             if (selectedImageUri != null) {
-                binding.ivMyprofileOvalEdit.setImageURI(selectedImageUri)
-                binding.ivMyprofileFace.visibility = View.INVISIBLE
+                binding.ivMyprofilePhoto.setImageURI(selectedImageUri)
                 isPhotoSelected = true
 
                 imageFile = uriToFile(selectedImageUri!!, requireContext()) // 전역 변수 업데이트

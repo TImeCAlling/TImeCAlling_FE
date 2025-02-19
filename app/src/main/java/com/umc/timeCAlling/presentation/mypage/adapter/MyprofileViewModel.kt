@@ -29,6 +29,8 @@ class MyprofileViewModel @Inject constructor(
     private val _userInfo = MutableStateFlow<UiState<GetUserResponseModel>>(UiState.Loading)
     val userInfo: StateFlow<UiState<GetUserResponseModel>> = _userInfo.asStateFlow()
 
+    private var currentProfileImageUrl: String? = null
+
     private val _updateState = MutableStateFlow<UiState<Boolean>>(UiState.Empty)
     val updateState: StateFlow<UiState<Boolean>> = _updateState.asStateFlow()
 
@@ -45,6 +47,7 @@ class MyprofileViewModel @Inject constructor(
                 .onSuccess { user ->
                     Log.d("MyprofileViewModel", "getUser() 성공: $user")
                     _userInfo.value = UiState.Success(user)
+                    currentProfileImageUrl = user.profileImage
                 }
                 .onFailure { exception ->
                     Log.e("MyprofileViewModel", "getUser() 실패: ${exception.message}\n${exception.stackTraceToString()}")
@@ -53,25 +56,26 @@ class MyprofileViewModel @Inject constructor(
         }
     }
 
-    fun updateUser(nickname: String, avgPrepTime: Int, freeTime: String, imageFile: File?) {
+    fun updateUser(nickname: String?, avgPrepTime: Int?, freeTime: String?, imageFile: File?) {
+        val (imagePart, updateUserRequestModel) = createMultipartRequest(nickname, avgPrepTime, freeTime, imageFile)
+
         viewModelScope.launch {
-            val updateUserRequest = UpdateUserRequestModel(nickname, avgPrepTime, freeTime)
-
-            val profileImage = imageFile?.let {
-                val requestFile = it.asRequestBody("image/*".toMediaTypeOrNull())
-                MultipartBody.Part.createFormData("profileImage", it.name, requestFile)
-            }
-
-            mypageRepository.updateUser(profileImage, updateUserRequest)
+            _updateState.value = UiState.Loading
+            mypageRepository.updateUser(imagePart, updateUserRequestModel)
                 .onSuccess {
                     Log.d("MyprofileViewModel", "updateUser() 성공")
-                    getUser() // 업데이트 후 최신 정보 불러오기
+                    _updateState.value = UiState.Success(true)
+
+                    currentProfileImageUrl = imageFile?.absolutePath ?: currentProfileImageUrl
+                    // getUser() // 업데이트 후 최신 정보 다시 가져오기
                 }
                 .onFailure { exception ->
                     Log.e("MyprofileViewModel", "updateUser() 실패: ${exception.message}\n${exception.stackTraceToString()}")
+                    _updateState.value = UiState.Error(exception)
                 }
         }
     }
+
 
     fun deleteUser() {
         viewModelScope.launch {
@@ -104,15 +108,19 @@ class MyprofileViewModel @Inject constructor(
     }
 
     private fun createMultipartRequest(
-        nickname: String,
-        avgPrepTime: Int,
-        freeTime: String,
+        nickname: String?,
+        avgPrepTime: Int?,
+        freeTime: String?,
         imageFile: File?
     ): Pair<MultipartBody.Part?, RequestBody> {
         val userUpdateJson = JSONObject().apply {
-            put("nickname", nickname)
-            put("avgPrepTime", avgPrepTime)
-            put("freeTime", freeTime)
+            put("nickname", nickname ?: JSONObject.NULL) // ✅ 명시적 null 값 포함
+            put("avgPrepTime", avgPrepTime ?: JSONObject.NULL) // ✅ 명시적 null 값 포함
+            put("freeTime", freeTime ?: JSONObject.NULL) // ✅ 명시적 null 값 포함
+
+            if (imageFile == null) {
+                put("profileImage", currentProfileImageUrl ?: JSONObject.NULL)
+            }
         }.toString()
 
         val userUpdateRequestBody = userUpdateJson.toRequestBody("application/json".toMediaTypeOrNull())
@@ -124,5 +132,7 @@ class MyprofileViewModel @Inject constructor(
 
         return Pair(imagePart, userUpdateRequestBody)
     }
+
+
 }
 
