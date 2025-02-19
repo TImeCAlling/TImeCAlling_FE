@@ -1,12 +1,19 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
+import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import androidx.compose.ui.semantics.text
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -19,6 +26,7 @@ import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import kotlin.text.contains
 import kotlin.text.format
 import kotlin.text.substring
 
@@ -193,13 +201,14 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 binding.ivAddScheduleDateArrow.visibility = View.VISIBLE
 
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
+                binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
                 viewModel.setScheduleDate(formattedDate!!)
             }
         }
 
-        // 이미지 클릭 리스너
         binding.layoutAddScheduleDate.setOnClickListener {
+            hideKeyboard(view ?: binding.root)
             if (dateBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 시간 BottomSheet 숨기기
@@ -261,12 +270,13 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             binding.ivAddScheduleTimeArrow.visibility = View.VISIBLE
 
             timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
+            binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
             viewModel.setScheduleTime(formattedTime)
         }
 
-        // 이미지 클릭 리스너
         binding.layoutAddScheduleTime.setOnClickListener {
+            hideKeyboard(view ?: binding.root)
             if (timeBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -280,13 +290,10 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         timeBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // binding 객체가 null이 아닌지 확인
-                if (_binding != null) {
-                    if (slideOffset <= 0) {
-                        binding.viewBottomSheetBackground.visibility = View.INVISIBLE
-                    } else if (slideOffset > 0) {
-                        binding.viewBottomSheetBackground.visibility = View.VISIBLE
-                    }
+                if (slideOffset <= 0) {
+                    binding.viewBottomSheetBackground.visibility = View.INVISIBLE
+                } else if (slideOffset > 0) {
+                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
                 }
             }
 
@@ -298,7 +305,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     private fun initScheduleName(){
         binding.etAddScheduleName.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10)) // 최대 글자 수 10글자로 제한
-
+        binding.etAddScheduleName.imeOptions = EditorInfo.IME_ACTION_DONE
+        binding.etAddScheduleName.setSingleLine()
         binding.etAddScheduleName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // 텍스트 변경 전
@@ -315,10 +323,23 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 // 텍스트 변경 후
             }
         })
+        // 엔터 키 이벤트 처리
+        binding.etAddScheduleName.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                hideKeyboard(v)
+                true // 이벤트 처리 완료
+            } else {
+                false // 이벤트 처리 실패
+            }
+        }
     }
 
     private fun initScheduleMemo(){
         binding.etAddScheduleMemo.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20)) // 최대 글자 수 10글자로 제한
+        // imeOptions 설정
+        binding.etAddScheduleMemo.imeOptions = EditorInfo.IME_ACTION_DONE
+        // singleLine 설정
+        binding.etAddScheduleMemo.setSingleLine()
 
         binding.etAddScheduleMemo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -334,6 +355,15 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             override fun afterTextChanged(s: Editable?) {
             }
         })
+        // 엔터 키 이벤트 처리
+        binding.etAddScheduleMemo.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                hideKeyboard(v)
+                true // 이벤트 처리 완료
+            } else {
+                false // 이벤트 처리 실패
+            }
+        }
     }
 
     private fun moveToLocationSearch() {
@@ -382,5 +412,9 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 )
             }
         }else{ binding.tvAddScheduleNext.isEnabled = false }
+    }
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

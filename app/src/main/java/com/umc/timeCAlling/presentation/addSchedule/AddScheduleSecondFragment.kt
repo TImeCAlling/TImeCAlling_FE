@@ -430,20 +430,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
         val categoryBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (isAdded && viewLifecycleOwner.lifecycle.currentState.isAtLeast(
-                        Lifecycle.State.INITIALIZED
-                    )
-                ) {
-                    if (slideOffset <= 0) {
-                        binding.viewBottomSheetBackground.visibility =
-                            View.INVISIBLE
-                    } else if (slideOffset > 0) {
-                        binding.viewBottomSheetBackground.visibility = View.VISIBLE
-                    }
+                if (slideOffset <= 0) {
+                    binding.viewBottomSheetBackground.visibility =
+                        View.INVISIBLE
+                } else if (slideOffset > 0) {
+                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
                 }
             }
-
-
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 
             }
