@@ -10,6 +10,6 @@ import javax.inject.Inject
 class ChecklistDataSourceImpl @Inject constructor(
     private val checklistService: ChecklistService
 ) : ChecklistDataSource {
-    override suspend fun updateChecklist(requestDto: UpdateChecklistRequestDto): BaseResponse<UpdateChecklistResponseDto> =
-        checklistService.updateChecklist(request = requestDto)
+    override suspend fun updateChecklist(scheduleId: Int, requestDto: UpdateChecklistRequestDto): BaseResponse<UpdateChecklistResponseDto> =
+        checklistService.updateChecklist(scheduleId = scheduleId,request = requestDto)
 }

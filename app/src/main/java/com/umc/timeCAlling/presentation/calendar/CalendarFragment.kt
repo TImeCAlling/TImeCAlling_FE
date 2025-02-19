@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.Window
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
@@ -19,6 +20,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
@@ -28,7 +30,6 @@ import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponse
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.calendar.adapter.DetailScheduleRVA
-import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -44,7 +45,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var scheduleId : Int = 0
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
     private val adapter : DetailScheduleRVA by lazy {
-        DetailScheduleRVA()
+        DetailScheduleRVA(scheduleViewModel, viewLifecycleOwner)
     }
     private val wakeupViewModel: WakeupViewModel by activityViewModels()
 
@@ -287,8 +288,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 initDetailScheduleBottomSheet(schedule)
             }
 
-
-
             binding.ivDetailMore.setOnClickListener {
                 val theme = ContextThemeWrapper(requireContext(), R.style.PopupMenuItemStyle)
                 val popup = PopupMenu(
@@ -340,6 +339,28 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     }
 
     private fun initDetailScheduleBottomSheet(schedule: DetailScheduleResponseModel) {
+        scheduleViewModel.getScheduleUsers(schedule.scheduleId)
+        scheduleViewModel.getUser()
+        scheduleViewModel.user.observe(viewLifecycleOwner) {user ->
+            binding.layoutDetailMembers.removeAllViews()
+            val inflater = layoutInflater
+            val profile: View = inflater.inflate(R.layout.item_detail_schedule_member, binding.layoutDetailMembers, false)
+            val profileImage = profile.findViewById<ImageView>(R.id.img_detail_schedule_member)
+
+            Glide.with(requireContext())
+                .load(user.profileImage)
+                .into(profileImage)
+
+            binding.layoutDetailMembers.addView(profile)
+            scheduleViewModel.scheduleUsers.observe(viewLifecycleOwner) { scheduleUsers ->
+                if (scheduleUsers.isEmpty()) {
+                    //do nothing yet
+                } else {
+                    //do nothing yet
+                }
+            }
+        }
+
         val meetTime = schedule.meetTime
         val parsedTime = parseTimeString(meetTime)
         if (parsedTime != null) {

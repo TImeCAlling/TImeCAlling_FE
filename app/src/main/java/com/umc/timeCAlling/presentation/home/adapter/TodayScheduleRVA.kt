@@ -10,7 +10,6 @@ import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleBinding
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
-import com.umc.timeCAlling.presentation.home.TodaySchedule
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -77,9 +76,6 @@ class TodayScheduleRVA(
 
         holder.itemView.setOnClickListener {
             onItemClick.invoke(items[position])
-        }
-        holder.more.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "${items[position].name} Clicked", Toast.LENGTH_SHORT).show()
         }
     }
 

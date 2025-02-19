@@ -64,14 +64,14 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/mint_300"
                         app:cardCornerRadius="999dp">
 
                         <ImageView
                             android:id="@+id/iv_mypage_pic"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_mypage_face"/>
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:src="@drawable/img_schedules_profile1"
+                            android:scaleType="centerCrop"/>
 
                     </androidx.cardview.widget.CardView>
 

@@ -2,11 +2,13 @@ package com.umc.timeCAlling.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.umc.timeCAlling.data.datasource.ChecklistDataSource
 import com.umc.timeCAlling.data.datasource.AlarmDataSource
 import com.umc.timeCAlling.data.datasource.LoginDataSource
 import com.umc.timeCAlling.data.datasource.MypageDataSource
 import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.data.datasource.TmapDataSource
+import com.umc.timeCAlling.data.datasourceImpl.ChecklistDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.AlarmDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.LoginDataSourceImpl
 import com.umc.timeCAlling.data.datasourceImpl.MypageDataSourceImpl
@@ -44,6 +46,10 @@ object DataSourceModule {
     @Provides
     @Singleton
     fun provideMypageDataSource(mypageDataSourceImpl: MypageDataSourceImpl):MypageDataSource = mypageDataSourceImpl
+
+    @Provides
+    @Singleton
+    fun provideChecklistDataSource(checklistDataSourceImpl: ChecklistDataSourceImpl):ChecklistDataSource = checklistDataSourceImpl
 
     @Provides
     @Singleton

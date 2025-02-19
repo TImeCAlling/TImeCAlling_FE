@@ -5,10 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.umc.timeCAlling.domain.model.response.mypage.GetUserResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
+import com.umc.timeCAlling.domain.repository.MypageRepository
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
 import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupPeopleRVA
 import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupViewModel
@@ -20,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
-    private val scheduleRepository: ScheduleRepository
+    private val scheduleRepository: ScheduleRepository,
+    private val mypageRepository: MypageRepository
 ) : ViewModel() {
 
     private val _schedules = MutableLiveData<List<ScheduleByDateResponseModel>>()
@@ -104,6 +107,20 @@ class ScheduleViewModel @Inject constructor(
                 _meetDate.value = response.meetDate
                 Log.d("ScheduleViewModel", "${shareId},${meetDate}")
                 Log.d("ScheduleViewModel", scheduleId.value.toString())
+            }.onFailure { error ->
+                Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
+            }
+        }
+    }
+
+    private val _user = MutableLiveData<GetUserResponseModel>()
+    val user: LiveData<GetUserResponseModel> get() = _user
+
+    fun getUser() {
+        viewModelScope.launch {
+            mypageRepository.getUser().onSuccess { response ->
+                _user.value = response
+                Log.d("ScheduleViewModel", "유저 정보 ㅣ ${response.toString()}")
             }.onFailure { error ->
                 Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
             }
