@@ -10,6 +10,7 @@ import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentSignupSpareBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.login.adapter.SignupViewModel
+import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,7 +50,7 @@ class SignupSpareFragment :
         }
 
         // 다음 버튼 클릭
-        binding.tvSignupSpareNext.setOnClickListener {
+        binding.tvSignupSpareNext.setOnSingleClickListener {
             val selectedFreeTimeText = getSelectedFreeTime()
             Log.d("SignupSpareFragment", "선택된 여유시간: $selectedFreeTimeText") // 로그 추가
 

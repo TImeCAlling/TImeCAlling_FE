@@ -65,6 +65,7 @@ class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding
         binding.tvAddScheduleSuccessNext.setOnClickListener {
             viewModel.resetData()
             findNavController().navigate(R.id.action_addScheduleSuccessFragment_to_homeFragment)
+            scheduleId = -1
         }
     }
 

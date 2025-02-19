@@ -8,19 +8,27 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentCheckListBinding
+import com.umc.timeCAlling.domain.model.request.checklist.UpdateChecklistRequestModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import org.threeten.bp.LocalTime
+import org.threeten.bp.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class CheckListFragment: BaseFragment<FragmentCheckListBinding>(R.layout.fragment_check_list) {
-    private lateinit var args : CheckListFragmentArgs
 
+    private val viewModel : CheckListViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
+    private lateinit var args : CheckListFragmentArgs
     private var questionIndex = 0
     private var selectedIndex: Int? = null
+    private lateinit var userAnswer: UpdateChecklistRequestModel
     private var userAnswers: String = ""
     private val questions = listOf(
         QuestionItem(
@@ -48,6 +56,7 @@ class CheckListFragment: BaseFragment<FragmentCheckListBinding>(R.layout.fragmen
             answers = listOf("네", "아니요")
         ),
     )
+    private var request = UpdateChecklistRequestModel()
 
     override fun initView() {
         args = CheckListFragmentArgs.fromBundle(requireArguments())
@@ -103,25 +112,67 @@ class CheckListFragment: BaseFragment<FragmentCheckListBinding>(R.layout.fragmen
             if(selectedIndex == null) {
                 Toast.makeText(requireContext(), "답변을 선택해주세요.", Toast.LENGTH_SHORT).show()
             } else {
+                setRequestModelParameter(questionIndex, selectedIndex!!)
+
                 if(questionIndex == 0 && selectedIndex == 1) {
                     questionIndex++
                 }
-                if(questionIndex == 1) {questionIndex++}
+                else if(questionIndex == 1) questionIndex++
+
                 binding.progressindicatorCheckList.progress += 20
-                userAnswers += questions[questionIndex].answers[selectedIndex!!] + ", "
+
                 if(questionIndex < questions.size - 1) {
                     questionIndex++
                     showQuestion(questionIndex)
                 } else {
-                    Log.d("userAnswers", userAnswers)
+                    Log.d("CheckListFragment", request.toString())
                     val idx = args.scheduleIndex
-                    val action = CheckListFragmentDirections.actionCheckListFragmentToCheckListResultFragment(idx)
-                    findNavController().navigate(action)
+                    viewModel.updateChecklist(idx, request)
+
+                    viewModel.checkListId.observe(viewLifecycleOwner) { id ->
+                        homeViewModel.addDeletedItem(id)
+                        val action = CheckListFragmentDirections.actionCheckListFragmentToCheckListResultFragment(idx)
+                        findNavController().navigate(action)
+                    }
                 }
             }
         }
     }
 
+    private fun setRequestModelParameter(questionIndex: Int, selectedIndex: Int) {
+        when(questionIndex) {
+            0 -> request.isSuccess = selectedIndex == 0
+            1 -> request.spare = when(selectedIndex) {
+                0 -> "10분 이상"
+                1 -> "5뷴 ~ 10분"
+                2 -> "거의 정시"
+                else -> ""
+            }
+            2 -> request.late = when(selectedIndex) {
+                0 -> "5분 미만"
+                1 -> "5분 ~ 10분"
+                2 -> "10분 이상"
+                else -> ""
+            }
+            3 -> request.reason = when(selectedIndex) {
+                0 -> "교통 체증"
+                1 -> "늦게 출발"
+                2 -> "길을 잘못 찾음"
+                3 -> "일찍 출발"
+                4 -> "교통상황 원활"
+                5 -> "목적지와 가까움"
+                else -> ""
+            }
+            4 -> request.externals = when(selectedIndex) {
+                0 -> "날씨"
+                1 -> "교통상황"
+                2 -> "예상치 못한 개인 사정"
+                3 -> "기타"
+                else -> ""
+            }
+            5 -> request.isFit = selectedIndex == 0
+        }
+    }
     private fun showQuestion(index : Int) {
         selectedIndex = null
         val questionItem = questions[index]

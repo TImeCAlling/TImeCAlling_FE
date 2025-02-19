@@ -10,30 +10,30 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.Window
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentCalendarBinding
+import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
-import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
-import com.umc.timeCAlling.util.extension.viewLifeCycle
+import com.umc.timeCAlling.presentation.calendar.adapter.DetailScheduleRVA
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
-import timber.log.Timber
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -45,8 +45,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var scheduleId : Int = 0
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
     private val adapter : DetailScheduleRVA by lazy {
-        DetailScheduleRVA()
+        DetailScheduleRVA(scheduleViewModel, viewLifecycleOwner)
     }
+    private val wakeupViewModel: WakeupViewModel by activityViewModels()
 
     override fun initView() {
         initDetailScheduleRVA()
@@ -55,13 +56,17 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         bottomNavigationShow()
 
         binding.layoutDetailMembers.setOnClickListener {
-            findNavController().navigate(R.id.action_calendarFragment_to_wakeupFragment)
+            val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
+            findNavController().navigate(R.id.action_calendarFragment_to_wakeupFragment, bundle)
         }
 
     }
 
     override fun initObserver() {
-
+        scheduleViewModel.scheduleId.observe(viewLifecycleOwner) { newScheduleId ->
+        scheduleId = newScheduleId ?: 0
+        Log.d("CalendarFragment", "scheduleId updated: $scheduleId")
+    }
     }
 
     private fun initBottomSheet() {
@@ -254,7 +259,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             } else {
                 binding.layoutNoSchedule.visibility = View.GONE
                 binding.rvCalendarDetailSchedule.visibility = View.VISIBLE
-                adapter.setScheduleList(scheduleList = scheduleList as ArrayList<ScheduleByDateResponseModel>)
+                adapter.setScheduleList(scheduleList = scheduleList)
                 Log.d("CalendarFragment", "오늘 일정에 추가됐음!!!")
             }
         }
@@ -269,30 +274,19 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             }
         }
 
-        //이 부분은 나중에 상세일정조회 api와 연결 후 수정하겠습니다
         adapter.onItemClick = { schedule ->
+            scheduleViewModel.getDetailSchedule(schedule.checkListId)
             bottomNavigationRemove() // 아이템 클릭 시 BottomNavigationView 숨기기
             behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
-            binding.tvDetailTitle.text = schedule.name
-            binding.tvDetailTimeType.text = "오전"    //나중에 수정!!
-            binding.tvDetailTime.text = schedule.meetTime
-            binding.tvDetailCategory.text = schedule.categories[0].categoryName
-            binding.tvDetailRepeatInfo.text = if(schedule.repeatDays == null) {"반복 안함"} else { schedule.repeatDays[0] }
+            scheduleViewModel.detailSchedule.observe(viewLifecycleOwner) { schedule ->
 
-            /*if (list[position].memberCount >= 4) {
-                binding.layoutDetailExtraMembers.visibility = View.VISIBLE
-                binding.tvDetailExtraMembers.text = "+${list[position].memberCount - 3}"
-                val marginEndInDp = -12
-                binding.cvDetailMemberThird.layoutParams = (binding.cvDetailMemberThird.layoutParams as MarginLayoutParams).apply {
-                    marginEnd = requireContext().toPx(marginEndInDp).toInt()
-                }
-            } else {
-                binding.layoutDetailExtraMembers.visibility = View.GONE
-                binding.cvDetailMemberThird.layoutParams = (binding.cvDetailMemberThird.layoutParams as MarginLayoutParams).apply {
-                    marginEnd = 0
-                }
-            }*/
+                wakeupViewModel.setScheduledDate(scheduleViewModel.meetDate.value?:"")
+                wakeupViewModel.setSharedId(scheduleViewModel.shareId.value?:"")
+                Log.d("DetailSchedule", schedule.toString())
+
+                initDetailScheduleBottomSheet(schedule)
+            }
 
             binding.ivDetailMore.setOnClickListener {
                 val theme = ContextThemeWrapper(requireContext(), R.style.PopupMenuItemStyle)
@@ -329,8 +323,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                     when (menuItem.itemId) {
                         R.id.popup_edit -> {
                             val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
-                            navController.navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
-                            Toast.makeText(requireContext(), "수정하기", Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
                             true
                         }
                         R.id.popup_delete -> {
@@ -342,6 +335,117 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 }
                 popup.show()
             }
+        }
+    }
+
+    private fun initDetailScheduleBottomSheet(schedule: DetailScheduleResponseModel) {
+        scheduleViewModel.getScheduleUsers(schedule.scheduleId)
+        scheduleViewModel.getUser()
+        scheduleViewModel.user.observe(viewLifecycleOwner) {user ->
+            binding.layoutDetailMembers.removeAllViews()
+            val inflater = layoutInflater
+            val profile: View = inflater.inflate(R.layout.item_detail_schedule_member, binding.layoutDetailMembers, false)
+            val profileImage = profile.findViewById<ImageView>(R.id.img_detail_schedule_member)
+
+            Glide.with(requireContext())
+                .load(user.profileImage)
+                .into(profileImage)
+
+            binding.layoutDetailMembers.addView(profile)
+            scheduleViewModel.scheduleUsers.observe(viewLifecycleOwner) { scheduleUsers ->
+                if (scheduleUsers.isEmpty()) {
+                    //do nothing yet
+                } else {
+                    //do nothing yet
+                }
+            }
+        }
+
+        val meetTime = schedule.meetTime
+        val parsedTime = parseTimeString(meetTime)
+        if (parsedTime != null) {
+            val (hours, minutes) = parsedTime
+            val formattedHours = if (hours == 0) 12 else if (hours > 12) hours - 12 else hours
+            val formattedMinutes = String.format("%02d", minutes)
+
+            binding.tvDetailTimeType.text = if (hours < 12) "오전" else "오후"
+            binding.tvDetailTime.text =
+                "${String.format("%02d", formattedHours)}:${formattedMinutes}"
+        }
+
+        binding.tvDetailTitle.text = schedule.name
+        binding.tvDetailDesc.text = schedule.body
+        binding.tvDetailDate.text = schedule.meetDate
+        binding.tvDetailPlace.text = schedule.place
+        binding.tvDetailHour.text =
+            if (schedule.moveTime >= 60) (schedule.moveTime / 60).toString() else "0"
+        binding.tvDetailMinute.text =
+            if (schedule.moveTime >= 60) (schedule.moveTime % 60).toString() else schedule.moveTime.toString()
+
+        binding.tvDetailType.text = freeTimeConverter(schedule.freeTime)
+
+        if (schedule.repeatDays != null && schedule.start != null && schedule.end != null) {
+            binding.tvDetailRepeatInfo.text = repeatDaysToKo(schedule.repeatDays)
+            binding.tvDetailStart.text = schedule.start
+            binding.tvDetailEnd.text = schedule.end
+            binding.layoutDetailWhenRepeatExist.visibility = View.VISIBLE
+        } else {
+            binding.tvDetailRepeatInfo.text = "반복 안함"
+            binding.layoutDetailWhenRepeatExist.visibility = View.GONE
+        }
+
+        binding.tvDetailCategory.text = schedule.categories[0].categoryName
+    }
+
+    private fun parseTimeString(timeString: String): Pair<Int, Int>? {
+        // 입력 문자열이 유효한 형식인지 확인
+        if (!timeString.matches(Regex("\\d{2}:\\d{2}"))) {
+            return null
+        }
+        val parts = timeString.split(":")
+        if (parts.size != 2) {
+            return null
+        }
+
+        val hours = parts[0].toIntOrNull()
+        val minutes = parts[1].toIntOrNull()
+
+        // 변환 실패 시 null 반환
+        if (hours == null || minutes == null) {
+            return null
+        }
+
+        return Pair(hours, minutes)
+    }
+
+    private fun dayConverter(day: String): String {
+        when(day) {
+            "MONDAY" -> return "월"
+            "TUESDAY" -> return "화"
+            "WEDNESDAY" -> return "수"
+            "THURSDAY" -> return "목"
+            "FRIDAY" -> return "금"
+            "SATURDAY" -> return "토"
+            "SUNDAY" -> return "일"
+            else -> return ""
+        }
+    }
+
+    private fun repeatDaysToKo(repeatDays: List<String>): String {
+        var koDays = ""
+        if(repeatDays.size == 7) koDays = "매일"
+        else {
+            koDays = repeatDays.map { dayConverter(it) }.joinToString(", ")
+        }
+        return koDays + " 반복"
+    }
+
+    private fun freeTimeConverter(freeTime: String) : String {
+        return when(freeTime) {
+            "TIGHT" -> "딱딱"
+            "RELAXED" -> "여유"
+            "PLENTY" -> "넉넉"
+            else -> ""
         }
     }
 

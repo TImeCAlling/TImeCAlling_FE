@@ -38,6 +38,10 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
 
     private val maxRecentSearches = 10 // 최대 검색어 개수
 
+
+    private val _alarmId = MutableLiveData<Int>()
+    val alarmId: LiveData<Int> get() = _alarmId
+    
     //일정 생성 값
     private val _scheduleName = MutableLiveData<String>()
     val scheduleName : LiveData<String> = _scheduleName
@@ -96,9 +100,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     private val _repeatDates = MutableLiveData<MutableList<String>>(mutableListOf()) // MutableList 사용
     val repeatDates: LiveData<MutableList<String>> = _repeatDates // LiveData 타입 변경
 
-    fun setRepeatDates(dates: List<String>) {
-        _repeatDates.value?.addAll(dates) // 기존 리스트에 추가
-        _repeatDates.value = _repeatDates.value // LiveData 값 업데이트
+    fun setRepeatDates(dates: List<String>?) {
+        _repeatDates.value = dates?.toMutableList() ?: mutableListOf()
     }
 
     private val _isRepeat = MutableLiveData<Boolean>()
@@ -156,6 +159,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
     }
     init {
         _recentSearches.value = loadRecentSearches() // 초기화 시 로드
+        _alarmId.value = spf.getInt("alarmId", 0) // SharedPreferences에서 alarmId 로드, 없으면 0으로 초기화
     }
 
     fun setMode(m: String) { mode = m }
@@ -336,8 +340,8 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                 _locationLatitude.value = it.latitude
                 _repeatDates.value = repeatDates.value
                 _isRepeat.value = it.isRepeat
-                _startDate.value = it.start
-                _endDate.value = it.end
+                _startDate.value = it.start?:""
+                _endDate.value = it.end?:""
                 Log.d("sharedSchedule isRepeat", "${it.isRepeat}")
             }.onFailure {
                 Log.e("sharedSchedule", "API 호출 실패: $it")
@@ -349,7 +353,7 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         viewModelScope.launch {
             val request = ScheduleRequestModel(
                 name = scheduleName.value ?: "",
-                body = scheduleMemo.value ?: "",
+                body = if (scheduleMemo.value.isNullOrEmpty()) null else scheduleMemo.value,
                 meetDate = scheduleDate.value ?: "",
                 meetTime = scheduleTime.value ?: "",
                 place = selectedLocationName.value ?: "",
@@ -357,10 +361,10 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
                 latitude = locationLatitude.value ?: "",
                 moveTime = moveTime.value ?: 0,
                 freeTime = freeTime.value ?: "TIGHT",
-                repeatDays = repeatDates.value ?: emptyList(),
+                repeatDays = if (isRepeat.value == true) repeatDates.value else null,
                 isRepeat =  isRepeat.value ?: false,
-                start = startDate.value ?: "",
-                end = endDate.value ?: "",
+                start = if (startDate.value.isNullOrEmpty()) null else startDate.value,
+                end = if (endDate.value.isNullOrEmpty()) null else endDate.value,
                 categories =  listOf(CategoriesRequestModel(categoryName.value ?: "", categoryColor.value ?: 0))
             )
             Log.d("","${request}")
@@ -390,4 +394,14 @@ class AddScheduleViewModel @Inject constructor( // @Inject : 의존성 주입을
         _categoryName.value = ""
         _categoryColor.value = 0
     }
+
+    fun incrementScheduleId() {
+        val exAlarmId = _alarmId.value ?: 0
+        _alarmId.value = exAlarmId + 1
+        with(spf.edit()) {
+            putInt("alarmId", exAlarmId + 1)
+            apply()
+        }
+    }
+
 }

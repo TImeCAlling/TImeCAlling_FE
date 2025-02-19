@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.material3.AlertDialog
 import androidx.compose.ui.semantics.dismiss
@@ -19,6 +20,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.umc.timeCAlling.R
@@ -26,15 +28,19 @@ import com.umc.timeCAlling.TopSheetBehavior
 import com.umc.timeCAlling.databinding.DialogScheduleShareBinding
 import com.umc.timeCAlling.databinding.DialogWakeupShareBinding
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
+import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
 import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.LocalTime
 
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -43,9 +49,11 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var behavior: TopSheetBehavior<View>
     private val viewModel: HomeViewModel by activityViewModels()
     private val scheduleViewModel : AddScheduleViewModel by activityViewModels()
+    private val lastScheduleViewModel: ScheduleViewModel by activityViewModels()
     private var dialog: androidx.appcompat.app.AlertDialog? = null
 
     override fun initView() {
+        viewModel.clearAll()
         arguments?.let {
             val scheduleId = it.getInt("scheduleId", -1)
             if (scheduleId != -1) {
@@ -101,9 +109,9 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         initTodayScheduleRV()
         initTopSheet()
         bottomNavigationShow()
+        setProgressBar()
     }
     override fun initObserver() {
-
     }
 
     private fun initTodayDate() {
@@ -130,7 +138,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                Log.d("slideOffset", slideOffset.toString())
             }
         })
 
@@ -144,7 +151,61 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
     }
 
-    private fun showTopSheet() {
+    private fun showTopSheet(scheduleId: Int) {
+
+        viewModel.getScheduleStatus(scheduleId)
+        lastScheduleViewModel.getScheduleUsers(scheduleId)
+        lastScheduleViewModel.getUser()
+        lastScheduleViewModel.user.observe(viewLifecycleOwner) {user ->
+            binding.layoutPreMembers.removeAllViews()
+            val inflater = layoutInflater
+            val profile: View = inflater.inflate(R.layout.item_detail_schedule_member, binding.layoutPreMembers, false)
+            val profileImage = profile.findViewById<ImageView>(R.id.img_detail_schedule_member)
+
+            Glide.with(requireContext())
+                .load(user.profileImage)
+                .into(profileImage)
+
+            binding.layoutPreMembers.addView(profile)
+            lastScheduleViewModel.scheduleUsers.observe(viewLifecycleOwner) { scheduleUsers ->
+                if (scheduleUsers.isEmpty()) {
+                    //do nothing yet
+                } else {
+                    //do nothing yet
+                }
+            }
+        }
+
+        viewModel.scheduleStatus.observe(viewLifecycleOwner) { status ->
+            binding.apply {
+                val meetTime = status.meetTime
+                val parsedTime = parseTimeString(meetTime)
+                if (parsedTime != null) {
+                    val (hours, minutes, seconds) = parsedTime
+                    val formattedHours = if (hours == 0) 12 else if (hours > 12) hours - 12 else hours
+                    val formattedMinutes = String.format("%02d", minutes)
+
+                    tvPreTimeType.text = if (hours < 12) "오전" else "오후"
+                    tvPreTime.text = "${String.format("%02d", formattedHours)}:${formattedMinutes}"
+                }
+
+                tvPreTitle.text = status.name
+
+                val totalTime = status.totalTime
+                val parsedTotalTime = parseTimeString(totalTime)
+                if(parsedTotalTime != null) {
+                    val (hours, minutes, seconds) = parsedTotalTime
+                    tvPreTotalTime.text = if(hours == 0) "${minutes}분" else "${hours}시간 ${minutes}분"
+                }
+                tvPreLeftTime.text = if(status.leftTime > 60) "${status.leftTime / 60}시간 ${status.leftTime % 60}분" else "${status.leftTime}분"
+
+                val progress = calculatePreparationProgress(meetTime, totalTime)
+                progressbar.progress = progress
+                tvProgressPercent.text = progress.toString()
+            }
+        }
+
+
         behavior.state = TopSheetBehavior.STATE_EXPANDED
         binding.viewHomeTopsheetBackground.visibility = View.VISIBLE
         binding.viewHomeTopsheetBackground.setOnSingleClickListener {
@@ -163,69 +224,52 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun initLastScheduleRV() {
-        var list = arrayListOf<LastSchedule>(
-            LastSchedule("UMC 2차 과제 제출", "시연 영상", true, "11:59"),
-            LastSchedule("수학 학원 알바", "책 챙겨가기", true, "19:00"),
-            LastSchedule("신선전 포스터 제작", "A0 사이즈로 제작", true, "20:00"),
-            LastSchedule("UMC 8th 회장단 회의", "노션 회의록 참고", true, "21:00")
-        )
-        val listSize = list.size
-        setProgressBar(listSize, listSize)
-        val adapter = LastScheduleRVA(list)
+        viewModel.loadItems()
+        val adapter = LastScheduleRVA()
         binding.rvHomeLastSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = adapter
         }
-        if(list.isEmpty()) {
-            binding.rvHomeLastSchedule.visibility = View.GONE
-            binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
-        }
-        else {
-            binding.rvHomeLastSchedule.visibility = View.VISIBLE
-            binding.tvHomeNoLastSchedule.visibility = View.GONE
-        }
-        adapter.itemClick = object : LastScheduleRVA.ItemClick {
-            override fun onItemClick(view: View, position: Int) {
-                Toast.makeText(requireContext(), "${list[position].title} Clicked", Toast.LENGTH_SHORT).show()
-                val action = HomeFragmentDirections.actionHomeFragmentToCheckListFragment(scheduleIndex =position)
-                findNavController().navigate(action)
+
+        viewModel.checklists.observe(viewLifecycleOwner) { list ->
+            Log.d("HomeFragment", "Checklists: $list")
+
+            if (list.isEmpty()) {
+                binding.rvHomeLastSchedule.visibility = View.GONE
+                binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
+            } else {
+                val lastSchedules = mutableListOf<DetailScheduleResponseModel>()
+                var receivedCount = 0
+
+                list.forEach { checklistId ->
+                    lastScheduleViewModel.getDetailSchedule(checklistId)
+                }
+
+                // 한 번만 observe 해서 모든 데이터를 받았을 때 RecyclerView 갱신
+                lastScheduleViewModel.detailSchedule.observe(viewLifecycleOwner) { lastSchedule ->
+                    if (!lastSchedules.contains(lastSchedule)) { // 중복 추가 방지
+                        lastSchedules.add(lastSchedule)
+                        receivedCount++
+
+                        if (receivedCount == list.size) {
+                            val sortedLastSchedules = lastSchedules.sortedBy{it.meetTime}
+                            adapter.setLastScheduleList(scheduleList = sortedLastSchedules)
+                            binding.rvHomeLastSchedule.visibility = View.VISIBLE
+                            binding.tvHomeNoLastSchedule.visibility = View.GONE
+                        }
+                    }
+                }
             }
         }
 
-        val args = HomeFragmentArgs.fromBundle(requireArguments())
-        val idx = args.scheduleIndex
-        if(idx != -1) {
-            list.removeAt(idx)
-            adapter.notifyDataSetChanged()
-            setProgressBar(listSize, list.size)
-            if(list.isEmpty()) {
-                binding.rvHomeLastSchedule.visibility = View.GONE
-                binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
-            }
+        adapter.onItemClick = { schedule ->
+            val action = HomeFragmentDirections.actionHomeFragmentToCheckListFragment(scheduleIndex = schedule.scheduleId)
+            findNavController().navigate(action)
         }
     }
 
     private fun initTodayScheduleRV() {
         viewModel.getTodaySchedules()
-        val list2 = arrayListOf<TodaySchedule>(
-            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", true, "9:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", true, "10:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조", "일정 설명", false, "12:00", "24\nmin"),
-            TodaySchedule("컴퓨터 구조2", "일정 설명2", false, "13:00", "24\nmin"),
-        )
-        val listSize = list2.size
         val adapter = TodayScheduleRVA()
         binding.rvHomeTodaySchedule.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -238,35 +282,29 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             } else {
                 binding.rvHomeTodaySchedule.visibility = View.VISIBLE
                 binding.layoutHomeNoTodaySchedule.visibility = View.GONE
-                adapter.setScheduleList(scheduleList = scheduleList as ArrayList<TodayScheduleResponseModel>)
+                adapter.setScheduleList(scheduleList = scheduleList)
             }
         }
-        if(list2.isEmpty()) {
-            binding.rvHomeTodaySchedule.visibility = View.GONE
-            binding.layoutHomeNoTodaySchedule.visibility = View.VISIBLE
-        }
-        else {
-            binding.rvHomeTodaySchedule.visibility = View.VISIBLE
-            binding.layoutHomeNoTodaySchedule.visibility = View.GONE
-        }
-        adapter.itemClick = object : TodayScheduleRVA.ItemClick {
-            override fun onClick(view: View, position: Int) {
-                showTopSheet()
-            }
+
+        adapter.onItemClick = { schedule ->
+            showTopSheet(schedule.scheduleId)
         }
     }
 
-    private fun setProgressBar(size: Int, currentSize: Int) {
-        val maxWidth = binding.viewHomeProgressBarBackground.width
-        val progress = ((1-(currentSize.toFloat() / size.toFloat())) * maxWidth).toInt()
-        binding.viewHomeProgressBarForeground.layoutParams = (binding.viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
-            width = if(progress <= 20) requireContext().toPx(20).toInt() else requireContext().toPx(progress).toInt()
-        }
-        binding.tvHomeProgress.text = "${((1 - (currentSize.toFloat() / size.toFloat())) * 100).toInt()}%"
-
-        viewModel.getSuccessRate()
-        viewModel.successRate.observe(viewLifecycleOwner) { response ->
-            binding.tvHomeProgress.text = "${response.successRate}%"
+    private fun setProgressBar() {
+        // viewHomeProgressBarBackground가 레이아웃된 후에 실행
+        binding.viewHomeProgressBarBackground.post {
+            val maxWidth = binding.viewHomeProgressBarBackground.width
+            viewModel.getSuccessRate()
+            viewModel.successRate.observe(viewLifecycleOwner) { response ->
+                binding.apply {
+                    tvHomeProgress.text = "${response.successRate.toInt()}%"
+                    viewHomeProgressBarForeground.layoutParams = (viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
+                        this.width = (maxWidth * response.successRate / 100).toInt()
+                        if(this.width < requireContext().toPx(20).toInt()) this.width = requireContext().toPx(20).toInt()
+                    }
+                }
+            }
         }
     }
 
@@ -298,6 +336,60 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         val ovalImageView = requireActivity().findViewById<View>(R.id.iv_main_bnv_white_oval)
         ovalImageView?.visibility = View.VISIBLE
+    }
+
+    private fun parseTimeString(timeString: String): Triple<Int, Int, Int>? {
+        // 입력 문자열이 유효한 형식인지 확인
+        if (!timeString.matches(Regex("\\d{2}:\\d{2}:\\d{2}"))) {
+            return null
+        }
+        val parts = timeString.split(":")
+        if (parts.size != 3) {
+            return null
+        }
+
+        val hours = parts[0].toIntOrNull()
+        val minutes = parts[1].toIntOrNull()
+        val seconds = parts[2].toIntOrNull()
+
+        // 변환 실패 시 null 반환
+        if (hours == null || minutes == null || seconds == null) {
+            return null
+        }
+
+        return Triple(hours, minutes, seconds)
+    }
+
+    private fun calculatePreparationProgress(meetTime: String, totalTime: String): Int {
+
+        //1. LocalTime으로 변환
+        val meetTimeLocalTime = LocalTime.parse(meetTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
+        val totalTimeLocalTime = LocalTime.parse(totalTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
+
+        // 2. 준비 시작 시간 계산
+        val preparationStartTime = meetTimeLocalTime.minusHours(totalTimeLocalTime.hour.toLong())
+            .minusMinutes(totalTimeLocalTime.minute.toLong())
+            .minusSeconds(totalTimeLocalTime.second.toLong())
+
+        // 3. 현재 시간 가져오기
+        val now = LocalTime.now()
+
+        // 6. 예외 처리
+        if (now.isAfter(meetTimeLocalTime)) {
+            return 100 // 현재 시간이 meetTime 이후일 경우, 진행도는 100%
+        }
+        if(now.isBefore(preparationStartTime)) {
+            return 0 // 현재 시간이 준비 시작 시간 이전일 경우, 진행도는 0%
+        }
+
+        // 4. 시간 차이 계산
+        val durationToNow = Duration.between(preparationStartTime, now)
+        val durationToMeetTime = Duration.between(preparationStartTime, meetTimeLocalTime)
+
+        // 5. 진행도 계산
+        val progress = (durationToNow.toMillis().toDouble() / durationToMeetTime.toMillis() * 100).toInt()
+
+        return progress
     }
 
     fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(

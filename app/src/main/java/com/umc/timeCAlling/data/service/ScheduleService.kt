@@ -4,12 +4,14 @@ import com.umc.timeCAlling.data.dto.BaseResponse
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleRequestDto
 import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleResponseDto
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.DetailScheduleResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
-import com.umc.timeCAlling.data.dto.response.schedule.ScheduleByDateResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.ScheduleStatusResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.ScheduleUsersResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SchedulesResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SharedScheduleResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.SuccessRateResponseDto
@@ -35,7 +37,7 @@ interface ScheduleService {
         @Path("scheduleId") scheduleId: Int
     ):BaseResponse<ScheduleResponseDto>
 
-  @GET("/api/schedules/date")
+   @GET("/api/schedules/date")
     suspend fun getScheduleByDate(
         @Query("date") date: String // ex. ?date=2025-01-20
     ) : BaseResponse<SchedulesResponseDto>
@@ -58,4 +60,19 @@ interface ScheduleService {
         @Path("scheduleId") scheduleId: Int,
         @Body request: ScheduleRequestDto
     ): BaseResponse<SchedulesResponseDto>
+
+    @GET("/api/schedules/{scheduleId}/users")
+    suspend fun getScheduleUsers(
+        @Path("scheduleId") scheduleId: Int
+    ): BaseResponse<List<ScheduleUsersResponseDto>>
+
+    @GET("/api/schedules/{checklistId}")
+    suspend fun getDetailSchedule(
+        @Path("checklistId") checklistId: Int
+    ) : BaseResponse<DetailScheduleResponseDto>
+
+    @GET("/api/schedules/{scheduleId}/status")
+    suspend fun getScheduleStatus(
+        @Path("scheduleId") scheduleId: Int
+    ) : BaseResponse<ScheduleStatusResponseDto>
 }

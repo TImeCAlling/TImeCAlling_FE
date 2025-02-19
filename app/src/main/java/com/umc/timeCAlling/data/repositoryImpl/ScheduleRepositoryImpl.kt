@@ -3,15 +3,14 @@ package com.umc.timeCAlling.data.repositoryImpl
 import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
-import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.ScheduleStatusResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SchedulesResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SharedScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodaySchedulesResponseModel
-import com.umc.timeCAlling.domain.model.response.tmap.CarTransportationModel
-import com.umc.timeCAlling.domain.model.response.tmap.PublicTransportationModel
-import com.umc.timeCAlling.domain.model.response.tmap.WalkTransportationModel
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
 import javax.inject.Inject
 
@@ -41,4 +40,13 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun postSharedSchedule(scheduleId: Int, requestModel: ScheduleRequestModel): Result<SchedulesResponseModel> =
         runCatching { scheduleDataSource.postSharedSchedule(scheduleId,requestModel.toScheduleRequestDto()).result.toSchedulesResponseModel() }
+
+    override suspend fun getScheduleUsers(scheduleId: Int): Result<List<ScheduleUsersResponseModel>> =
+        runCatching { scheduleDataSource.getScheduleUsers(scheduleId).result.map { it.toScheduleUsersResponseModel() } }
+
+    override suspend fun getDetailSchedule(checklistId: Int): Result<DetailScheduleResponseModel> =
+        runCatching { scheduleDataSource.getDetailSchedule(checklistId).result.toDetailScheduleResponseModel() }
+
+    override suspend fun getScheduleStatus(scheduleId: Int): Result<ScheduleStatusResponseModel> =
+        runCatching { scheduleDataSource.getScheduleStatus(scheduleId).result.toScheduleStatusResponseModel() }
 }

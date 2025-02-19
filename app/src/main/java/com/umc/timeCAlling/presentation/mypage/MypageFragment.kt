@@ -7,6 +7,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import android.content.Context
+import android.util.TypedValue
+import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -15,6 +19,8 @@ import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentMypageBinding
 import com.umc.timeCAlling.util.network.UiState
+import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
+import com.umc.timeCAlling.presentation.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,6 +28,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypage) {
     private lateinit var navController: NavController
+    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val scheduleViewModel: ScheduleViewModel by activityViewModels()
 
     private val myprofileViewModel: MyprofileViewModel by viewModels()
     private var nickname: String = ""
@@ -32,10 +40,12 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
 
         myprofileViewModel.getUser()
         observeViewModel()
+        initSuccessRate()
+        initProfile()
     }
 
     override fun initObserver() {
-
+        mypageProfileObserve()
     }
 
     private fun setClickListener() {
@@ -121,4 +131,45 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
     private fun navigateToMypageVoiceFragment() {
         findNavController().navigate(R.id.action_mypageFragment_to_mypageVoiceFragment)
     }
+
+    private fun initSuccessRate() {
+        binding.viewMypageProgressBackground.post {
+            val maxWidth = binding.viewMypageProgressBackground.width
+            homeViewModel.getSuccessRate()
+            homeViewModel.successRate.observe(viewLifecycleOwner) { response ->
+                binding.apply {
+                    tvMypageCurrentProgress.text = "약속 성공률 ${response.successRate.toInt()}%\n다음 목표 ${if(response.successRate.toInt() + 10 > 100) 100 else response.successRate.toInt() + 10}%, 함께 도전해요!"
+                    tvMypageProgressPercent.text = "${response.successRate.toInt()}%"
+                    viewMypageProgressForeground.layoutParams = (viewMypageProgressForeground.layoutParams as ViewGroup.LayoutParams).apply {
+                        this.width = (maxWidth * response.successRate / 100).toInt()
+                        if(this.width < requireContext().toPx(20).toInt()) this.width = requireContext().toPx(20).toInt()
+                    }
+                    tvMypageScheduleSuccess.text = "${response.success}개"
+                    tvMypageScheduleFailure.text = "${response.failed}개"
+                }
+            }
+        }
+    }
+
+    private fun initProfile() {
+        scheduleViewModel.getUser()
+    }
+
+    private fun mypageProfileObserve() {
+        scheduleViewModel.user.observe(viewLifecycleOwner) { response ->
+            binding.apply {
+                binding.tvMypageName.text = response.nickname + "님"
+                Glide.with(requireContext())
+                    .load(response.profileImage)
+                    .into(ivMypagePic)
+            }
+        }
+    }
+
+    fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp.toFloat(),
+        resources.displayMetrics
+    )
+
 }

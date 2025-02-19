@@ -5,5 +5,5 @@ import com.umc.timeCAlling.domain.model.request.checklist.UpdateChecklistRequest
 import com.umc.timeCAlling.domain.model.response.UpdateChecklistResponseModel
 
 interface ChecklistRepository {
-    suspend fun updateChecklist(requestModel: UpdateChecklistRequestModel): Result<UpdateChecklistResponseModel>
+    suspend fun updateChecklist(scheduleId: Int,  requestModel: UpdateChecklistRequestModel): Result<UpdateChecklistResponseModel>
 }

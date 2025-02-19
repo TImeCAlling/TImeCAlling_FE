@@ -10,8 +10,8 @@ data class SharedScheduleResponseModel(
     val place : String,
     val longitude : String,
     val latitude : String,
-    val repeatDays : List<String>,
+    val repeatDays : List<String>?,
     val isRepeat : Boolean,
-    val start : String,
-    val end : String
+    val start : String?,
+    val end : String?
 )

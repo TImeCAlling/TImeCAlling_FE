@@ -2,12 +2,16 @@
 
 import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.data.datasource.TmapDataSource
+import com.umc.timeCAlling.data.repositoryImpl.ChecklistRepositoryImpl
+import com.umc.timeCAlling.data.repositoryImpl.AlarmRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.LoginRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.MypageRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.ScheduleRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.TestRepositoryImpl
 import com.umc.timeCAlling.data.repositoryImpl.TmapRepositoryImpl
 import com.umc.timeCAlling.data.service.TestService
+import com.umc.timeCAlling.domain.repository.ChecklistRepository
+import com.umc.timeCAlling.domain.repository.AlarmRepository
 import com.umc.timeCAlling.domain.repository.LoginRepository
 import com.umc.timeCAlling.domain.repository.MypageRepository
 import com.umc.timeCAlling.domain.repository.ScheduleRepository
@@ -50,4 +54,11 @@ object RepositoryModule {
     @Singleton
     fun ProvidesMypageRepository(mypageRepositoryImpl: MypageRepositoryImpl): MypageRepository = mypageRepositoryImpl
 
+    @Provides
+    @Singleton
+    fun ProvidesCheckListRepository(checklistRepositoryImpl: ChecklistRepositoryImpl): ChecklistRepository = checklistRepositoryImpl
+
+    @Provides
+    @Singleton
+    fun ProvidesAlarmRepository(alarmRepositoryImpl: AlarmRepositoryImpl): AlarmRepository = alarmRepositoryImpl
 }

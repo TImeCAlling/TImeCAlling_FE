@@ -15,6 +15,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.umc.timeCAlling.R
+import com.google.firebase.messaging.FirebaseMessaging
+import com.umc.timeCAlling.MyFirebaseMessagingService
 import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.domain.model.request.login.KakaoSignupRequestModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
@@ -164,7 +166,6 @@ class SignupViewModel @Inject constructor(
     fun handleLoginSuccess(accessToken: String, refreshToken: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             loginRepository.kakaoLogin(KakaoLoginRequestModel(accessToken)).onSuccess { response ->
-
                 Log.d("SignupViewModel", "카카오 로그인 성공: Access Token = ${response.accessToken}")
                 Log.d("SignupViewModel", "카카오 로그인 성공: Refresh Token = ${response.refreshToken}")
 
@@ -174,7 +175,15 @@ class SignupViewModel @Inject constructor(
                     putBoolean("isLoggedIn", true)
                     apply()
                 }
-
+                // FCM 토큰 갱신 요청
+                FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val token = task.result
+                        Log.d("SignupViewModel", "FCM token on login: $token")
+                    } else {
+                        Log.e("SignupViewModel", "Failed to get FCM token on login", task.exception)
+                    }
+                }
                 callback(true)
             }.onFailure { error ->
                 Log.e("SignupViewModel", "서버 로그인 실패: ${error.message}")
