@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.di
 
+import com.umc.timeCAlling.data.service.ChecklistService
 import com.umc.timeCAlling.data.service.AlarmService
 import com.umc.timeCAlling.data.service.LoginService
 import com.umc.timeCAlling.data.service.MypageService
@@ -48,6 +49,12 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideMypageService(@Named("default") retrofit: Retrofit): MypageService {
+        return retrofit.buildService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChecklistService(@Named("default") retrofit: Retrofit): ChecklistService {
         return retrofit.buildService()
     }
 

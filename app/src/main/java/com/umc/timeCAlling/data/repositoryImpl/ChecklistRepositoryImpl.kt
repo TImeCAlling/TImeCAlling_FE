@@ -10,6 +10,6 @@ import javax.inject.Inject
 class ChecklistRepositoryImpl @Inject constructor(
     private val checklistDataSource: ChecklistDataSource
 ) : ChecklistRepository {
-    override suspend fun updateChecklist(requestModel: UpdateChecklistRequestModel): Result<UpdateChecklistResponseModel> =
-        runCatching {checklistDataSource.updateChecklist(requestModel.toUpdateChecklistRequestDto()).result.toUpdateChecklistResponseModel()}
+    override suspend fun updateChecklist(scheduleId: Int, requestModel: UpdateChecklistRequestModel): Result<UpdateChecklistResponseModel> =
+        runCatching {checklistDataSource.updateChecklist(scheduleId, requestModel.toUpdateChecklistRequestDto()).result.toUpdateChecklistResponseModel()}
 }

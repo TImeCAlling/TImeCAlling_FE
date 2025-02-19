@@ -4,14 +4,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleDetailBinding
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
+import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
 
-class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
+class DetailScheduleRVA(
+    private val viewModel: ScheduleViewModel,
+    private val viewLifecycleOwner: LifecycleOwner
+) : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
     lateinit var onItemClick: ((ScheduleByDateResponseModel) -> Unit)
-    private var detailSchedules : List<ScheduleByDateResponseModel> = emptyList()
+    private var detailSchedules: List<ScheduleByDateResponseModel> = emptyList()
 
     fun setScheduleList(scheduleList: List<ScheduleByDateResponseModel>) {
         this.detailSchedules = ArrayList(scheduleList)
@@ -26,19 +34,53 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
         val time = binding.tvDetailScheduleTime
         val timeType = binding.tvDetailScheduleTimeType
 
-        val memberFirst = binding.cvDetailScheduleMemberFirst
-        val memberSecond = binding.cvDetailScheduleMemberSecond
-        val extraMembers = binding.cvDetailScheduleExtraMembers
-        val extraMembersCount = binding.tvDetailScheduleExtraMembers
+        val memberContainer = binding.linearLayout
 
         val view = binding.viewDetailSchedule
         val bar = binding.viewDetailScheduleBar
         val container = binding.layoutDetailScheduleContainer
         val checkBtn = binding.imgDetailScheduleCheck
+
+        fun bind(item : ScheduleByDateResponseModel) {
+            viewModel.getScheduleUsers(item.scheduleId)
+            viewModel.getUser()
+            viewModel.user.observe(viewLifecycleOwner) { user ->
+                memberContainer.removeAllViews()
+                val inflater = LayoutInflater.from(itemView.context)
+                val profile: View = inflater.inflate(
+                    R.layout.item_schedule_member,
+                    memberContainer,
+                    false
+                )
+                val profileImage =
+                    profile.findViewById<ImageView>(R.id.img_detail_schedule_member)
+
+                val params = profile.layoutParams as ViewGroup.MarginLayoutParams
+                params.setMargins(0, 0, 0, 0)
+                profile.layoutParams = params
+
+                Glide.with(itemView.context)
+                    .load(user.profileImage)
+                    .into(profileImage)
+
+                memberContainer.addView(profile)
+                viewModel.scheduleUsers.observe(viewLifecycleOwner) { scheduleUsers ->
+                    if (scheduleUsers.isEmpty()) {
+                        //do nothing yet
+                    } else {
+                        //do nothing yet
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailScheduleViewHolder {
-        val view = ItemTodayScheduleDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val view = ItemTodayScheduleDetailBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return DetailScheduleViewHolder(view)
     }
 
@@ -46,7 +88,7 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
         var isChecked = false
         val meetTime = detailSchedules[position].meetTime
         val parsedTime = parseTimeString(meetTime)
-        if(parsedTime != null) {
+        if (parsedTime != null) {
             val (hours, minutes, seconds) = parsedTime
             val formattedHours = if (hours == 0) 12 else if (hours > 12) hours - 12 else hours
             val formattedMinutes = String.format("%02d", minutes)
@@ -56,23 +98,24 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
         }
 
         holder.title.text = detailSchedules[position].name
-        if(detailSchedules[position].repeatDays != null) {
+        if (detailSchedules[position].repeatDays != null) {
             holder.repeatInfo.text = repeatDaysToKo(detailSchedules[position].repeatDays!!)
         } else {
             holder.repeatInfo.text = ""
         }
         holder.category.text = detailSchedules[position].categories[0].categoryName //카테고리 색 반영 나중에
 
-        if(position == 0) {
+        if (position == 0) {
             holder.view.setBackgroundResource(R.drawable.shape_rect_999_mint_fill)
             holder.container.setBackgroundResource(R.drawable.shape_rect_28_mint200_fill_mint_line_1)
             holder.time.setTextColor(holder.time.context.getColor(R.color.mint_600))
         }
 
-        holder.bar.visibility = if(position == detailSchedules.size -1) View.GONE else View.VISIBLE
+        holder.bar.visibility =
+            if (position == detailSchedules.size - 1) View.GONE else View.VISIBLE
 
         holder.checkBtn.setOnClickListener {
-            if(!isChecked) {
+            if (!isChecked) {
                 holder.checkBtn.setImageResource(R.drawable.ic_schedule_detail_check_mint)
                 isChecked = true
             } else {
@@ -84,12 +127,13 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
         holder.itemView.setOnClickListener {
             onItemClick.invoke(detailSchedules[position])
         }
+        holder.bind(detailSchedules[position])
     }
 
     override fun getItemCount(): Int = detailSchedules.size
 
     private fun dayConverter(day: String): String {
-        when(day) {
+        when (day) {
             "MONDAY" -> return "월"
             "TUESDAY" -> return "화"
             "WEDNESDAY" -> return "수"
@@ -103,7 +147,7 @@ class DetailScheduleRVA() : RecyclerView.Adapter<DetailScheduleRVA.DetailSchedul
 
     private fun repeatDaysToKo(repeatDays: List<String>): String {
         var koDays = ""
-        if(repeatDays.size == 7) koDays = "매일"
+        if (repeatDays.size == 7) koDays = "매일"
         else {
             koDays = repeatDays.map { dayConverter(it) }.joinToString(", ")
         }

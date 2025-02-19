@@ -6,7 +6,7 @@ data class SuccessRateResponseModel(
     val total: Int,
     val success: Int,
     val failed: Int,
-    val successRate: Int,
+    val successRate: Float,
 ) {
     fun toSuccessRateResponseDto() = SuccessRateResponseDto(total, success, failed, successRate)
 }

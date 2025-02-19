@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.material3.AlertDialog
 import androidx.compose.ui.semantics.dismiss
@@ -19,6 +20,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.umc.timeCAlling.R
@@ -26,9 +28,11 @@ import com.umc.timeCAlling.TopSheetBehavior
 import com.umc.timeCAlling.databinding.DialogScheduleShareBinding
 import com.umc.timeCAlling.databinding.DialogWakeupShareBinding
 import com.umc.timeCAlling.databinding.FragmentHomeBinding
+import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
+import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
 import com.umc.timeCAlling.presentation.home.adapter.LastScheduleRVA
 import com.umc.timeCAlling.presentation.home.adapter.TodayScheduleRVA
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
@@ -45,9 +49,11 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var behavior: TopSheetBehavior<View>
     private val viewModel: HomeViewModel by activityViewModels()
     private val scheduleViewModel : AddScheduleViewModel by activityViewModels()
+    private val lastScheduleViewModel: ScheduleViewModel by activityViewModels()
     private var dialog: androidx.appcompat.app.AlertDialog? = null
 
     override fun initView() {
+        viewModel.clearAll()
         arguments?.let {
             val scheduleId = it.getInt("scheduleId", -1)
             if (scheduleId != -1) {
@@ -106,7 +112,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         setProgressBar()
     }
     override fun initObserver() {
-
     }
 
     private fun initTodayDate() {
@@ -149,6 +154,27 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun showTopSheet(scheduleId: Int) {
 
         viewModel.getScheduleStatus(scheduleId)
+        lastScheduleViewModel.getScheduleUsers(scheduleId)
+        lastScheduleViewModel.getUser()
+        lastScheduleViewModel.user.observe(viewLifecycleOwner) {user ->
+            binding.layoutPreMembers.removeAllViews()
+            val inflater = layoutInflater
+            val profile: View = inflater.inflate(R.layout.item_detail_schedule_member, binding.layoutPreMembers, false)
+            val profileImage = profile.findViewById<ImageView>(R.id.img_detail_schedule_member)
+
+            Glide.with(requireContext())
+                .load(user.profileImage)
+                .into(profileImage)
+
+            binding.layoutPreMembers.addView(profile)
+            lastScheduleViewModel.scheduleUsers.observe(viewLifecycleOwner) { scheduleUsers ->
+                if (scheduleUsers.isEmpty()) {
+                    //do nothing yet
+                } else {
+                    //do nothing yet
+                }
+            }
+        }
 
         viewModel.scheduleStatus.observe(viewLifecycleOwner) { status ->
             binding.apply {
@@ -171,7 +197,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     val (hours, minutes, seconds) = parsedTotalTime
                     tvPreTotalTime.text = if(hours == 0) "${minutes}분" else "${hours}시간 ${minutes}분"
                 }
-                tvPreLeftTime.text = status.leftTime.toString()
+                tvPreLeftTime.text = if(status.leftTime > 60) "${status.leftTime / 60}시간 ${status.leftTime % 60}분" else "${status.leftTime}분"
 
                 val progress = calculatePreparationProgress(meetTime, totalTime)
                 progressbar.progress = progress
@@ -198,42 +224,47 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun initLastScheduleRV() {
-        var list = arrayListOf<LastSchedule>(
-            LastSchedule("UMC 2차 과제 제출", "시연 영상", true, "11:59"),
-            LastSchedule("수학 학원 알바", "책 챙겨가기", true, "19:00"),
-            LastSchedule("신선전 포스터 제작", "A0 사이즈로 제작", true, "20:00"),
-            LastSchedule("UMC 8th 회장단 회의", "노션 회의록 참고", true, "21:00")
-        )
-        val adapter = LastScheduleRVA(list)
+        viewModel.loadItems()
+        val adapter = LastScheduleRVA()
         binding.rvHomeLastSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = adapter
         }
-        if(list.isEmpty()) {
-            binding.rvHomeLastSchedule.visibility = View.GONE
-            binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
-        }
-        else {
-            binding.rvHomeLastSchedule.visibility = View.VISIBLE
-            binding.tvHomeNoLastSchedule.visibility = View.GONE
-        }
-        adapter.itemClick = object : LastScheduleRVA.ItemClick {
-            override fun onItemClick(view: View, position: Int) {
-                Toast.makeText(requireContext(), "${list[position].title} Clicked", Toast.LENGTH_SHORT).show()
-                val action = HomeFragmentDirections.actionHomeFragmentToCheckListFragment(scheduleIndex =position)
-                findNavController().navigate(action)
+
+        viewModel.checklists.observe(viewLifecycleOwner) { list ->
+            Log.d("HomeFragment", "Checklists: $list")
+
+            if (list.isEmpty()) {
+                binding.rvHomeLastSchedule.visibility = View.GONE
+                binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
+            } else {
+                val lastSchedules = mutableListOf<DetailScheduleResponseModel>()
+                var receivedCount = 0
+
+                list.forEach { checklistId ->
+                    lastScheduleViewModel.getDetailSchedule(checklistId)
+                }
+
+                // 한 번만 observe 해서 모든 데이터를 받았을 때 RecyclerView 갱신
+                lastScheduleViewModel.detailSchedule.observe(viewLifecycleOwner) { lastSchedule ->
+                    if (!lastSchedules.contains(lastSchedule)) { // 중복 추가 방지
+                        lastSchedules.add(lastSchedule)
+                        receivedCount++
+
+                        if (receivedCount == list.size) {
+                            val sortedLastSchedules = lastSchedules.sortedBy{it.meetTime}
+                            adapter.setLastScheduleList(scheduleList = sortedLastSchedules)
+                            binding.rvHomeLastSchedule.visibility = View.VISIBLE
+                            binding.tvHomeNoLastSchedule.visibility = View.GONE
+                        }
+                    }
+                }
             }
         }
 
-        val args = HomeFragmentArgs.fromBundle(requireArguments())
-        val idx = args.scheduleIndex
-        if(idx != -1) {
-            list.removeAt(idx)
-            adapter.notifyDataSetChanged()
-            if(list.isEmpty()) {
-                binding.rvHomeLastSchedule.visibility = View.GONE
-                binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
-            }
+        adapter.onItemClick = { schedule ->
+            val action = HomeFragmentDirections.actionHomeFragmentToCheckListFragment(scheduleIndex = schedule.scheduleId)
+            findNavController().navigate(action)
         }
     }
 
@@ -267,9 +298,9 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             viewModel.getSuccessRate()
             viewModel.successRate.observe(viewLifecycleOwner) { response ->
                 binding.apply {
-                    tvHomeProgress.text = "${response.successRate}%"
+                    tvHomeProgress.text = "${response.successRate.toInt()}%"
                     viewHomeProgressBarForeground.layoutParams = (viewHomeProgressBarForeground.layoutParams as ViewGroup.LayoutParams).apply {
-                        this.width = maxWidth * response.successRate / 100
+                        this.width = (maxWidth * response.successRate / 100).toInt()
                         if(this.width < requireContext().toPx(20).toInt()) this.width = requireContext().toPx(20).toInt()
                     }
                 }
