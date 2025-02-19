@@ -71,13 +71,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 if (repeatDates.isNotEmpty()) {
                     val koreanDays = repeatDates.map { day ->
                         when (day) {
-                            "MONDAY" -> "월요일"
-                            "TUESDAY" -> "화요일"
-                            "WEDNESDAY" -> "수요일"
-                            "THURSDAY" -> "목요일"
-                            "FRIDAY" -> "금요일"
-                            "SATURDAY" -> "토요일"
-                            "SUNDAY" -> "일요일"
+                            "MONDAY" -> "월"
+                            "TUESDAY" -> "화"
+                            "WEDNESDAY" -> "수"
+                            "THURSDAY" -> "목"
+                            "FRIDAY" -> "금"
+                            "SATURDAY" -> "토"
+                            "SUNDAY" -> "일"
                             else -> day
                         }
                     }
@@ -252,18 +252,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private fun updateRepeatInfo() {
         val repeatText = if (isRepeatEnabled) {
             if (selectedDays.isNotEmpty()) {
-                val selectedDaysOfWeek = selectedDays.joinToString(", ") { day ->
-                    when (day) {
-                        "월" -> "월요일"
-                        "화" -> "화요일"
-                        "수" -> "수요일"
-                        "목" -> "목요일"
-                        "금" -> "금요일"
-                        "토" -> "토요일"
-                        "일" -> "일요일"
-                        else -> day
-                    }
-                }
+                val selectedDaysOfWeek = selectedDays.joinToString(", ")
                 "$selectedDaysOfWeek 마다"
             } else {
                 "없음"
