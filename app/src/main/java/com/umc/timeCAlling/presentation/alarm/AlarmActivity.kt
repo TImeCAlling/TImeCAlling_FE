@@ -9,6 +9,8 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -30,6 +32,8 @@ class AlarmActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
     private lateinit var tts: TextToSpeech
     private var isTtsInitialized = false
     private var ttsText: String = ""
+    private val ttsHandler = Handler(Looper.getMainLooper())
+    private val ttsRepeatInterval: Long = 8000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +122,7 @@ class AlarmActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
             // 알람 소리 음량 고정
             val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
             val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
-            val fixedVolume = (maxVolume * 0.8).toInt() // 최대 음량의 80%로 설정
+            val fixedVolume = (maxVolume * 0.95).toInt() // 최대 음량의 80%로 설정
             audioManager.setStreamVolume(AudioManager.STREAM_ALARM, fixedVolume, 0)
             // 알람 소리 AudioAttributes 설정
             val audioAttributes = AudioAttributes.Builder()
@@ -136,6 +140,7 @@ class AlarmActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
+        stopTts()
 
         val alarmHelper = AlarmHelper(this)
         alarmHelper.cancelAlarm(alarmId)
@@ -172,8 +177,15 @@ class AlarmActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
     }
 
     private fun startTts() {
+        val nickName = spf.getString("nickName", "") ?: ""
+        val fcmSenderNickname = intent.getStringExtra("senderNickname") ?: null
+
         if (isTtsInitialized) {
-            ttsText = "일어나세요!"
+            ttsText = if (fcmSenderNickname != null) {
+                "${nickName}님, 벌써 약속 시간 다가와요! ${fcmSenderNickname}님이 깨우라고 하셨어요!"
+            } else {
+                "약속 잘 지키셨겠죠? 오늘 일정도 좋은 시간 보내세요!          "
+            }
             speakOut()
         }
     }
@@ -193,7 +205,12 @@ class AlarmActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
             tts.setAudioAttributes(audioAttributes)
             // TTS 출력
             tts.speak(ttsText, TextToSpeech.QUEUE_FLUSH, null, "tts1")
+
+            ttsHandler.postDelayed({
+                speakOut()
+            }, ttsRepeatInterval)
         }
+        isTtsInitialized = true
     }
 
     private fun stopTts() {
@@ -201,6 +218,7 @@ class AlarmActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
             tts.stop()
             tts.shutdown()
             isTtsInitialized = false
+            ttsHandler.removeCallbacksAndMessages(null)
         }
     }
 }
