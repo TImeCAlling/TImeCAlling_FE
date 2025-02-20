@@ -25,7 +25,9 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
             binding.clSignupTermBtn2 to binding.ivSignupTermOval2,
             binding.clSignupTermBtn3 to binding.ivSignupTermOval3,
             binding.clSignupTermBtn4 to binding.ivSignupTermOval4,
-            binding.clSignupTermBtn5 to binding.ivSignupTermOval5
+            binding.clSignupTermBtn5 to binding.ivSignupTermOval5,
+            binding.clSignupTermBtn6 to binding.ivSignupTermOval6,
+            binding.clSignupTermBtn7 to binding.ivSignupTermOval7,
         )
 
         // '모두 동의' 버튼
@@ -84,7 +86,8 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
             binding.ivSignupTermOval1,
             binding.ivSignupTermOval2,
             binding.ivSignupTermOval3,
-            binding.ivSignupTermOval4
+            binding.ivSignupTermOval4,
+            binding.ivSignupTermOval5
         ).all { it.tag == true }
 
         binding.tvSignupTermNext.apply {
@@ -104,8 +107,11 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
     private fun setupArrowClickListeners() {
         val arrowConfigs = listOf(
             Triple(binding.ivSignupTermArrowUp2, binding.ivSignupTermArrowDown2, binding.svSignupTermContent2),
-            Triple(binding.ivSignupTermArrowUp3, binding.ivSignupTermArrowDown3, binding.tvSignupTermContent3),
-            Triple(binding.ivSignupTermArrowUp4, binding.ivSignupTermArrowDown4, binding.tvSignupTermContent4)
+            Triple(binding.ivSignupTermArrowUp3, binding.ivSignupTermArrowDown3, binding.svSignupTermContent3),
+            Triple(binding.ivSignupTermArrowUp4, binding.ivSignupTermArrowDown4, binding.svSignupTermContent4),
+            Triple(binding.ivSignupTermArrowUp5, binding.ivSignupTermArrowDown5, binding.svSignupTermContent5),
+            Triple(binding.ivSignupTermArrowUp6, binding.ivSignupTermArrowDown6, binding.svSignupTermContent6),
+            Triple(binding.ivSignupTermArrowUp7, binding.ivSignupTermArrowDown7, binding.svSignupTermContent7)
         )
 
         arrowConfigs.forEach { (arrowUp, arrowDown, contentView) ->
@@ -129,7 +135,11 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
 
     private fun setupTermsContent() {
         binding.tvSignupTermContent2.text = loadTermsContent(R.raw.term_1)
-        // 추가 약관 내용을 설정할 수 있습니다.
+        binding.tvSignupTermContent3.text = loadTermsContent(R.raw.term_2)
+        binding.tvSignupTermContent4.text = loadTermsContent(R.raw.term_3)
+        binding.tvSignupTermContent5.text = loadTermsContent(R.raw.term_4)
+        binding.tvSignupTermContent6.text = loadTermsContent(R.raw.term_5)
+        binding.tvSignupTermContent7.text = loadTermsContent(R.raw.term_6)
     }
 
     private fun isNextButtonEnabled(): Boolean {

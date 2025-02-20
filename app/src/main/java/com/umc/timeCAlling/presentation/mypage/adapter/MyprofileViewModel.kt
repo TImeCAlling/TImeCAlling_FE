@@ -1,9 +1,10 @@
 package com.umc.timeCAlling.presentation.mypage
 
-import android.content.SharedPreferences
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.umc.timeCAlling.R
 import com.umc.timeCAlling.domain.model.request.mypage.UpdateUserRequestModel
 import com.umc.timeCAlling.domain.model.response.mypage.GetUserResponseModel
 import com.umc.timeCAlling.domain.repository.MypageRepository
@@ -19,13 +20,15 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import timber.log.Timber
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import javax.inject.Inject
 
 @HiltViewModel
 class MyprofileViewModel @Inject constructor(
-    private val mypageRepository: MypageRepository,
-    private val spf: SharedPreferences
+    private val mypageRepository: MypageRepository
 ) : ViewModel() {
 
     private val _userInfo = MutableStateFlow<UiState<GetUserResponseModel>>(UiState.Loading)
@@ -58,18 +61,39 @@ class MyprofileViewModel @Inject constructor(
         }
     }
 
-    fun updateUser(nickname: String?, avgPrepTime: Int?, freeTime: String?, imageFile: File?) {
-        val (imagePart, updateUserRequestModel) = createMultipartRequest(nickname, avgPrepTime, freeTime, imageFile)
+    fun updateUser(nickname: String?, avgPrepTime: Int?, freeTime: String?, imageFile: File?, context: Context) {
+        val imagePart = try {
+            val defaultProfileUrl = "https://timecalling-uploaded-files.s3.ap-northeast-2.amazonaws.com/profile_image.png"
+
+            // 🔍 현재 `profileImage`가 기본 프로필 URL이면 drawable의 기본 이미지를 전송
+            if (currentProfileImageUrl == defaultProfileUrl) {
+                getMultipartBodyFromResource(context, R.drawable.ic_profile_default_default, "profileImage")
+            } else if (imageFile != null) {
+                getMultipartBodyFromFile(imageFile, "profileImage")
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Timber.e("Error creating MultipartBody.Part for profile image: ${e.message}")
+            null
+        }
+
+        val userUpdateJson = JSONObject().apply {
+            put("nickname", nickname ?: JSONObject.NULL)
+            put("avgPrepTime", avgPrepTime ?: JSONObject.NULL)
+            put("freeTime", freeTime ?: JSONObject.NULL)
+        }.toString()
+
+        val userUpdateRequestBody = userUpdateJson.toRequestBody("application/json".toMediaTypeOrNull())
 
         viewModelScope.launch {
             _updateState.value = UiState.Loading
-            mypageRepository.updateUser(imagePart, updateUserRequestModel)
+            mypageRepository.updateUser(imagePart, userUpdateRequestBody)
                 .onSuccess {
                     Log.d("MyprofileViewModel", "updateUser() 성공")
                     _updateState.value = UiState.Success(true)
 
                     currentProfileImageUrl = imageFile?.absolutePath ?: currentProfileImageUrl
-                    // getUser() // 업데이트 후 최신 정보 다시 가져오기
                 }
                 .onFailure { exception ->
                     Log.e("MyprofileViewModel", "updateUser() 실패: ${exception.message}\n${exception.stackTraceToString()}")
@@ -116,19 +140,9 @@ class MyprofileViewModel @Inject constructor(
         imageFile: File?
     ): Pair<MultipartBody.Part?, RequestBody> {
         val userUpdateJson = JSONObject().apply {
-            put("nickname", nickname ?: JSONObject.NULL) // ✅ 명시적 null 값 포함
-            put("avgPrepTime", avgPrepTime ?: JSONObject.NULL) // ✅ 명시적 null 값 포함
-            put("freeTime", freeTime ?: JSONObject.NULL) // ✅ 명시적 null 값 포함
-
-            if(nickname != null) {
-                spf.edit().apply {
-                    putString("nickName", nickname) // putString으로 변경
-                    apply()
-                }
-            }
-            if (imageFile == null) {
-                put("profileImage", currentProfileImageUrl ?: JSONObject.NULL)
-            }
+            put("nickname", nickname ?: JSONObject.NULL)
+            put("avgPrepTime", avgPrepTime ?: JSONObject.NULL)
+            put("freeTime", freeTime ?: JSONObject.NULL)
         }.toString()
 
         val userUpdateRequestBody = userUpdateJson.toRequestBody("application/json".toMediaTypeOrNull())
@@ -139,6 +153,27 @@ class MyprofileViewModel @Inject constructor(
         }
 
         return Pair(imagePart, userUpdateRequestBody)
+    }
+
+    private fun getMultipartBodyFromResource(context: Context, resourceId: Int, paramName: String): MultipartBody.Part {
+        val file = File(context.cacheDir, "default_profile.png")
+
+        val inputStream: InputStream = context.resources.openRawResource(resourceId)
+        val outputStream = FileOutputStream(file)
+
+        inputStream.use { input ->
+            outputStream.use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        val requestFile = file.asRequestBody("image/png".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(paramName, file.name, requestFile)
+    }
+
+    private fun getMultipartBodyFromFile(file: File, paramName: String): MultipartBody.Part {
+        val requestFile = file.asRequestBody("image/png".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(paramName, file.name, requestFile)
     }
 
 

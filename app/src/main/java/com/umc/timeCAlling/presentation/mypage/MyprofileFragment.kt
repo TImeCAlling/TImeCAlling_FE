@@ -376,27 +376,23 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
             binding.tvMyprofileCurrentName.text.toString()
         } else null
 
-        val updatedAvgPrepTime = if (avgPrepTime != binding.tvMyprofileTimeEdit.text.toString().toInt()) {
-            binding.tvMyprofileTimeEdit.text.toString().toInt()
-        } else null
+        val updatedAvgPrepTime = binding.tvMyprofileTimeEdit.text.toString().toIntOrNull()
 
-        val updatedFreeTime = if (freeTime != binding.tvMyprofileSpareEdit.text.toString()) {
-            when (binding.tvMyprofileSpareEdit.text.toString()) {
-                "여유" -> "PLENTY"
-                "넉넉" -> "RELAXED"
-                "딱딱" -> "TIGHT"
-                else -> null
-            }
-        } else null
+        val updatedFreeTime = when (binding.tvMyprofileSpareEdit.text.toString()) {
+            "여유" -> "PLENTY"
+            "넉넉" -> "RELAXED"
+            "딱딱" -> "TIGHT"
+            else -> null
+        }
 
         myprofileViewModel.updateUser(
             updatedNickname,
             updatedAvgPrepTime,
             updatedFreeTime,
-            imageFile
+            imageFile,
+            requireContext()
         )
     }
-
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -519,9 +515,19 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         dialog.show()
     }
 
-    private fun deleteUser(){
-        myprofileViewModel.deleteUser()
+    private fun clearAppCache(context: Context) {
+        try {
+            val cacheDir = context.cacheDir
+            cacheDir.deleteRecursively() // 앱의 캐시 파일 전체 삭제
+            Log.d("MyprofileFragment", "앱 캐시 삭제 완료")
+        } catch (e: Exception) {
+            Log.e("MyprofileFragment", "앱 캐시 삭제 실패: ${e.message}")
+        }
+    }
+
+    private fun deleteUser() {
         viewLifecycleOwner.lifecycleScope.launch {
+            myprofileViewModel.deleteUser()
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myprofileViewModel.deleteState.collectLatest { state ->
                     when (state) {
@@ -529,6 +535,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                             Log.d("MyprofileFragment", "회원탈퇴 성공, 저장된 토큰 삭제 후 로그인 화면으로 이동")
 
                             signupViewModel.clearAuthToken()
+                            clearAppCache(requireContext()) // ✅ 앱 캐시 삭제 추가
 
                             findNavController().navigate(R.id.action_myprofileFragment_to_loginFragment) // 로그인 화면으로 이동
                         }
@@ -543,9 +550,9 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
         }
     }
 
-    private fun logoutUser(){
-        myprofileViewModel.logoutUser()
+    private fun logoutUser() {
         viewLifecycleOwner.lifecycleScope.launch {
+            myprofileViewModel.logoutUser()
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 myprofileViewModel.logoutState.collectLatest { state ->
                     when (state) {
@@ -553,6 +560,8 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
                             Log.d("MyprofileFragment", "로그아웃 성공, 로그인 화면으로 이동")
 
                             signupViewModel.clearAuthToken()
+                            clearAppCache(requireContext()) // ✅ 앱 캐시 삭제 추가
+
                             findNavController().navigate(R.id.action_myprofileFragment_to_loginFragment) // 로그인 화면으로 이동
                         }
                         is UiState.Error -> {
@@ -565,6 +574,7 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
             }
         }
     }
+
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

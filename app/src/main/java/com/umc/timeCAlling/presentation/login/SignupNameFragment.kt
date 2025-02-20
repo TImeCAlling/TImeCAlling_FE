@@ -51,7 +51,13 @@ class SignupNameFragment : BaseFragment<FragmentSignupNameBinding>(R.layout.frag
 
     private fun initEditName() {
         // 입력 글자 수 제한
-        binding.etSignupNameInput.filters = arrayOf(InputFilter.LengthFilter(5))
+        binding.etSignupNameInput.filters = arrayOf(
+            InputFilter.LengthFilter(5), // 최대 글자 수 제한
+            InputFilter { source, _, _, _, _, _ ->
+                source.toString().replace(" ", "").replace("\n", "") // 띄어쓰기와 엔터 제거
+            }
+        )
+
 
         // 입력 필드 포커스 및 텍스트 변화 리스너 설정
         binding.etSignupNameInput.setOnFocusChangeListener { _, hasFocus ->

@@ -51,7 +51,7 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
     private fun setClickListener() {
         binding.apply {
             clMypageSetting.setOnClickListener {
-                navigateToMyprofileFragment() // 내 프로필
+                navigateToMyprofileFragment()
             }
             layoutMypageAlarmlist.setOnClickListener {
                 findNavController().navigate(R.id.action_mypageFragment_to_alarmlistFragment)
@@ -63,7 +63,7 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
                 navigateToMypageVoiceFragment()
             }
             layoutMypageTerms.setOnClickListener {
-                //이용약관
+                navigateToMypageTermFragment()
             }
             ivMypageBack.setOnClickListener { findNavController().navigate(R.id.action_global_homeFragment) }
         }
@@ -130,6 +130,10 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
 
     private fun navigateToMypageVoiceFragment() {
         findNavController().navigate(R.id.action_mypageFragment_to_mypageVoiceFragment)
+    }
+
+    private fun navigateToMypageTermFragment() {
+        findNavController().navigate(R.id.action_mypageFragment_to_mypageTermFragment)
     }
 
     private fun initSuccessRate() {
