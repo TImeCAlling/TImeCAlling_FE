@@ -16,6 +16,7 @@ import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupPeopleRVA
 import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
@@ -43,8 +44,11 @@ class ScheduleViewModel @Inject constructor(
             _isLoading.value = true
             scheduleRepository.getScheduleByDate(date).onSuccess { response ->
                 if (response.schedules.isNotEmpty()) {
-                    val schedules = response.schedules.sortedBy{it.meetTime}
-                    val upcomingSchedules = getUpcomingSchedules(schedules)
+                    var schedules = response.schedules.sortedBy{it.meetTime}
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    if(date == LocalDate.now().format(formatter)) {
+                        schedules = getUpcomingSchedules(schedules)
+                    }
                     _schedules.value = schedules
                     Log.d("ScheduleViewModel", response.toString())
                 } else {

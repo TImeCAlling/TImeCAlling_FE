@@ -48,6 +48,9 @@
         android:name="com.umc.timeCAlling.presentation.calendar.wakeup.WakeupFragment"
         android:label="WakeupFragment"
         tools:layout="@layout/fragment_wakeup">
+        <action
+            android:id="@+id/action_wakeupFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment"/>
     </fragment>
 
     <navigation
