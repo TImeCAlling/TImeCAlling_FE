@@ -376,18 +376,14 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
             binding.tvMyprofileCurrentName.text.toString()
         } else null
 
-        val updatedAvgPrepTime = if (avgPrepTime != binding.tvMyprofileTimeEdit.text.toString().toInt()) {
-            binding.tvMyprofileTimeEdit.text.toString().toInt()
-        } else null
+        val updatedAvgPrepTime = binding.tvMyprofileTimeEdit.text.toString().toIntOrNull()
 
-        val updatedFreeTime = if (freeTime != binding.tvMyprofileSpareEdit.text.toString()) {
-            when (binding.tvMyprofileSpareEdit.text.toString()) {
-                "여유" -> "PLENTY"
-                "넉넉" -> "RELAXED"
-                "딱딱" -> "TIGHT"
-                else -> null
-            }
-        } else null
+        val updatedFreeTime = when (binding.tvMyprofileSpareEdit.text.toString()) {
+            "여유" -> "PLENTY"
+            "넉넉" -> "RELAXED"
+            "딱딱" -> "TIGHT"
+            else -> null
+        }
 
         myprofileViewModel.updateUser(
             updatedNickname,
@@ -396,7 +392,6 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
             imageFile
         )
     }
-
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
