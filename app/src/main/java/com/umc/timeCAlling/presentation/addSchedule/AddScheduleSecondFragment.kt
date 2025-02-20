@@ -37,6 +37,7 @@ import com.umc.timeCAlling.presentation.addSchedule.adapter.CategoryRVA
 import com.umc.timeCAlling.presentation.alarm.AlarmHelper
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
 @AndroidEntryPoint
@@ -52,12 +53,9 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
     private lateinit var spf: SharedPreferences
 
     override fun initView() {
-        binding.apply {
-            menuAddScheduleRepeat.setOnCheckedChangeListener { _, isChecked -> setSwitchColor(binding.menuAddScheduleRepeat, isChecked)}
-        }
         spf = requireContext().getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
         mode = viewModel.getMode()
-        scheduleId = arguments?.getInt("scheduleId") ?: -2
+        scheduleId = arguments?.getInt("scheduleId") ?: -1
         Log.d("AddScheduleSecondFragment", "scheduleId: $scheduleId")
 
         initSavedData()
@@ -71,13 +69,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
                 if (repeatDates.isNotEmpty()) {
                     val koreanDays = repeatDates.map { day ->
                         when (day) {
-                            "MONDAY" -> "월요일"
-                            "TUESDAY" -> "화요일"
-                            "WEDNESDAY" -> "수요일"
-                            "THURSDAY" -> "목요일"
-                            "FRIDAY" -> "금요일"
-                            "SATURDAY" -> "토요일"
-                            "SUNDAY" -> "일요일"
+                            "MONDAY" -> "월"
+                            "TUESDAY" -> "화"
+                            "WEDNESDAY" -> "수"
+                            "THURSDAY" -> "목"
+                            "FRIDAY" -> "금"
+                            "SATURDAY" -> "토"
+                            "SUNDAY" -> "일"
                             else -> day
                         }
                     }
@@ -246,24 +244,20 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             isRepeatEnabled = isChecked
             viewModel.setIsRepeat(isRepeatEnabled)
             updateRepeatInfo()
+            if (isChecked) {
+                binding.menuAddScheduleRepeat.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
+                binding.menuAddScheduleRepeat.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+            } else {
+                binding.menuAddScheduleRepeat.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_400))
+                binding.menuAddScheduleRepeat.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray_600))
+            }
         }
     }
 
     private fun updateRepeatInfo() {
         val repeatText = if (isRepeatEnabled) {
             if (selectedDays.isNotEmpty()) {
-                val selectedDaysOfWeek = selectedDays.joinToString(", ") { day ->
-                    when (day) {
-                        "월" -> "월요일"
-                        "화" -> "화요일"
-                        "수" -> "수요일"
-                        "목" -> "목요일"
-                        "금" -> "금요일"
-                        "토" -> "토요일"
-                        "일" -> "일요일"
-                        else -> day
-                    }
-                }
+                val selectedDaysOfWeek = selectedDays.joinToString(", ")
                 "$selectedDaysOfWeek 마다"
             } else {
                 "없음"
@@ -395,6 +389,18 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             binding.layoutAddSheduleRepeatDate.visibility = View.VISIBLE
             repeatBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
+            // CalendarDay를 LocalDate로 변환
+            val startLocalDate = LocalDate.of(startDate!!.year, startDate!!.month + 1, startDate!!.day)
+            val endLocalDate = LocalDate.of(endDate!!.year, endDate!!.month + 1, endDate!!.day)
+
+            // 날짜 비교 및 재설정
+            if (startLocalDate.isAfter(endLocalDate)) {
+                // startLocalDate가 endLocalDate보다 늦은 경우, 두 날짜를 교환
+                val temp = startDate
+                startDate = endDate
+                endDate = temp
+            }
+
             viewModel.setStartDate(startTextView.text.toString())
             viewModel.setEndDate(endTextView.text.toString())
         }
@@ -428,20 +434,13 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
 
         val categoryBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (isAdded && viewLifecycleOwner.lifecycle.currentState.isAtLeast(
-                        Lifecycle.State.INITIALIZED
-                    )
-                ) {
-                    if (slideOffset <= 0) {
-                        binding.viewBottomSheetBackground.visibility =
-                            View.INVISIBLE
-                    } else if (slideOffset > 0) {
-                        binding.viewBottomSheetBackground.visibility = View.VISIBLE
-                    }
+                if (slideOffset <= 0) {
+                    binding.viewBottomSheetBackground.visibility =
+                        View.INVISIBLE
+                } else if (slideOffset > 0) {
+                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
                 }
             }
-
-
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 
             }
@@ -577,14 +576,6 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
              }*/
         } else {
             Log.e("AddScheduleSecondFragment", "scheduleDate or scheduleTime is null")
-        }
-    }
-
-    private fun setSwitchColor(switch: MaterialSwitch, isChecked: Boolean) {
-        if(isChecked) {
-            switch.trackTintList = getResources().getColorStateList(R.color.mint_main)
-        } else {
-            switch.trackTintList = getResources().getColorStateList(R.color.gray_400)
         }
     }
 

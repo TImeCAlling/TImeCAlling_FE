@@ -86,6 +86,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         }
 
         binding.ivLocationSearch.setOnClickListener {
+            hideKeyboard(view ?: binding.root)
             searchLocation()
             val keyword = binding.etLocationSearchLocation.text.toString()
             viewModel.addRecentSearch(keyword) // 검색어 추가
@@ -103,6 +104,10 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         binding.ivLocationSearchBack.setOnSingleClickListener {
             findNavController().popBackStack()
         }
+    }
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun checkLocationPermission() {
@@ -142,7 +147,7 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
 
     private fun getCurrentLocation() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 if (location != null) {
                     Log.d("LocationSearchFragment", "Current Location in getCurrentLocation(): ${location.latitude}, ${location.longitude}")
                     viewModel.updateCurrentLocation(location)
@@ -219,6 +224,10 @@ class LocationSearchFragment : BaseFragment<FragmentLocationSearchBinding>(com.u
         tMapView = TMapView(requireContext())
         tMapView.setSKTMapApiKey(getString(R.string.tmap_app_key)) // T map API 키로 변경
         binding.tmapView.addView(tMapView)
+        tMapView.setOnMapReadyListener {
+            Log.d("LocationSearchFragment", "TMapView is ready")
+            getCurrentLocation()
+        }
     }
 
     private fun initRecentSearchRVA() {

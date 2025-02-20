@@ -23,13 +23,13 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="23dp">
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/iv_add_schedule_success_back"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_arrow_left"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
                 android:id="@+id/tv_add_schedule_title"

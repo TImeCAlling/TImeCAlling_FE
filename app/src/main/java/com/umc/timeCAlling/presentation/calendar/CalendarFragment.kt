@@ -30,6 +30,7 @@ import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponse
 import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.calendar.adapter.DetailScheduleRVA
+import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -45,7 +46,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var scheduleId : Int = 0
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
     private val adapter : DetailScheduleRVA by lazy {
-        DetailScheduleRVA(scheduleViewModel, viewLifecycleOwner)
+        DetailScheduleRVA(requireContext(), scheduleViewModel, viewLifecycleOwner)
     }
     private val wakeupViewModel: WakeupViewModel by activityViewModels()
 

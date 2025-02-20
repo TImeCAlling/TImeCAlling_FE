@@ -36,7 +36,10 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
         viewModel.scheduleUsers.observe(viewLifecycleOwner) { users ->
             if (users.isNullOrEmpty()) {
                 wakeupPeopleRVA.submitList(emptyList())
+                binding.ivWakeupNonePeople.visibility = View.VISIBLE
+                binding.tvWakeupPeople.visibility = View.GONE
             } else {
+                binding.ivWakeupNonePeople.visibility = View.INVISIBLE
                 wakeupPeopleRVA.submitList(users)
             }
         }

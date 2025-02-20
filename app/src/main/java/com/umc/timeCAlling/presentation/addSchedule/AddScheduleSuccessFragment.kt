@@ -34,9 +34,9 @@ class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding
         binding.tvAddScheduleSuccessShare.setOnSingleClickListener {
             issueLink()
         }
-        binding.ivAddScheduleSuccessBack.setOnSingleClickListener {
+        /*binding.ivAddScheduleSuccessBack.setOnSingleClickListener {
             findNavController().popBackStack()
-        }
+        }*/
 
     }
 
@@ -65,7 +65,8 @@ class AddScheduleSuccessFragment: BaseFragment<FragmentAddScheduleSuccessBinding
         binding.tvAddScheduleSuccessNext.setOnClickListener {
             viewModel.resetData()
             findNavController().navigate(R.id.action_addScheduleSuccessFragment_to_homeFragment)
-            scheduleId = -1
+            viewModel.setMode(" ")
+            viewModel.setScheduleId(-1)
         }
     }
 

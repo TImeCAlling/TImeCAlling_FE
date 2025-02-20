@@ -1,5 +1,8 @@
 package com.umc.timeCAlling.presentation.addSchedule
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
@@ -7,18 +10,25 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentAddScheduleBinding
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.util.extension.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import kotlin.text.contains
 import kotlin.text.format
 import kotlin.text.substring
 
@@ -32,6 +42,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
     private var mode : String = ""
     private var location : Boolean = false
     private var _binding : FragmentAddScheduleBinding? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun initObserver() {
 
@@ -94,6 +105,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             findNavController().popBackStack()
             viewModel.setMode("")
         }
+        getCurrentLocation()
     }
 
     private fun bottomNavigationRemove() {
@@ -147,7 +159,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
         }
         viewModel.moveTime.value?.let { moveTime ->
             binding.tvAddScheduleHour.text = if (moveTime >= 60) (moveTime / 60).toString() else "0"
-            binding.tvAddScheduleMinute.text = (moveTime % 60).toString()
+            binding.tvAddScheduleMinute.text = (moveTime % 60).toString()?:null
             if (moveTime != 0) { // 0이 아닌 경우에만 배경 변경
                 binding.tvAddScheduleTimeTaken.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_rect_999_gray900_fill)
                 binding.tvAddScheduleTimeTaken.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -193,13 +205,14 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 binding.ivAddScheduleDateArrow.visibility = View.VISIBLE
 
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
+                binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
                 viewModel.setScheduleDate(formattedDate!!)
             }
         }
 
-        // 이미지 클릭 리스너
         binding.layoutAddScheduleDate.setOnClickListener {
+            hideKeyboard(view ?: binding.root)
             if (dateBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // 시간 BottomSheet 숨기기
@@ -214,8 +227,10 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (slideOffset <= 0) {
                     binding.viewBottomSheetBackground.visibility = View.INVISIBLE
+                    binding.viewBottomSheetBackground.isClickable = false
                 } else if (slideOffset > 0) {
                     binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                    binding.viewBottomSheetBackground.isClickable = true
                 }
             }
 
@@ -261,12 +276,13 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             binding.ivAddScheduleTimeArrow.visibility = View.VISIBLE
 
             timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨기기
+            binding.viewBottomSheetBackground.visibility = View.INVISIBLE
 
             viewModel.setScheduleTime(formattedTime)
         }
 
-        // 이미지 클릭 리스너
         binding.layoutAddScheduleTime.setOnClickListener {
+            hideKeyboard(view ?: binding.root)
             if (timeBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 timeBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 dateBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -280,13 +296,12 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
         timeBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // binding 객체가 null이 아닌지 확인
-                if (_binding != null) {
-                    if (slideOffset <= 0) {
-                        binding.viewBottomSheetBackground.visibility = View.INVISIBLE
-                    } else if (slideOffset > 0) {
-                        binding.viewBottomSheetBackground.visibility = View.VISIBLE
-                    }
+                if (slideOffset <= 0) {
+                    binding.viewBottomSheetBackground.visibility = View.INVISIBLE
+                    binding.viewBottomSheetBackground.isClickable = false
+                } else if (slideOffset > 0) {
+                    binding.viewBottomSheetBackground.visibility = View.VISIBLE
+                    binding.viewBottomSheetBackground.isClickable = true
                 }
             }
 
@@ -298,7 +313,8 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
 
     private fun initScheduleName(){
         binding.etAddScheduleName.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10)) // 최대 글자 수 10글자로 제한
-
+        binding.etAddScheduleName.imeOptions = EditorInfo.IME_ACTION_DONE
+        binding.etAddScheduleName.setSingleLine()
         binding.etAddScheduleName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // 텍스트 변경 전
@@ -315,10 +331,23 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 // 텍스트 변경 후
             }
         })
+        // 엔터 키 이벤트 처리
+        binding.etAddScheduleName.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                hideKeyboard(v)
+                true // 이벤트 처리 완료
+            } else {
+                false // 이벤트 처리 실패
+            }
+        }
     }
 
     private fun initScheduleMemo(){
         binding.etAddScheduleMemo.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20)) // 최대 글자 수 10글자로 제한
+        // imeOptions 설정
+        binding.etAddScheduleMemo.imeOptions = EditorInfo.IME_ACTION_DONE
+        // singleLine 설정
+        binding.etAddScheduleMemo.setSingleLine()
 
         binding.etAddScheduleMemo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -334,6 +363,15 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
             override fun afterTextChanged(s: Editable?) {
             }
         })
+        // 엔터 키 이벤트 처리
+        binding.etAddScheduleMemo.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                hideKeyboard(v)
+                true // 이벤트 처리 완료
+            } else {
+                false // 이벤트 처리 실패
+            }
+        }
     }
 
     private fun moveToLocationSearch() {
@@ -363,7 +401,7 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 }
             }
         }
-        if(binding.etAddScheduleName.text.isNotEmpty()&& binding.etAddScheduleMemo.text.isNotEmpty()&& binding.tvAddScheduleDate.text.isNotEmpty()&& binding.tvAddScheduleTime.text.isNotEmpty()&& binding.tvAddScheduleLocation.text.isNotEmpty()&& binding.tvAddScheduleMinute.text.isNotEmpty()) {
+        if(binding.etAddScheduleName.text.isNotEmpty()&& binding.etAddScheduleMemo.text.isNotEmpty()&& binding.tvAddScheduleDate.text!="날짜를 입력하세요"&& binding.tvAddScheduleTime.text!="시간을 입력하세요"&& binding.tvAddScheduleLocation.text!="장소를 입력해주세요"&& binding.tvAddScheduleMinute.text!="    ") {
             binding.tvAddScheduleNext.isEnabled = true
             binding.tvAddScheduleNext.backgroundTintList =
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.mint_main))
@@ -382,5 +420,27 @@ class AddScheduleFragment: BaseFragment<FragmentAddScheduleBinding>(R.layout.fra
                 )
             }
         }else{ binding.tvAddScheduleNext.isEnabled = false }
+    }
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+    private fun getCurrentLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    Log.d("AddScheduleFragment", "Current Location in getCurrentLocation(): ${location.latitude}, ${location.longitude}")
+                    viewModel.updateCurrentLocation(location)
+                } else {
+                    Log.d("AddScheduleFragment", "Location is null")
+                }
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -161,7 +161,7 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
                 binding.tvMypageName.text = response.nickname + "님"
                 Glide.with(requireContext())
                     .load(response.profileImage)
-                    .into(ivMypagePic)
+                    .into(ivMypageProfile)
             }
         }
     }

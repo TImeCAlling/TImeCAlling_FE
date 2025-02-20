@@ -178,7 +178,7 @@
                         <com.google.android.material.materialswitch.MaterialSwitch
                             android:id="@+id/menu_add_schedule_repeat"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="22dp"
                             app:thumbTint="@color/white"
                             app:trackTint="@color/gray_400"
                             android:layout_weight="1"/>

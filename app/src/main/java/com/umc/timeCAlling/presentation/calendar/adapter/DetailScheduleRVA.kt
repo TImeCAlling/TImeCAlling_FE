@@ -1,10 +1,13 @@
 package com.umc.timeCAlling.presentation.calendar.adapter
 
+import android.content.Context
+import android.content.res.ColorStateList
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +15,11 @@ import com.bumptech.glide.Glide
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleDetailBinding
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
+import com.umc.timeCAlling.presentation.addSchedule.CategoryManager
 import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
 
 class DetailScheduleRVA(
+    private val context: Context,
     private val viewModel: ScheduleViewModel,
     private val viewLifecycleOwner: LifecycleOwner
 ) : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
@@ -26,11 +31,11 @@ class DetailScheduleRVA(
         Log.d("DetailScheduleRVA", "setScheduleList 호출됨")
         notifyDataSetChanged()
     }
-
     inner class DetailScheduleViewHolder(private val binding: ItemTodayScheduleDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.tvDetailScheduleTitle
         val repeatInfo = binding.tvDetailScheduleRepeatInfo
         val category = binding.tvDetailScheduleCategory
+        val categoryImage = binding.ivDetailScheduleCategory
         val time = binding.tvDetailScheduleTime
         val timeType = binding.tvDetailScheduleTimeType
 
@@ -104,6 +109,8 @@ class DetailScheduleRVA(
             holder.repeatInfo.text = ""
         }
         holder.category.text = detailSchedules[position].categories[0].categoryName //카테고리 색 반영 나중에
+        holder.category.setTextColor(holder.category.context.getColor(CategoryManager.getColor(detailSchedules[position].categories[0].categoryColor)))
+        holder.categoryImage.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, CategoryManager.getColor(detailSchedules[position].categories[0].categoryColor)))
 
         if (position == 0) {
             holder.view.setBackgroundResource(R.drawable.shape_rect_999_mint_fill)
