@@ -251,7 +251,7 @@
 
                 <!-- arrow -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_signup_term_arro_2"
+                    android:id="@+id/cl_signup_term_arrow_2"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1:1"
@@ -359,7 +359,7 @@
 
                 <!-- arrow -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_signup_term_arro_3"
+                    android:id="@+id/cl_signup_term_arrow_3"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1:1"
@@ -468,7 +468,7 @@
 
                 <!-- arrow -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_signup_term_arro_4"
+                    android:id="@+id/cl_signup_term_arrow_4"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1:1"
@@ -576,7 +576,7 @@
 
                 <!-- arrow -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_signup_term_arro_5"
+                    android:id="@+id/cl_signup_term_arrow_5"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1:1"
@@ -684,7 +684,7 @@
 
                 <!-- arrow -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_signup_term_arro_6"
+                    android:id="@+id/cl_signup_term_arrow_6"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1:1"
@@ -792,7 +792,7 @@
 
                 <!-- arrow -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_signup_term_arro_7"
+                    android:id="@+id/cl_signup_term_arrow_7"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1:1"

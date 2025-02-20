@@ -107,11 +107,11 @@ class SignupTermFragment : BaseFragment<FragmentSignupTermBinding>(R.layout.frag
     private fun setupArrowClickListeners() {
         val arrowConfigs = listOf(
             Triple(binding.ivSignupTermArrowUp2, binding.ivSignupTermArrowDown2, binding.svSignupTermContent2),
-            Triple(binding.ivSignupTermArrowUp3, binding.ivSignupTermArrowDown3, binding.tvSignupTermContent3),
-            Triple(binding.ivSignupTermArrowUp4, binding.ivSignupTermArrowDown4, binding.tvSignupTermContent4),
-            Triple(binding.ivSignupTermArrowUp5, binding.ivSignupTermArrowDown5, binding.tvSignupTermContent5),
-            Triple(binding.ivSignupTermArrowUp6, binding.ivSignupTermArrowDown6, binding.tvSignupTermContent6),
-            Triple(binding.ivSignupTermArrowUp7, binding.ivSignupTermArrowDown7, binding.tvSignupTermContent7)
+            Triple(binding.ivSignupTermArrowUp3, binding.ivSignupTermArrowDown3, binding.svSignupTermContent3),
+            Triple(binding.ivSignupTermArrowUp4, binding.ivSignupTermArrowDown4, binding.svSignupTermContent4),
+            Triple(binding.ivSignupTermArrowUp5, binding.ivSignupTermArrowDown5, binding.svSignupTermContent5),
+            Triple(binding.ivSignupTermArrowUp6, binding.ivSignupTermArrowDown6, binding.svSignupTermContent6),
+            Triple(binding.ivSignupTermArrowUp7, binding.ivSignupTermArrowDown7, binding.svSignupTermContent7)
         )
 
         arrowConfigs.forEach { (arrowUp, arrowDown, contentView) ->
