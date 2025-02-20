@@ -70,6 +70,9 @@
             <action
                 android:id="@+id/action_mypageFragment_to_mypageVoiceFragment"
                 app:destination="@id/mypageVoiceFragment"/>
+            <action
+                android:id="@+id/action_mypageFragment_to_mypageTermFragment"
+                app:destination="@id/mypageTermFragment"/>
         </fragment>
         <fragment
             android:id="@+id/myprofileFragment"
@@ -112,6 +115,11 @@
             android:name="com.umc.timeCAlling.presentation.mypage.MypageVoiceFragment"
             android:label="MypageVoiceFragment"
             tools:layout="@layout/fragment_mypage_voice"/>
+        <fragment
+            android:id="@+id/mypageTermFragment"
+            android:name="com.umc.timeCAlling.presentation.mypage.MypageTermFragment"
+            android:label="MypageTermFragment"
+            tools:layout="@layout/fragment_mypage_term"/>
     </navigation>
 
     <navigation
