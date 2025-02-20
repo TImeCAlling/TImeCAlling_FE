@@ -1,40 +1,35 @@
 package com.umc.timeCAlling.presentation.alarm
 
-import android.Manifest
-import android.app.AlarmManager
 import android.app.KeyguardManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.icu.util.Calendar
+import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
-import android.media.Ringtone
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityAlarmBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
-import kotlin.text.clear
-import kotlin.text.format
 import java.util.Locale
 
 @AndroidEntryPoint
-class AlarmActivity : AppCompatActivity() {
+class AlarmActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
     private lateinit var binding: ActivityAlarmBinding
     private var mediaPlayer: MediaPlayer? = null
     private var alarmId: Int = 0
     private lateinit var spf: SharedPreferences
+    private lateinit var tts: TextToSpeech
+    private var isTtsInitialized = false
+    private var ttsText: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +37,8 @@ class AlarmActivity : AppCompatActivity() {
         binding = ActivityAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
         spf = getSharedPreferences("my_app_prefs", Context.MODE_PRIVATE)
+        // TTS 초기화
+        tts = TextToSpeech(this, this)
         // 화면이 꺼져 있는지 확인
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         if (!powerManager.isInteractive) {
@@ -118,8 +115,21 @@ class AlarmActivity : AppCompatActivity() {
             val ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             mediaPlayer = MediaPlayer.create(this, ringtoneUri)
             mediaPlayer?.isLooping = true
+            // 알람 소리 음량 고정
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+            val fixedVolume = (maxVolume * 0.8).toInt() // 최대 음량의 80%로 설정
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, fixedVolume, 0)
+            // 알람 소리 AudioAttributes 설정
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+            mediaPlayer?.setAudioAttributes(audioAttributes)
         }
         mediaPlayer?.start()
+        // TTS 출력 시작
+        startTts()
     }
 
     private fun stopAlarm() {
@@ -143,5 +153,54 @@ class AlarmActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopAlarm()
+        stopTts()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.KOREAN)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language not supported!")
+            } else {
+                isTtsInitialized = true
+                // TTS 초기화 후 TTS 출력 시작
+                startTts()
+            }
+        }else {
+            Log.e("TTS", "Initialization Failed!")
+        }
+    }
+
+    private fun startTts() {
+        if (isTtsInitialized) {
+            ttsText = "일어나세요!"
+            speakOut()
+        }
+    }
+
+    private fun speakOut() {
+        if (isTtsInitialized) {
+            // TTS 음량 고정
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+            val fixedVolume = (maxVolume * 0.8).toInt() // 최대 음량의 80%로 설정
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, fixedVolume, 0)
+            // TTS AudioAttributes 설정
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build()
+            tts.setAudioAttributes(audioAttributes)
+            // TTS 출력
+            tts.speak(ttsText, TextToSpeech.QUEUE_FLUSH, null, "tts1")
+        }
+    }
+
+    private fun stopTts() {
+        if (isTtsInitialized) {
+            tts.stop()
+            tts.shutdown()
+            isTtsInitialized = false
+        }
     }
 }
