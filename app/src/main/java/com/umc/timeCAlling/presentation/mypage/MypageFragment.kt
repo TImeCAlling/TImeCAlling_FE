@@ -18,9 +18,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.FragmentMypageBinding
-import com.umc.timeCAlling.util.network.UiState
 import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
 import com.umc.timeCAlling.presentation.home.HomeViewModel
+import com.umc.timeCAlling.util.network.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -138,7 +138,9 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
             homeViewModel.getSuccessRate()
             homeViewModel.successRate.observe(viewLifecycleOwner) { response ->
                 binding.apply {
-                    tvMypageCurrentProgress.text = "약속 성공률 ${response.successRate.toInt()}%\n다음 목표 ${if(response.successRate.toInt() + 10 > 100) 100 else response.successRate.toInt() + 10}%, 함께 도전해요!"
+                    val successRate = response.successRate.toInt()
+                    val nearestTen = roundUpToNearestTen(successRate)
+                    tvMypageCurrentProgress.text = "약속 성공률 ${successRate}%\n다음 목표 ${if(successRate == 100) 100 else nearestTen}%, 함께 도전해요!"
                     tvMypageProgressPercent.text = "${response.successRate.toInt()}%"
                     viewMypageProgressForeground.layoutParams = (viewMypageProgressForeground.layoutParams as ViewGroup.LayoutParams).apply {
                         this.width = (maxWidth * response.successRate / 100).toInt()
@@ -149,6 +151,13 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
                 }
             }
         }
+    }
+
+    private fun roundUpToNearestTen(number: Int): Int {
+        if (number < 0) {
+            throw IllegalArgumentException("Number must be non-negative")
+        }
+        return (number / 10 + 1) * 10
     }
 
     private fun initProfile() {

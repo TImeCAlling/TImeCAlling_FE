@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.umc.timeCAlling.domain.model.response.schedule.PastScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleStatusResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.SuccessRateResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.TodayScheduleResponseModel
@@ -129,5 +130,21 @@ class HomeViewModel @Inject constructor(
     fun clearDeletedAll() {
         sharedPrefsHelper.clearDeletedList("DeletedChecklistPrefs")
         _deletedId.value = emptyList()
+    }
+
+    private val _pastChecklists = MutableLiveData<List<PastScheduleResponseModel>?>()
+    val pastChecklists: LiveData<List<PastScheduleResponseModel>?> get() = _pastChecklists
+
+    fun getPastCheckLists() {
+        viewModelScope.launch {
+            scheduleRepository.getPastCheckLists().onSuccess { response ->
+                if (response.checkLists != null) {
+                    _pastChecklists.value = response.checkLists
+                } else _pastChecklists.value = emptyList()
+                Log.d("getPastCheckLists()", response.toString())
+            }.onFailure { error ->
+                Log.e("getPastCheckLists()", error.toString())
+            }
+        }
     }
 }

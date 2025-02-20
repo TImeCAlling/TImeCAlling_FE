@@ -3,6 +3,7 @@ package com.umc.timeCAlling.domain.repository
 import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.PastScheduleListResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleStatusResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
@@ -23,4 +24,6 @@ interface ScheduleRepository {
     suspend fun getScheduleUsers(scheduleId: Int) : Result<List<ScheduleUsersResponseModel>>
     suspend fun getDetailSchedule(checklistId: Int) : Result<DetailScheduleResponseModel>
     suspend fun getScheduleStatus(scheduleId: Int) : Result<ScheduleStatusResponseModel>
+    suspend fun getPastCheckLists() : Result<PastScheduleListResponseModel>
+
 }

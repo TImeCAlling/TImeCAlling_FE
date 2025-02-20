@@ -5,6 +5,7 @@ import com.umc.timeCAlling.data.dto.request.schedule.ScheduleRequestDto
 import com.umc.timeCAlling.data.dto.request.schedule.CreateScheduleResponseDto
 import com.umc.timeCAlling.data.dto.request.schedule.ScheduleResponseDto
 import com.umc.timeCAlling.data.dto.response.schedule.DetailScheduleResponseDto
+import com.umc.timeCAlling.data.dto.response.schedule.PastScheduleListResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.PATCH
@@ -75,4 +76,8 @@ interface ScheduleService {
     suspend fun getScheduleStatus(
         @Path("scheduleId") scheduleId: Int
     ) : BaseResponse<ScheduleStatusResponseDto>
+
+    @GET("/api/schedules/past")
+    suspend fun getPastCheckLists(
+    ) : BaseResponse<PastScheduleListResponseDto>
 }

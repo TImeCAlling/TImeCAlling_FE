@@ -4,6 +4,7 @@ import com.umc.timeCAlling.data.datasource.ScheduleDataSource
 import com.umc.timeCAlling.domain.model.request.schedule.ScheduleRequestModel
 import com.umc.timeCAlling.domain.model.response.schedule.CreateScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.DetailScheduleResponseModel
+import com.umc.timeCAlling.domain.model.response.schedule.PastScheduleListResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleUsersResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleStatusResponseModel
@@ -49,4 +50,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun getScheduleStatus(scheduleId: Int): Result<ScheduleStatusResponseModel> =
         runCatching { scheduleDataSource.getScheduleStatus(scheduleId).result.toScheduleStatusResponseModel() }
+
+    override suspend fun getPastCheckLists(): Result<PastScheduleListResponseModel> =
+        runCatching { scheduleDataSource.getPastCheckLists().result.toPastScheduleListResponseModel() }
 }

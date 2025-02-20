@@ -443,7 +443,7 @@
                         android:id="@+id/tv_pre_ment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📣 5분 전입니다. 나갈 준비하세요."
+                        android:text="📣 약속 시간까지, 우리 조금만 더 서둘러볼까요?"
                         style="@style/TextAppearance.TimeCAlling.Body2"
                         android:layout_marginTop="20dp"
                         android:layout_marginHorizontal="15dp"
@@ -567,6 +567,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="15dp">
                         <TextView
+                            android:id="@+id/tv_topsheet_show_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="자세한 일정 보기"
