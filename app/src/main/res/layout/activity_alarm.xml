@@ -52,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:text="'홍길동' 님의 알람"
                 style="@style/TextAppearance.TimeCAlling.SemiBold_36sp"
-                android:layout_marginTop="12dp"/>
+                android:layout_marginTop="12dp"
+                android:gravity="center"/>
             <TextView
                 android:id="@+id/tv_alarm_content"
                 android:layout_width="wrap_content"
