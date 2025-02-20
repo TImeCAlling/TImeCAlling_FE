@@ -1,5 +1,6 @@
 package com.umc.timeCAlling.presentation.mypage
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyprofileViewModel @Inject constructor(
-    private val mypageRepository: MypageRepository
+    private val mypageRepository: MypageRepository,
+    private val spf: SharedPreferences
 ) : ViewModel() {
 
     private val _userInfo = MutableStateFlow<UiState<GetUserResponseModel>>(UiState.Loading)
@@ -118,6 +120,12 @@ class MyprofileViewModel @Inject constructor(
             put("avgPrepTime", avgPrepTime ?: JSONObject.NULL) // ✅ 명시적 null 값 포함
             put("freeTime", freeTime ?: JSONObject.NULL) // ✅ 명시적 null 값 포함
 
+            if(nickname != null) {
+                spf.edit().apply {
+                    putString("nickName", nickname) // putString으로 변경
+                    apply()
+                }
+            }
             if (imageFile == null) {
                 put("profileImage", currentProfileImageUrl ?: JSONObject.NULL)
             }

@@ -30,7 +30,7 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
     private lateinit var navController: NavController
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val scheduleViewModel: ScheduleViewModel by activityViewModels()
-
+    private val spf by lazy { requireActivity().getSharedPreferences("my_app_prefs", Context.MODE_PRIVATE) }
     private val myprofileViewModel: MyprofileViewModel by viewModels()
     private var nickname: String = ""
 
@@ -168,6 +168,10 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
         scheduleViewModel.user.observe(viewLifecycleOwner) { response ->
             binding.apply {
                 binding.tvMypageName.text = response.nickname + "님"
+                spf.edit().apply{
+                    putString("nickName", response.nickname)
+                    apply()
+                }
                 Glide.with(requireContext())
                     .load(response.profileImage)
                     .into(ivMypageProfile)

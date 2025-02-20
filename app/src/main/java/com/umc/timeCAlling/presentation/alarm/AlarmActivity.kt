@@ -1,44 +1,48 @@
 package com.umc.timeCAlling.presentation.alarm
 
-import android.Manifest
-import android.app.AlarmManager
 import android.app.KeyguardManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
+import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
-import android.media.Ringtone
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
-import androidx.core.content.ContextCompat
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ActivityAlarmBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.text.clear
+import java.util.Locale
 
 @AndroidEntryPoint
-class AlarmActivity : AppCompatActivity() {
+class AlarmActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
     private lateinit var binding: ActivityAlarmBinding
     private var mediaPlayer: MediaPlayer? = null
     private var alarmId: Int = 0
+    private lateinit var spf: SharedPreferences
+    private lateinit var tts: TextToSpeech
+    private var isTtsInitialized = false
+    private var ttsText: String = ""
+    private val ttsHandler = Handler(Looper.getMainLooper())
+    private val ttsRepeatInterval: Long = 8000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("AlarmActivity", "onCreate() called")
         binding = ActivityAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        spf = getSharedPreferences("my_app_prefs", Context.MODE_PRIVATE)
+        // TTS 초기화
+        tts = TextToSpeech(this, this)
         // 화면이 꺼져 있는지 확인
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         if (!powerManager.isInteractive) {
@@ -63,21 +67,12 @@ class AlarmActivity : AppCompatActivity() {
                         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
             )
         }
-
+        val nickName = spf.getString("nickName", "") ?: "사용자"
         // Intent에서 알람 정보 가져오기
         alarmId = intent.getIntExtra("alarmId", 0)
         val alarmName = intent.getStringExtra("alarmName") ?: "Unknown Alarm"
-        val year = intent.getIntExtra("year", 0)
-        val month = intent.getIntExtra("month", 0)
-        val dayOfMonth = intent.getIntExtra("dayOfMonth", 0)
-        val hourOfDay = intent.getIntExtra("hourOfDay", 0)
-        val minute = intent.getIntExtra("minute", 0)
-
-        // Intent에서 FCM data payload 가져오기
-        val fcmTitle = intent.getStringExtra("title")
-        val fcmBody = intent.getStringExtra("body")
-        val fcmScheduledDate = intent.getStringExtra("scheduledDate")
-        val fcmSenderNickname = intent.getStringExtra("senderNickname")
+        val formattedDate = intent.getStringExtra("formattedDate") ?: ""
+        val fcmSenderNickname = intent.getStringExtra("senderNickname") ?: null
 
         // 다른 앱 위에 윈도우 표시
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -96,23 +91,19 @@ class AlarmActivity : AppCompatActivity() {
         val alarmContent2TextView = findViewById<TextView>(R.id.tv_alarm_content_2)
         val alarmStopImageView = findViewById<ImageView>(R.id.iv_alarm_stop)
 
-        // TextView에 알람 이름과 날짜 설정
+        // TextView에 알람 이름 설정
         alarmNameTextView.text = alarmName
-        alarmDateTextView.text = String.format("%04d-%02d-%02d %02d:%02d", year, month + 1, dayOfMonth, hourOfDay, minute)
-        // TextView에 추가 텍스트 설정
-        alarmTitleTextView.text = "'${alarmName}' 님의 알람" // 예시 텍스트
-        alarmContentTextView.text = "김콜링님이 빨리 일어나라고 했어" // 예시 텍스트
-        alarmContent2TextView.text = "준비 끝났지?" // 예시 텍스트
+        alarmDateTextView.text = formattedDate
 
         // TextView에 추가 텍스트 설정 (FCM data payload)
-        if (fcmTitle != null && fcmBody != null && fcmScheduledDate != null && fcmSenderNickname != null) {
-            alarmTitleTextView.text = "'${fcmTitle}'" // 예시 텍스트
-            alarmContentTextView.text = "${fcmSenderNickname}님이 빨리 일어나라고 했어" // 예시 텍스트
-            alarmContent2TextView.text = "${fcmBody}" // 예시 텍스트
+        if (alarmName != null && formattedDate != null && fcmSenderNickname != null) {
+            alarmTitleTextView.text = "'${alarmName}" // 예시 텍스트
+            alarmContentTextView.text = "${nickName}님, 벌써 약속 시간 다가와요!" // 예시 텍스트
+            alarmContent2TextView.text = "${fcmSenderNickname}님이 깨우라고 하셨어요!" // 예시 텍스트
         } else {
-            alarmTitleTextView.text = "'${alarmName}' 님의 알람" // 예시 텍스트
-            alarmContentTextView.text = "김콜링님이 빨리 일어나라고 했어" // 예시 텍스트
-            alarmContent2TextView.text = "준비 끝났지?" // 예시 텍스트
+            alarmTitleTextView.text = "${nickName}님의 알람" // 예시 텍스트
+            alarmContentTextView.text = "약속 잘 지키셨겠죠?" // 예시 텍스트
+            alarmContent2TextView.text = "오늘 일정도 좋은 시간 보내세요!" // 예시 텍스트
         }
 
         // 알람 끄기 버튼 클릭 리스너
@@ -128,14 +119,28 @@ class AlarmActivity : AppCompatActivity() {
             val ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             mediaPlayer = MediaPlayer.create(this, ringtoneUri)
             mediaPlayer?.isLooping = true
+            // 알람 소리 음량 고정
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+            val fixedVolume = (maxVolume * 0.95).toInt() // 최대 음량의 80%로 설정
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, fixedVolume, 0)
+            // 알람 소리 AudioAttributes 설정
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+            mediaPlayer?.setAudioAttributes(audioAttributes)
         }
         mediaPlayer?.start()
+        // TTS 출력 시작
+        startTts()
     }
 
     private fun stopAlarm() {
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
+        stopTts()
 
         val alarmHelper = AlarmHelper(this)
         alarmHelper.cancelAlarm(alarmId)
@@ -153,5 +158,67 @@ class AlarmActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopAlarm()
+        stopTts()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.KOREAN)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language not supported!")
+            } else {
+                isTtsInitialized = true
+                // TTS 초기화 후 TTS 출력 시작
+                startTts()
+            }
+        }else {
+            Log.e("TTS", "Initialization Failed!")
+        }
+    }
+
+    private fun startTts() {
+        val nickName = spf.getString("nickName", "") ?: ""
+        val fcmSenderNickname = intent.getStringExtra("senderNickname") ?: null
+
+        if (isTtsInitialized) {
+            ttsText = if (fcmSenderNickname != null) {
+                "${nickName}님, 벌써 약속 시간 다가와요! ${fcmSenderNickname}님이 깨우라고 하셨어요!"
+            } else {
+                "약속 잘 지키셨겠죠? 오늘 일정도 좋은 시간 보내세요!          "
+            }
+            speakOut()
+        }
+    }
+
+    private fun speakOut() {
+        if (isTtsInitialized) {
+            // TTS 음량 고정
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+            val fixedVolume = (maxVolume * 0.8).toInt() // 최대 음량의 80%로 설정
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, fixedVolume, 0)
+            // TTS AudioAttributes 설정
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build()
+            tts.setAudioAttributes(audioAttributes)
+            // TTS 출력
+            tts.speak(ttsText, TextToSpeech.QUEUE_FLUSH, null, "tts1")
+
+            ttsHandler.postDelayed({
+                speakOut()
+            }, ttsRepeatInterval)
+        }
+        isTtsInitialized = true
+    }
+
+    private fun stopTts() {
+        if (isTtsInitialized) {
+            tts.stop()
+            tts.shutdown()
+            isTtsInitialized = false
+            ttsHandler.removeCallbacksAndMessages(null)
+        }
     }
 }

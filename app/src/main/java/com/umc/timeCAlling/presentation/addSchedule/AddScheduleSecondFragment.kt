@@ -557,7 +557,7 @@ class AddScheduleSecondFragment: BaseFragment<FragmentAddScheduleSecondBinding>(
             val (year, month, dayOfMonth) = parseDate(scheduleDate)
             val (hourOfDay, minute) = parseTime(scheduleTime)
 
-            alarmHelper.setAlarm(alarmName, year, month, dayOfMonth, hourOfDay, minute, alarmId)
+            alarmHelper.setAlarm(alarmName, year, month, dayOfMonth, hourOfDay, minute, alarmId, scheduleDate)
 
             /* // 반복 설정 여부 확인
              if (viewModel.isRepeat.value == true) {
