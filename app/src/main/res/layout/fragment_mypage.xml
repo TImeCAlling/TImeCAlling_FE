@@ -67,20 +67,10 @@
                         android:id="@+id/tv_mypage_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="김지각"
+                        android:text="님"
                         style="@style/TextAppearance.TimeCAlling.Head2"
                         android:layout_marginStart="12dp"
                         app:layout_constraintStart_toEndOf="@id/iv_mypage_profile"
-                        app:layout_constraintTop_toTopOf="@id/iv_mypage_profile"
-                        app:layout_constraintBottom_toBottomOf="@id/iv_mypage_profile"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="님"
-                        style="@style/TextAppearance.TimeCAlling.Head2"
-                        app:layout_constraintStart_toEndOf="@id/tv_mypage_name"
                         app:layout_constraintTop_toTopOf="@id/iv_mypage_profile"
                         app:layout_constraintBottom_toBottomOf="@id/iv_mypage_profile"/>
 

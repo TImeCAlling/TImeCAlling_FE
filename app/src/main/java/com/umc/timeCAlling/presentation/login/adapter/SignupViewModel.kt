@@ -17,11 +17,13 @@ import androidx.lifecycle.viewModelScope
 import com.umc.timeCAlling.R
 import com.google.firebase.messaging.FirebaseMessaging
 import com.umc.timeCAlling.MyFirebaseMessagingService
+import com.umc.timeCAlling.domain.model.request.alarm.FcmTokenRequestModel
 import com.umc.timeCAlling.domain.model.request.login.KakaoLoginRequestModel
 import com.umc.timeCAlling.domain.model.request.login.KakaoSignupRequestModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoLoginResponseModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoSignupResponseModel
 import com.umc.timeCAlling.domain.model.response.login.KakaoUserInfoResponseModel
+import com.umc.timeCAlling.domain.repository.AlarmRepository
 import com.umc.timeCAlling.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -40,7 +42,8 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val spf: SharedPreferences,
     application: Application,
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    private val alarmRepository: AlarmRepository
 ) : ViewModel() {
 
 
@@ -71,6 +74,10 @@ class SignupViewModel @Inject constructor(
 
     fun setNickname(name: String) {
         _nickname.value = name
+        spf.edit().apply {
+            putString("nickName", name)
+            apply()
+        }
     }
 
     fun setProfileImage(uri: Uri) {
@@ -179,6 +186,7 @@ class SignupViewModel @Inject constructor(
                 FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val token = task.result
+                        fcmToken(token)
                         Log.d("SignupViewModel", "FCM token on login: $token")
                     } else {
                         Log.e("SignupViewModel", "Failed to get FCM token on login", task.exception)
@@ -188,6 +196,17 @@ class SignupViewModel @Inject constructor(
             }.onFailure { error ->
                 Log.e("SignupViewModel", "서버 로그인 실패: ${error.message}")
                 callback(false)
+            }
+        }
+    }
+
+    fun fcmToken(fcmToken : String){
+        viewModelScope.launch {
+            val requestModel = FcmTokenRequestModel(fcmToken)
+            alarmRepository.fcmToken(requestModel).onSuccess {
+                Log.d("SignupViewModel", "FCM 토큰 전송 성공: $it")
+            }.onFailure { error ->
+                Log.e("SignupViewModel", "FCM 토큰 전송 실패: ${error.message}")
             }
         }
     }

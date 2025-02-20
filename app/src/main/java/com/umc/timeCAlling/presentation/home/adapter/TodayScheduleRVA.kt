@@ -61,8 +61,8 @@ class TodayScheduleRVA(
             holder.timeType.text = timeType
             holder.time.text = "${String.format("%02d", formattedHours)}:${formattedMinutes}"
         }
-        val leftMin = calculateMinutesUntilSpecificTime(meetTime)
-        holder.timeLeft.text = "${leftMin}\nmin"
+        val leftTime = calculateRemainingTime(meetTime)
+        holder.timeLeft.text = if(leftTime["hours"] == 0L) "${leftTime["minutes"]}\nmin" else if(leftTime["minutes"] == 0L) "${leftTime["hours"]}h" else "${leftTime["hours"]}H\n${leftTime["minutes"]}m"
 
         //제일 가까운 일정 ( 첫번째 인덱스 )는 민트색
         if(position == 0) {
@@ -103,13 +103,13 @@ class TodayScheduleRVA(
         return Triple(hours, minutes, seconds)
     }
 
-    private fun calculateMinutesUntilSpecificTime(specificTime: String): Long {
+    fun calculateRemainingTime(timeString: String): Map<String, Long> {
         // 현재 시간 가져오기
         val now = LocalDateTime.now()
 
-        // 특정 시간 파싱 (hh:mm:ss 형식)
+        // 특정 시간 파싱 (HH:mm:ss 형식)
         val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-        val parsedTime = LocalTime.parse(specificTime, timeFormatter)
+        val parsedTime = LocalTime.parse(timeString, timeFormatter)
 
         // 특정 시간의 LocalDateTime 생성
         var specificDateTime = LocalDateTime.of(LocalDate.now(), parsedTime)
@@ -122,7 +122,11 @@ class TodayScheduleRVA(
         // 시간 차이 계산
         val duration = Duration.between(now, specificDateTime)
 
-        // 분 단위로 변환
-        return duration.toMinutes()
+        // 시간과 분 추출
+        val hours = duration.toHours()
+        val minutes = duration.toMinutes() % 60
+
+        // 결과 반환
+        return mapOf("hours" to hours, "minutes" to minutes)
     }
 }

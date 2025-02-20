@@ -75,7 +75,8 @@ class WakeupFragment: BaseFragment<FragmentWakeupBinding>(R.layout.fragment_wake
         }
 
         binding.ivWakeupBack.setOnSingleClickListener {
-            findNavController().popBackStack()
+           // findNavController().popBackStack()
+            findNavController().navigate(R.id.action_wakeupFragment_to_calendarFragment)
         }
 
         binding.rvWakeupPeople.layoutManager = LinearLayoutManager(requireContext())

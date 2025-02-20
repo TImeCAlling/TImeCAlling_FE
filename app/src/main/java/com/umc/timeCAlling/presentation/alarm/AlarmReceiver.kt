@@ -6,6 +6,9 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.media.MediaPlayer
 import android.util.Log
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import com.umc.timeCAlling.util.TokenRefreshWorker
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -14,6 +17,10 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
+
+        val tokenRefreshWorkRequest = OneTimeWorkRequest.Builder(TokenRefreshWorker::class.java).build()
+        WorkManager.getInstance(context).enqueue(tokenRefreshWorkRequest)
+
         val alarmId = intent.getIntExtra("alarmId", 0)
         val alarmName = intent.getStringExtra("alarmName") ?: ""
         val year = intent.getIntExtra("year", -1)
@@ -21,6 +28,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val dayOfMonth = intent.getIntExtra("dayOfMonth", -1)
         val hourOfDay = intent.getIntExtra("hourOfDay", -1)
         val minute = intent.getIntExtra("minute", -1)
+        val formattedDate = intent.getStringExtra("formattedDate") ?: ""
 
         val currentCalendar = Calendar.getInstance()
         val currentYear = currentCalendar.get(Calendar.YEAR)
@@ -31,7 +39,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
         Log.d("AlarmReceiver", "Alarm received for: $alarmName, Date: $year-${month + 1}-$dayOfMonth, Time: $hourOfDay:$minute, alarmId: $alarmId")
         Log.d("AlarmReceiver", "Current Date: $currentYear-${currentMonth + 1}-$currentDayOfMonth")
-
 
         if (year == currentYear && month == currentMonth && dayOfMonth == currentDayOfMonth && hourOfDay == currentHourOfDay && minute == currentMinute) {            Log.d("AlarmReceiver", "Date matches. Starting AlarmActivity.")
             val alarmActivityIntent = Intent(context, AlarmActivity::class.java).apply {
@@ -44,6 +51,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 putExtra("dayOfMonth", dayOfMonth)
                 putExtra("hourOfDay", hourOfDay)
                 putExtra("minute", minute)
+                putExtra("formattedDate", formattedDate)
             }
             context.startActivity(alarmActivityIntent)
         } else {

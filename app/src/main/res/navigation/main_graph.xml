@@ -42,12 +42,19 @@
         <action
             android:id="@+id/action_calendarFragment_to_wakeupFragment"
             app:destination="@id/wakeupFragment"/>
+        <argument
+            android:name="scheduleId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
     </fragment>
     <fragment
         android:id="@+id/wakeupFragment"
         android:name="com.umc.timeCAlling.presentation.calendar.wakeup.WakeupFragment"
         android:label="WakeupFragment"
         tools:layout="@layout/fragment_wakeup">
+        <action
+            android:id="@+id/action_wakeupFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment"/>
     </fragment>
 
     <navigation

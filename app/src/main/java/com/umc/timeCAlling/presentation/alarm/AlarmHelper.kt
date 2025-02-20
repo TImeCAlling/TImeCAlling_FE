@@ -8,7 +8,9 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.add
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import kotlin.text.equals
 import kotlin.text.set
@@ -17,7 +19,7 @@ class AlarmHelper(private val context: Context) {
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-    fun setAlarm(alarmName: String, year: Int, month: Int, dayOfMonth: Int, hourOfDay: Int, minute: Int, alarmId: Int) {
+    fun setAlarm(alarmName: String, year: Int, month: Int, dayOfMonth: Int, hourOfDay: Int, minute: Int, alarmId: Int, scheduleDate:String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             if (!alarmManager.canScheduleExactAlarms()) {
                 Log.e("AlarmHelper", "Cannot schedule exact alarms: permission denied")
@@ -28,6 +30,7 @@ class AlarmHelper(private val context: Context) {
                 return
             }
         }
+
         val calendar = Calendar.getInstance().apply {
             set(Calendar.YEAR, year)
             set(Calendar.MONTH, month)
@@ -36,7 +39,7 @@ class AlarmHelper(private val context: Context) {
             set(Calendar.MINUTE, minute)
             set(Calendar.SECOND, 0)
         }
-
+        val formattedDate = formatDate(scheduleDate)
         val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("alarmName", alarmName)
             putExtra("year", year)
@@ -45,6 +48,7 @@ class AlarmHelper(private val context: Context) {
             putExtra("hourOfDay", hourOfDay)
             putExtra("minute", minute)
             putExtra("alarmId", alarmId)
+            putExtra("formattedDate", formattedDate)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -63,7 +67,18 @@ class AlarmHelper(private val context: Context) {
 
         Log.d("AlarmHelper", "Alarm set for $alarmName at ${calendar.time}, alarmId: $alarmId")
     }
+    fun formatDate(dateString: String): String {
+        // 입력된 날짜 문자열의 형식 지정
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+        // 출력할 날짜 문자열의 형식 지정
+        val outputFormat = SimpleDateFormat("M월 d일 (E)", Locale.KOREA)
 
+        // 입력된 날짜 문자열을 Date 객체로 파싱
+        val date: Date = inputFormat.parse(dateString) ?: return ""
+
+        // Date 객체를 출력할 형식의 문자열로 포맷팅
+        return outputFormat.format(date)
+    }
     fun cancelAlarm(alarmId: Int) {
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
