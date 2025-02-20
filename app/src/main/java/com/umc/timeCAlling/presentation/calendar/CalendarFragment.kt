@@ -32,6 +32,7 @@ import com.umc.timeCAlling.presentation.addSchedule.AddScheduleViewModel
 import com.umc.timeCAlling.presentation.base.BaseFragment
 import com.umc.timeCAlling.presentation.calendar.adapter.DetailScheduleRVA
 import com.umc.timeCAlling.presentation.calendar.wakeup.WakeupViewModel
+import com.umc.timeCAlling.presentation.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -51,12 +52,14 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     }
     private val wakeupViewModel: WakeupViewModel by activityViewModels()
     private val args: CalendarFragmentArgs by navArgs()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun initView() {
         initBottomSheet()
-        initDetailScheduleRVA()
         initCalendar()
+        initDetailScheduleRVA()
         bottomNavigationShow()
+        getChecklistInfo()
 
         binding.layoutDetailMembers.setOnClickListener {
             val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
@@ -69,6 +72,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             scheduleId = newScheduleId ?: 0
             Log.d("CalendarFragment", "scheduleId updated: $scheduleId")
         }
+        ovserveChecklistInfo()
     }
 
     private fun initBottomSheet() {
@@ -159,7 +163,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             dialog.dismiss()
             behavior.state = BottomSheetBehavior.STATE_HIDDEN
             addScheduleViewModel.deleteSchedule(scheduleId)
-            Toast.makeText(requireContext(), "삭제는 나중에..", Toast.LENGTH_SHORT).show()
         }
         btnNo.setOnClickListener {
             dialog.dismiss()
@@ -192,6 +195,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
         val formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         selectedDate = LocalDate.now()
+        adapter.setSelectedDate(date = selectedDate!!.format(formatter2))
         Log.d("CalendarFragment", "getScheduleByDate 호출!!")
         scheduleViewModel.getScheduleByDate(selectedDate!!.format(formatter2))
     }
@@ -219,6 +223,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
             itemView.setOnClickListener {
                 selectedDate = date
+                adapter.setSelectedDate(date = selectedDate!!.format(formatter))
                 scheduleViewModel.getScheduleByDate(selectedDate!!.format(formatter))
                 updateSelectionUI(index)
             }
@@ -264,70 +269,80 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 adapter.setScheduleList(scheduleList = scheduleList)
                 Log.d("CalendarFragment", "오늘 일정에 추가됐음!!!")
 
-                val scheduleId = args.scheduleId
-                val foundSchedule = scheduleList.find { it.scheduleId == scheduleId }
-                if(foundSchedule != null) {
-                    scheduleViewModel.getDetailSchedule(foundSchedule.checkListId)
-                    bottomNavigationRemove() // 아이템 클릭 시 BottomNavigationView 숨기기
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-                    scheduleViewModel.detailSchedule.observe(viewLifecycleOwner) { schedule ->
+                    val scheduleId = args.scheduleId
+                    val foundSchedule = scheduleList.find { it.scheduleId == scheduleId }
+                    if(foundSchedule != null) {
+                        scheduleViewModel.getDetailSchedule(foundSchedule.checkListId)
+                        bottomNavigationRemove() // 아이템 클릭 시 BottomNavigationView 숨기기
+                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        binding.layoutBottomSheet.setBackgroundResource(R.drawable.shape_bottom_sheet_expanded)
+                        binding.viewCalendarHandle.visibility = View.GONE
+                        binding.ivDetailClose.setImageResource(R.drawable.ic_arrow_left_detail)
+                        binding.layoutDetailTopBar.layoutParams = (binding.layoutDetailTopBar.layoutParams as MarginLayoutParams).apply {
+                            topMargin = requireContext().toPx(18).toInt()
+                        }
+                        behavior.isDraggable = false
 
-                        wakeupViewModel.setScheduledDate(scheduleViewModel.meetDate.value?:"")
-                        wakeupViewModel.setSharedId(scheduleViewModel.shareId.value?:"")
-                        Log.d("DetailSchedule", schedule.toString())
+                        scheduleViewModel.detailSchedule.observe(viewLifecycleOwner) { schedule ->
 
-                        initDetailScheduleBottomSheet(schedule)
-                    }
+                            wakeupViewModel.setScheduledDate(scheduleViewModel.meetDate.value?:"")
+                            wakeupViewModel.setSharedId(scheduleViewModel.shareId.value?:"")
+                            Log.d("DetailSchedule", schedule.toString())
 
-                    binding.ivDetailMore.setOnClickListener {
-                        val theme = ContextThemeWrapper(requireContext(), R.style.PopupMenuItemStyle)
-                        val popup = PopupMenu(
-                            requireContext(),
-                            it,
-                            Gravity.CENTER,
-                            0,
-                            R.style.CustomPopupMenuStyle
-                        )
-                        popup.menuInflater.inflate(R.menu.popup_menu_item, popup.menu)
-
-                        try {
-                            val fields = popup.javaClass.declaredFields
-                            for (field in fields) {
-                                if (field.name == "mPopup") {
-                                    field.isAccessible = true
-                                    val menuPopupHelper = field.get(popup)
-                                    val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
-                                    val setForceIconsMethod =
-                                        classPopupHelper.getMethod(
-                                            "setForceShowIcon",
-                                            Boolean::class.javaPrimitiveType
-                                        )
-                                    setForceIconsMethod.invoke(menuPopupHelper, true)
-                                    break
-                                }
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                            initDetailScheduleBottomSheet(schedule)
                         }
 
-                        popup.setOnMenuItemClickListener { menuItem ->
-                            when (menuItem.itemId) {
-                                R.id.popup_edit -> {
-                                    val bundle = Bundle().apply { putInt("scheduleId", scheduleId) }
-                                    findNavController().navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
-                                    true
+                        binding.ivDetailMore.setOnClickListener {
+                            val theme = ContextThemeWrapper(requireContext(), R.style.PopupMenuItemStyle)
+                            val popup = PopupMenu(
+                                requireContext(),
+                                it,
+                                Gravity.CENTER,
+                                0,
+                                R.style.CustomPopupMenuStyle
+                            )
+                            popup.menuInflater.inflate(R.menu.popup_menu_item, popup.menu)
+
+                            try {
+                                val fields = popup.javaClass.declaredFields
+                                for (field in fields) {
+                                    if (field.name == "mPopup") {
+                                        field.isAccessible = true
+                                        val menuPopupHelper = field.get(popup)
+                                        val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
+                                        val setForceIconsMethod =
+                                            classPopupHelper.getMethod(
+                                                "setForceShowIcon",
+                                                Boolean::class.javaPrimitiveType
+                                            )
+                                        setForceIconsMethod.invoke(menuPopupHelper, true)
+                                        break
+                                    }
                                 }
-                                R.id.popup_delete -> {
-                                    showDialogBox(foundSchedule.name)
-                                    true
-                                }
-                                else -> false
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
+
+                            popup.setOnMenuItemClickListener { menuItem ->
+                                when (menuItem.itemId) {
+                                    R.id.popup_edit -> {
+                                        val bundle = Bundle().apply { putInt("scheduleId", scheduleId!!) }
+                                        findNavController().navigate(R.id.action_calendarFragment_to_addScheduleTab, bundle)
+                                        true
+                                    }
+                                    R.id.popup_delete -> {
+                                        showDialogBox(foundSchedule.name)
+                                        true
+                                    }
+                                    else -> false
+                                }
+                            }
+                            popup.show()
                         }
-                        popup.show()
                     }
-                }
+
+
             }
         }
 
@@ -513,6 +528,20 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             "RELAXED" -> "여유"
             "PLENTY" -> "넉넉"
             else -> ""
+        }
+    }
+
+    private fun getChecklistInfo() {
+        homeViewModel.getPastCheckLists()
+    }
+
+    private fun ovserveChecklistInfo() {
+        homeViewModel.pastChecklists.observe(viewLifecycleOwner) { checklists ->
+            if (checklists != null) {
+                adapter.setDoneList(doneList = checklists)
+            } else {
+                adapter.setDoneList(emptyList())
+            }
         }
     }
 

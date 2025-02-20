@@ -54,7 +54,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private var dialog: androidx.appcompat.app.AlertDialog? = null
 
     override fun initView() {
-        viewModel.clearAll()
         arguments?.let {
             val scheduleId = it.getInt("scheduleId", -1)
             if (scheduleId != -1) {
@@ -231,25 +230,25 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun initLastScheduleRV() {
-        viewModel.loadItems()
+        viewModel.getPastCheckLists()
         val adapter = LastScheduleRVA()
         binding.rvHomeLastSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = adapter
         }
 
-        viewModel.checklists.observe(viewLifecycleOwner) { list ->
+        viewModel.pastChecklists.observe(viewLifecycleOwner) { list ->
             Log.d("HomeFragment", "Checklists: $list")
 
-            if (list.isEmpty()) {
+            if (list== null) {
                 binding.rvHomeLastSchedule.visibility = View.GONE
                 binding.tvHomeNoLastSchedule.visibility = View.VISIBLE
             } else {
                 val lastSchedules = mutableListOf<DetailScheduleResponseModel>()
                 var receivedCount = 0
 
-                list.forEach { checklistId ->
-                    lastScheduleViewModel.getDetailSchedule(checklistId)
+                list.forEach { item ->
+                    lastScheduleViewModel.getDetailSchedule(checklistId = item.checkListId)
                 }
 
                 // 한 번만 observe 해서 모든 데이터를 받았을 때 RecyclerView 갱신

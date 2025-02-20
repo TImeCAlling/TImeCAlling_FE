@@ -3,6 +3,7 @@ package com.umc.timeCAlling.presentation.calendar
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.umc.timeCAlling.domain.model.response.mypage.GetUserResponseModel
@@ -24,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
-    private val mypageRepository: MypageRepository
+    private val mypageRepository: MypageRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _schedules = MutableLiveData<List<ScheduleByDateResponseModel>>()
@@ -44,11 +46,7 @@ class ScheduleViewModel @Inject constructor(
             _isLoading.value = true
             scheduleRepository.getScheduleByDate(date).onSuccess { response ->
                 if (response.schedules.isNotEmpty()) {
-                    var schedules = response.schedules.sortedBy{it.meetTime}
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                    if(date == LocalDate.now().format(formatter)) {
-                        schedules = getUpcomingSchedules(schedules)
-                    }
+                    val schedules = response.schedules.sortedBy{it.meetTime}
                     _schedules.value = schedules
                     Log.d("ScheduleViewModel", response.toString())
                 } else {
@@ -61,15 +59,6 @@ class ScheduleViewModel @Inject constructor(
                 _isLoading.value = false // 로딩 종료
             }
         }
-    }
-
-    private fun getUpcomingSchedules(schedules: List<ScheduleByDateResponseModel>): List<ScheduleByDateResponseModel> {
-        val now = LocalTime.now()
-        val upcomingSchedules = schedules.filter { schedule ->
-            val meetTime = LocalTime.parse(schedule.meetTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
-            meetTime.isAfter(now)
-        }
-        return upcomingSchedules
     }
 
     var isSharedSchedule: Boolean = false
@@ -129,5 +118,12 @@ class ScheduleViewModel @Inject constructor(
                 Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
             }
         }
+    }
+
+    private val _id = MutableLiveData(savedStateHandle.get<Int>("scheduleId"))
+    val id: LiveData<Int?> = _id
+
+    fun consumeScheduleId() {
+        _id.value = -1 // Safe Args 값 초기화
     }
 }

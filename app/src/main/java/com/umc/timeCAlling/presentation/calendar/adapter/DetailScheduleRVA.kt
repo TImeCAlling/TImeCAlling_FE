@@ -14,9 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.umc.timeCAlling.R
 import com.umc.timeCAlling.databinding.ItemTodayScheduleDetailBinding
+import com.umc.timeCAlling.domain.model.response.schedule.PastScheduleResponseModel
 import com.umc.timeCAlling.domain.model.response.schedule.ScheduleByDateResponseModel
 import com.umc.timeCAlling.presentation.addSchedule.CategoryManager
 import com.umc.timeCAlling.presentation.calendar.ScheduleViewModel
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
+import org.threeten.bp.format.DateTimeFormatter
 
 class DetailScheduleRVA(
     private val context: Context,
@@ -25,12 +30,30 @@ class DetailScheduleRVA(
 ) : RecyclerView.Adapter<DetailScheduleRVA.DetailScheduleViewHolder>() {
     lateinit var onItemClick: ((ScheduleByDateResponseModel) -> Unit)
     private var detailSchedules: List<ScheduleByDateResponseModel> = emptyList()
+    private var checklistDone: List<PastScheduleResponseModel> = emptyList()
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    private var selectedDate: String = LocalDate.now().format(formatter)
 
     fun setScheduleList(scheduleList: List<ScheduleByDateResponseModel>) {
         this.detailSchedules = ArrayList(scheduleList)
         Log.d("DetailScheduleRVA", "setScheduleList 호출됨")
         notifyDataSetChanged()
     }
+
+    fun setDoneList(doneList: List<PastScheduleResponseModel>) {
+        this.checklistDone = ArrayList(doneList)
+        Log.d("DetailScheduleRVA", checklistDone.toString())
+        Log.d("DetailScheduleRVA", "setDoneList 호출됨")
+        notifyDataSetChanged()
+    }
+
+    fun setSelectedDate(date: String) {
+        this.selectedDate = date
+        Log.d("DetailScheduleRVA", "setSelectedDate 호출됨")
+        notifyDataSetChanged()
+    }
+
     inner class DetailScheduleViewHolder(private val binding: ItemTodayScheduleDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.tvDetailScheduleTitle
         val repeatInfo = binding.tvDetailScheduleRepeatInfo
@@ -90,7 +113,6 @@ class DetailScheduleRVA(
     }
 
     override fun onBindViewHolder(holder: DetailScheduleViewHolder, position: Int) {
-        var isChecked = false
         val meetTime = detailSchedules[position].meetTime
         val parsedTime = parseTimeString(meetTime)
         if (parsedTime != null) {
@@ -112,24 +134,26 @@ class DetailScheduleRVA(
         holder.category.setTextColor(holder.category.context.getColor(CategoryManager.getColor(detailSchedules[position].categories[0].categoryColor)))
         holder.categoryImage.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, CategoryManager.getColor(detailSchedules[position].categories[0].categoryColor)))
 
-        if (position == 0) {
+        val isChecked = checklistDone.any { it.scheduleId == detailSchedules[position].scheduleId } || !isTimeBeforeNow(meetTime)
+        Log.d("DetailScheduleRVA ${position}", "isChecked: $isChecked")
+
+        Log.d("DetailScheduleRVA selectedDate", "selectedDate: $selectedDate")
+        Log.d("DetailScheduleRVA isDateAfterToday", isDateAfterToday(selectedDate).toString())
+
+        if(!isChecked && !isDateAfterToday(selectedDate)) {
             holder.view.setBackgroundResource(R.drawable.shape_rect_999_mint_fill)
             holder.container.setBackgroundResource(R.drawable.shape_rect_28_mint200_fill_mint_line_1)
             holder.time.setTextColor(holder.time.context.getColor(R.color.mint_600))
+            holder.checkBtn.setImageResource(R.drawable.ic_schedule_detail_check_mint)
+        } else {
+            holder.view.setBackgroundResource(R.drawable.shape_rect_999_gray300_fill)
+            holder.container.setBackgroundResource(R.drawable.shape_rect_28_gray100_fill_gray300_line_1)
+            holder.time.setTextColor(holder.time.context.getColor(R.color.gray_500))
+            holder.checkBtn.setImageResource(R.drawable.ic_schedule_detail_check)
         }
 
         holder.bar.visibility =
             if (position == detailSchedules.size - 1) View.GONE else View.VISIBLE
-
-        holder.checkBtn.setOnClickListener {
-            if (!isChecked) {
-                holder.checkBtn.setImageResource(R.drawable.ic_schedule_detail_check_mint)
-                isChecked = true
-            } else {
-                holder.checkBtn.setImageResource(R.drawable.ic_schedule_detail_check)
-                isChecked = false
-            }
-        }
 
         holder.itemView.setOnClickListener {
             onItemClick.invoke(detailSchedules[position])
@@ -181,5 +205,32 @@ class DetailScheduleRVA(
         }
 
         return Triple(hours, minutes, seconds)
+    }
+
+    private fun isTimeBeforeNow(timeString: String): Boolean {
+        // 현재 시간 가져오기
+        val now = LocalDateTime.now()
+
+        // 시간 문자열 파싱
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val parsedTime = LocalTime.parse(timeString, timeFormatter)
+
+        // 특정 시간의 LocalDateTime 생성
+        val specificDateTime = LocalDateTime.of(now.toLocalDate(), parsedTime)
+
+        // 시간 비교
+        return specificDateTime.isBefore(now)
+    }
+
+    private fun isDateAfterToday(dateString: String): Boolean {
+        // 현재 날짜 가져오기
+        val today = LocalDate.now()
+
+        // 날짜 문자열 파싱
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val parsedDate = LocalDate.parse(dateString, dateFormatter)
+
+        // 날짜 비교
+        return parsedDate.isAfter(today)
     }
 }
