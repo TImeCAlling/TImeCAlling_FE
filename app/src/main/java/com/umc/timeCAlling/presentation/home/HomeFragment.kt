@@ -214,6 +214,11 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             behavior.state = TopSheetBehavior.STATE_COLLAPSED
             binding.viewHomeTopsheetBackground.visibility = View.GONE
         }
+        binding.tvTopsheetShowDetail.setOnSingleClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToCalendarFragment(scheduleId)
+            bottomNavigationShow()
+            findNavController().navigate(action)
+        }
         bottomNavigationRemove()
     }
 

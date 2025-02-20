@@ -42,6 +42,10 @@
         <action
             android:id="@+id/action_calendarFragment_to_wakeupFragment"
             app:destination="@id/wakeupFragment"/>
+        <argument
+            android:name="scheduleId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
     </fragment>
     <fragment
         android:id="@+id/wakeupFragment"

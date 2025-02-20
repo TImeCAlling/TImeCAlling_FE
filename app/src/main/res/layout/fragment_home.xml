@@ -567,6 +567,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="15dp">
                         <TextView
+                            android:id="@+id/tv_topsheet_show_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="자세한 일정 보기"
