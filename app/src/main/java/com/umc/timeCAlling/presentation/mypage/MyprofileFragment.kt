@@ -389,7 +389,8 @@ class MyprofileFragment : BaseFragment<FragmentMyprofileBinding>(R.layout.fragme
             updatedNickname,
             updatedAvgPrepTime,
             updatedFreeTime,
-            imageFile
+            imageFile,
+            requireContext()
         )
     }
 
