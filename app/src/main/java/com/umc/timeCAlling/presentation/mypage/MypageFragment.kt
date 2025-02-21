@@ -54,13 +54,13 @@ class MypageFragment: BaseFragment<FragmentMypageBinding>(R.layout.fragment_mypa
                 navigateToMyprofileFragment() // 내 프로필
             }
             layoutMypageAlarmlist.setOnClickListener {
-                findNavController().navigate(R.id.action_mypageFragment_to_alarmlistFragment)
+                //findNavController().navigate(R.id.action_mypageFragment_to_alarmlistFragment)
             }
             layoutMypageCategory.setOnClickListener {
                 findNavController().navigate(R.id.action_mypageFragment_to_categoryEditFragment)
             }
             layoutMypageSoundInfo.setOnClickListener {
-                navigateToMypageVoiceFragment()
+                //navigateToMypageVoiceFragment()
             }
             layoutMypageTerms.setOnClickListener {
                 //이용약관

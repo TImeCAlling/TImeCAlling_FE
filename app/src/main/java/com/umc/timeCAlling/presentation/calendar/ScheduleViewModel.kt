@@ -120,10 +120,19 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-    private val _id = MutableLiveData(savedStateHandle.get<Int>("scheduleId"))
-    val id: LiveData<Int?> = _id
+    private val _scheduleUserMap = MutableLiveData<Map<Int, List<ScheduleUsersResponseModel>>>()
+    val scheduleUserMap: LiveData<Map<Int, List<ScheduleUsersResponseModel>>> get() = _scheduleUserMap
 
-    fun consumeScheduleId() {
-        _id.value = -1 // Safe Args 값 초기화
+    fun loadScheduleUsers(scheduleId: Int) {
+        viewModelScope.launch {
+            scheduleRepository.getScheduleUsers(scheduleId).onSuccess { response ->
+                val currentMap = _scheduleUserMap.value?.toMutableMap() ?: mutableMapOf()
+                currentMap[scheduleId] = response
+                _scheduleUserMap.postValue(currentMap)
+            }.onFailure { error ->
+                Log.e("ScheduleViewModel", "HTTP 요청 실패: $error")
+            }
+        }
     }
+
 }

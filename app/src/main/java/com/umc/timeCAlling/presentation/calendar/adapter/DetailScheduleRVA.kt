@@ -3,10 +3,12 @@ package com.umc.timeCAlling.presentation.calendar.adapter
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
@@ -54,6 +56,10 @@ class DetailScheduleRVA(
         notifyDataSetChanged()
     }
 
+    init {
+        viewModel.getUser()
+    }
+
     inner class DetailScheduleViewHolder(private val binding: ItemTodayScheduleDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.tvDetailScheduleTitle
         val repeatInfo = binding.tvDetailScheduleRepeatInfo
@@ -69,37 +75,35 @@ class DetailScheduleRVA(
         val container = binding.layoutDetailScheduleContainer
         val checkBtn = binding.imgDetailScheduleCheck
 
-        fun bind(item : ScheduleByDateResponseModel) {
-            viewModel.getScheduleUsers(item.scheduleId)
-            viewModel.getUser()
-            viewModel.user.observe(viewLifecycleOwner) { user ->
-                memberContainer.removeAllViews()
-                val inflater = LayoutInflater.from(itemView.context)
-                val profile: View = inflater.inflate(
-                    R.layout.item_schedule_member,
-                    memberContainer,
-                    false
-                )
-                val profileImage =
-                    profile.findViewById<ImageView>(R.id.img_detail_schedule_member)
+        fun bind(item: ScheduleByDateResponseModel) {
 
-                val params = profile.layoutParams as ViewGroup.MarginLayoutParams
-                params.setMargins(0, 0, 0, 0)
-                profile.layoutParams = params
+//            viewModel.user.observe(viewLifecycleOwner) { user ->
+//                memberContainer.removeAllViews()
+//                addProfileToContainer(user.profileImage)
+//            }
+            viewModel.loadScheduleUsers(item.scheduleId) // ViewModel에서 캐싱하도록 호출
+            val users = viewModel.scheduleUserMap.value?.get(item.scheduleId) ?: emptyList()
 
-                Glide.with(itemView.context)
-                    .load(user.profileImage)
-                    .into(profileImage)
-
-                memberContainer.addView(profile)
-                viewModel.scheduleUsers.observe(viewLifecycleOwner) { scheduleUsers ->
-                    if (scheduleUsers.isEmpty()) {
-                        //do nothing yet
-                    } else {
-                        //do nothing yet
-                    }
+            memberContainer.removeAllViews()
+            if(users.isEmpty()) {
+                viewModel.user.observe(viewLifecycleOwner) { user ->
+                    memberContainer.removeAllViews()
+                    addProfileToContainer(user.profileImage)
                 }
             }
+            for (user in users) {
+                Log.d("DetailScheduleRVA", "user: $user")
+                addProfileToContainer(user.profile)
+            }
+        }
+
+        private fun addProfileToContainer(imageUrl: String) {
+            val inflater = LayoutInflater.from(itemView.context)
+            val profile: View = inflater.inflate(R.layout.item_schedule_member, memberContainer, false)
+            val profileImage = profile.findViewById<ImageView>(R.id.img_detail_schedule_member)
+
+            Glide.with(itemView.context).load(imageUrl).into(profileImage)
+            memberContainer.addView(profile)
         }
     }
 
@@ -233,4 +237,11 @@ class DetailScheduleRVA(
         // 날짜 비교
         return parsedDate.isAfter(today)
     }
+
+
+    fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp.toFloat(),
+        resources.displayMetrics
+    )
 }
